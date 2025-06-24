@@ -1,0 +1,48 @@
+@use "../../overrides/variables.scss" as vars;
+
+.navbar {
+  height: 100px;
+  background: vars.$herbalWash;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    font-weight: 200;
+
+    &:hover {
+      cursor: pointer;
+      color: vars.$whiteFlour;
+    }
+  }
+
+  .navigation {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.navbar-mobile {
+  height: 60px;
+  background: vars.$herbalWash;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    font-weight: 200;
+    font-size: 1.5rem;
+
+    &:hover {
+      cursor: pointer;
+      color: vars.$whiteFlour;
+    }
+  }
+
+  .navigation {
+    display: flex;
+    gap: 0.5rem;
+  }
+}

@@ -1,0 +1,9 @@
+@use "./shared/overrides/variables.scss" as vars;
+
+.router-outlet {
+  height: calc(100vh - 100px);
+}
+
+.router-outlet-mobile {
+  min-height: calc(100vh - 60px);
+}

@@ -1,0 +1,17 @@
+<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-5': !isMobile }">
+  <h1 class="title" [routerLink]="''">Home</h1>
+  <div class="navigation">
+    <p-button
+      class="projects"
+      [ngClass]="{ mobile: isMobile }"
+      label="Projects"
+      [routerLink]="'/projects'"
+    />
+    <p-button
+      class="contact"
+      [ngClass]="{ mobile: isMobile }"
+      label="Contact"
+      [routerLink]="'/contact'"
+    />
+  </div>
+</div>
