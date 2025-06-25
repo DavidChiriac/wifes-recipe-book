@@ -15,7 +15,7 @@ import { MenuItem } from 'primeng/api';
 export class NavbarComponent implements OnInit {
   isMobile!: boolean;
 
-  signedIn = false;
+  signedIn = true;
 
   items: MenuItem[] | undefined;
 

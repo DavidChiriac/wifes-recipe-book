@@ -10,11 +10,11 @@ import { EditRecipeComponent } from './recipe/edit-recipe/edit-recipe.component'
 export const routes: Routes = [
   { path: '', component: HomePageComponent, pathMatch: 'full' },
   {
-    path: 'recipe/:id',
+    path: 'recipe',
     component: RecipeComponent,
     children: [
-      { path: '', component: ViewRecipeComponent, pathMatch: 'full' },
-      { path: 'edit', component: EditRecipeComponent },
+      { path: ':id', component: ViewRecipeComponent, pathMatch: 'full' },
+      { path: ':id/edit', component: EditRecipeComponent },
     ],
   },
   { path: 'new-recipe', component: NewRecipeComponent },
