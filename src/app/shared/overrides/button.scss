@@ -65,3 +65,31 @@
     background: vars.$whiteFlour;
   }
 }
+
+.submit-recipe .p-button {
+  background: vars.$herbalWash;
+
+  &:hover {
+    background: vars.$farro;
+  }
+}
+
+.new-ingredient .p-button {
+  width: 34px;
+  height: 34px;
+  background: vars.$herbalWash;
+
+  &:hover {
+    background: vars.$farro;
+  }
+}
+
+.delete-ingredient .p-button {
+  width: 34px;
+  height: 34px;
+  background: vars.$crackedPepper;
+
+  &:hover {
+    background: vars.$farro;
+  }
+}

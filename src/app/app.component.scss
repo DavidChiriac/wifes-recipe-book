@@ -3,4 +3,22 @@
 .router-outlet {
   height: calc(100vh - 60px);
   width: 100vw;
+  position: relative;
+  overflow: hidden;
+
+  .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+
+      object-fit: cover;
+    }
+  }
 }

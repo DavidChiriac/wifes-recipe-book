@@ -1,0 +1,30 @@
+@use "../shared/overrides/variables.scss" as vars;
+
+.new-recipe {
+  .header {
+    text-align: center;
+    .title {
+      font-family: "MyCustomFont", sans-serif;
+      font-size: 5rem;
+    }
+  }
+
+  form {
+    width: 60%;
+    background: vars.$whiteFlour;
+    margin: auto;
+    padding: 50px;
+    border-radius: 50px;
+    height: calc(100vh - 300px);
+    overflow: auto;
+  }
+}
+
+form::-webkit-scrollbar {
+  display: none;
+}
+
+form {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

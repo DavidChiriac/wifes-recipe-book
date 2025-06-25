@@ -1,1 +1,84 @@
-<p>new-recipe works!</p>
+<div class="new-recipe">
+  <div class="header">
+    <h1 class="title">Add New Recipe</h1>
+  </div>
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div>
+      <div>
+        <label for="name">Recipe Name: </label>
+        <br />
+        <input pInputText id="name" type="text" formControlName="name" />
+      </div>
+      <br />
+      <div formArrayName="ingredients">
+        <label for="ingredients">Ingredients: </label>
+        <br />
+        <br />
+        @for (item of ingredients.controls; track item.controls['id'];) {
+        <div
+          class="flex gap-3 align-items-center mb-1"
+          [formGroupName]="$index"
+        >
+          <label for="ingredient">Name: </label>
+          <input
+            pInputText
+            [id]="'ingredients' + $index"
+            type="text"
+            formControlName="ingredient"
+          />
+          <label for="ingredient">Quantity: </label>
+          <input
+            pInputText
+            [id]="'ingredients' + $index"
+            type="text"
+            formControlName="quantity"
+          />
+          <p-button
+            class="delete-ingredient"
+            label="-"
+            (onClick)="removeIngredient($index)"
+          />
+          @if ($index === 0) {
+          <p-button
+            class="new-ingredient"
+            label="+"
+            (onClick)="addNewIngredient()"
+          />
+          }
+        </div>
+        }
+      </div>
+      <br />
+      <div>
+        <label for="preparation">Preparation: </label>
+        <br />
+        <textarea
+          rows="10"
+          cols="94"
+          style="resize: none"
+          id="preparation"
+          type="text"
+          formControlName="preparation"
+        ></textarea>
+      </div>
+      <br />
+      <div>
+        <label for="preparationTime">Preparation Time: </label>
+        <br />
+        <input
+          pInputText
+          id="preparationTime"
+          type="text"
+          formControlName="preparationTime"
+        />
+      </div>
+      <br />
+      <p-button
+        type="submit"
+        class="submit-recipe"
+        label="Save Recipe"
+        [disabled]="recipeForm.invalid"
+      />
+    </div>
+  </form>
+</div>
