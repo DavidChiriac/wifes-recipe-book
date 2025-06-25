@@ -1,0 +1,41 @@
+@use "../shared/overrides/variables.scss" as vars;
+
+.homepage {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  font-family: "MyCustomFont", sans-serif; /* Add a fallback font */
+
+  .overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      opacity: 0.5;
+
+      object-fit: cover;
+    }
+  }
+
+  .header {
+    position: relative;
+    text-align: center;
+
+    .title {
+      font-size: 6rem;
+    }
+
+    .description {
+      font-size: 2rem;
+      width: 70%;
+      text-align: center;
+      margin: auto;
+    }
+  }
+}

@@ -1,0 +1,20 @@
+<div [ngClass]="{ 'homepage-mobile': isMobile, homepage: !isMobile }">
+  <div class="overlay">
+    <img src="assets/images/homepage.jpg" />
+  </div>
+
+  <div class="header">
+    <h1 class="title">Wife's Recipe Book</h1>
+    <div class="description">
+      Welcome to your recipe book! Add, View and Edit recipes as you like.<br />
+      Be independent in your kitchen and your life!
+    </div>
+    <br />
+    <br />
+    <p-button
+      class="add-recipe-homepage"
+      label="Add new Recipe"
+      [routerLink]="'/new-recipe'"
+    ></p-button>
+  </div>
+</div>
