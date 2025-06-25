@@ -1,0 +1,50 @@
+@use "./variables.scss" as vars;
+
+.p-button {
+  font-size: 1rem;
+  color: vars.$whiteFlour;
+  border: none;
+  background: transparent;
+
+  &:hover {
+    background: vars.$whiteFlour;
+
+    .p-button-label {
+      color: vars.$crackedPepper;
+    }
+  }
+}
+
+.add-recipe .p-button {
+  background: vars.$saffronThread;
+  color: vars.$crackedPepper;
+  border: none;
+
+  .p-button-label {
+    font-weight: 700;
+  }
+
+  &:hover {
+    background: vars.$whiteFlour;
+  }
+}
+
+.sign-in .p-button {
+  background: vars.$crackedPepper;
+  color: vars.$whiteFlour;
+  border: none;
+
+  .p-button-label {
+    font-weight: 700;
+  }
+
+  &:hover {
+    background: vars.$whiteFlour;
+    color: vars.$crackedPepper;
+  }
+}
+
+.mobile .p-button {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+}

@@ -1,17 +1,49 @@
-<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-5': !isMobile }">
-  <h1 class="title" [routerLink]="''">Home</h1>
+<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': !isMobile }">
+  <div class="left" [routerLink]="''">
+    <img src="assets/logo/logo.png" alt="wife's recipe book logo" />
+    @if (!isMobile) {
+    <h1 class="title">Home</h1>
+    }
+  </div>
   <div class="navigation">
+    @if (signedIn) {
     <p-button
-      class="projects"
+      class="add-recipe"
       [ngClass]="{ mobile: isMobile }"
-      label="Projects"
-      [routerLink]="'/projects'"
+      label="+Add"
+      [routerLink]="'/recipe'"
     />
+    }
     <p-button
-      class="contact"
+      class="recipe-collection"
       [ngClass]="{ mobile: isMobile }"
-      label="Contact"
-      [routerLink]="'/contact'"
+      label="Recipe Collection"
+      [routerLink]="'/recipe-collection'"
     />
+
+    @if(!isMobile){ @if (signedIn) {
+    <p-button
+      class="my-recipes"
+      [ngClass]="{ mobile: isMobile }"
+      label="My Recipes"
+      [routerLink]="'/my-recipes'"
+    />
+    } @if(signedIn) {
+    <p-button
+      class="sign-in"
+      [ngClass]="{ mobile: isMobile }"
+      label="Sign Out"
+      (onClick)="signOut()"
+    />
+    } } @else { @if (signedIn) {
+    <p-menubar [model]="items" />
+    } } @if (!signedIn) {
+    <p-button
+      class="sign-in"
+      [ngClass]="{ mobile: isMobile }"
+      label="Sign In"
+      (onClick)="signIn()"
+    />
+    }
   </div>
 </div>

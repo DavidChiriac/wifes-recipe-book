@@ -1,0 +1,42 @@
+@use "./variables.scss" as vars;
+
+.p-menubar-mobile {
+  width: 40px;
+  background: transparent;
+  border: none;
+
+  .p-menubar-button {
+    color: vars.$whiteFlour;
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  &.p-menubar-mobile-active .p-menubar-root-list {
+    left: -200%;
+    width: 115px;
+    padding: 0;
+
+    .p-menubar-item {
+      .p-menubar-item-content {
+        .p-menubar-item-link {
+          .p-menubar-item-label {
+            font-size: 1rem;
+          }
+        }
+
+        .p-menubar-item-link-active {
+          background: vars.$herbalWash;
+          .p-menubar-item-label {
+            color: vars.$whiteFlour;
+          }
+        }
+      }
+    }
+  }
+}
