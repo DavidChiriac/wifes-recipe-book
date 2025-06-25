@@ -63,14 +63,26 @@
       </div>
       <br />
       <div>
-        <label for="preparationTime">Preparation Time: </label>
+        <label for="hours">Preparation Time: </label>
         <br />
         <input
           pInputText
-          id="preparationTime"
-          type="text"
-          formControlName="preparationTime"
+          #hourRef
+          id="hours"
+          type="number"
+          class="w-2"
+          formControlName="hours"
         />
+        hours :
+        <input
+          pInputText
+          #minutesRef
+          id="minutes"
+          type="number"
+          class="w-2"
+          formControlName="minutes"
+        />
+        minutes
       </div>
       <br />
       <p-button

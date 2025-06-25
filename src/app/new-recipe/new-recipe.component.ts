@@ -3,6 +3,7 @@ import {
   FormArray,
   FormControl,
   FormGroup,
+  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -13,7 +14,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-new-recipe',
-  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, TextareaModule],
+  imports: [
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    TextareaModule,
+    FormsModule,
+  ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
 })
@@ -30,12 +37,12 @@ export class NewRecipeComponent {
       ],
       Validators.required
     ),
-    preparationTime: new FormControl(''),
     preparation: new FormControl(''),
+    hours: new FormControl(0),
+    minutes: new FormControl(30),
   });
 
   onSubmit(): void {
-    console.log(this.recipeForm.invalid);
     console.warn(this.recipeForm.value);
   }
 
