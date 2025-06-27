@@ -10,7 +10,11 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { FileUploadEvent, FileUploadModule } from 'primeng/fileupload';
+import {
+  FileRemoveEvent,
+  FileSelectEvent,
+  FileUploadModule,
+} from 'primeng/fileupload';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -47,7 +51,7 @@ export class NewRecipeComponent {
   });
 
   uploadedFiles: File[] = [];
-  uploadedCoverPicture!: File;
+  uploadedCoverPicture: File | undefined;
 
   onSubmit(): void {
     console.warn(this.recipeForm.value);
@@ -83,15 +87,29 @@ export class NewRecipeComponent {
     return this.recipeForm.get('coverPicture') as FormControl;
   }
 
-  onUpload(event: FileUploadEvent): void {
-    this.uploadedFiles = event.files;
+  onUpload(event: FileSelectEvent): void {
+    console.log(event);
+    this.uploadedFiles = event.currentFiles;
     this.uploadedFiles.forEach((file: File) => {
       this.pictures.push(new FormControl(file));
     });
+    this.uploadedFiles = [];
   }
 
-  onUploadCoverPicture(event: FileUploadEvent): void {
-    this.uploadedCoverPicture = event.files[0];
-    this.coverPicture.setValue(new FormControl(event.files[0]));
+  onRemove(event: FileRemoveEvent): void {
+    this.pictures.removeAt(
+      this.pictures.getRawValue().findIndex((file) => file === event.file)
+    );
+  }
+
+  onRemoveCoverPicture(): void {
+    this.coverPicture.setValue(undefined);
+  }
+
+  onUploadCoverPicture(event: FileSelectEvent): void {
+    console.log(event);
+    this.uploadedCoverPicture = event.currentFiles[0];
+    this.coverPicture.setValue(new FormControl(event.currentFiles[0]));
+    this.uploadedCoverPicture = undefined;
   }
 }

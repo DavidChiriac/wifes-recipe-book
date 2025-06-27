@@ -4,18 +4,17 @@
   .header {
     text-align: center;
     .title {
-      font-family: "MyCustomFont", sans-serif;
-      font-size: 5rem;
+      font-size: 3rem;
     }
   }
 
   form {
-    width: 60%;
+    width: 90%;
     background: vars.$whiteFlour;
     margin: auto;
     padding: 50px;
     border-radius: 50px;
-    height: calc(100vh - 300px);
+    height: calc(100vh - 200px);
     overflow: auto;
   }
 }
