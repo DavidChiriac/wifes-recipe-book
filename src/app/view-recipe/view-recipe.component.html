@@ -1,0 +1,62 @@
+<div class="recipe">
+    <div class="container">
+        <div class="recipe-details">
+            <div class="flex justify-content-between gap-5">
+                <div class="w-4">
+                    <div class="cover-image">
+                        <img [src]="recipe.coverImageUrl" [alt]="recipe.title" />
+                    </div>
+                    <br />
+                    <div>
+                        <span class="font-bold">Recipe Name: </span>
+                        <span class="font-italic">{{recipe.title}}</span>
+                    </div>
+                    <br />
+                    <div>
+                        <div class="font-bold">Ingredients: </div>
+                        <ul>
+                            @for (ingredient of recipe.ingredients; track $index;) {
+                            <li class=" mb-3 font-italic">
+                                {{ingredient.name}} - {{ingredient.quantity}}
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="w-8">
+                    <div>
+                        <div class="font-bold">Preparation: </div>
+                        <br />
+                        <div class="font-italic">{{recipe.preparation}}</div>
+                    </div>
+                    <br />
+                    <br />
+                    <div>
+                        <div class="font-bold">Preparation Time:</div>
+                        <div class="font-italic">
+                            @if (recipe.preparationTime.hour && recipe.preparationTime.hour !== '0') {
+                            {{recipe.preparationTime.hour}} hour@if (recipe.preparationTime.hour !== '1') {s}
+                            }
+                            @if (recipe.preparationTime.minutes && recipe.preparationTime.minutes !== '0') {
+                            {{recipe.preparationTime.minutes}} minute@if (recipe.preparationTime.minutes !== '1') {s}
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="small-images">
+                @for (image of recipe.imagesUrls; track $index) {
+                <div class="image">
+                    <p-image
+                        [src]="image"
+                        class="presentation-image"
+                        [alt]="recipe.title"
+                        [preview]="true" />
+                </div>
+                }
+            </div>
+            <br />
+        </div>
+    </div>
+</div>

@@ -22,142 +22,15 @@ export class RecipeCollectionComponent {
       },
       coverImageUrl: 'assets/images/homepage.jpg',
       title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
+      slug: 'recipe-1',
+      preparation: '',
+      ingredients: [],
+      images: [],
+      imagesUrls: [],
+      preparationTime: {
+        hour: '',
+        minutes: '',
       },
-      coverImageUrl: 'assets/logo/logo.png',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-    },
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
     },
   ];
 
