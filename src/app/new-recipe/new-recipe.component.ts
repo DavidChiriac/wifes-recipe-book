@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -16,7 +16,12 @@ import {
   FileUploadModule,
 } from 'primeng/fileupload';
 import { v4 as uuidv4 } from 'uuid';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { RecipesService } from '../shared/services/recipes.service';
+import { IRecipe } from '../shared/interfaces/recipe.interface';
 
+@UntilDestroy()
 @Component({
   selector: 'app-new-recipe',
   imports: [
@@ -30,7 +35,7 @@ import { v4 as uuidv4 } from 'uuid';
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
 })
-export class NewRecipeComponent {
+export class NewRecipeComponent implements OnInit {
   recipeForm = new FormGroup({
     name: new FormControl('', Validators.required),
     ingredients: new FormArray(
@@ -45,16 +50,118 @@ export class NewRecipeComponent {
     ),
     preparation: new FormControl(''),
     hours: new FormControl(0),
-    coverPicture: new FormControl(),
-    pictures: new FormArray([]),
     minutes: new FormControl(30),
+    coverPicture: new FormControl(),
+    pictures: new FormArray([] as FormControl[]),
   });
 
   uploadedFiles: File[] = [];
   uploadedCoverPicture: File | undefined;
 
+  slug = '';
+
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly recipesService: RecipesService,
+    private readonly router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
+      if (params?.['id']) {
+        this.slug = params['id'];
+        this.populateForm();
+      }
+    });
+  }
+
+  populateForm(): void {
+    this.recipesService
+      .getSingleRecipe(this.slug)
+      .pipe(untilDestroyed(this))
+      .subscribe((recipe) => {
+        this.recipeForm = new FormGroup({
+          name: new FormControl(recipe.title, Validators.required),
+          ingredients: new FormArray(
+            [
+              ...recipe.ingredients.map(
+                (ingredient) =>
+                  new FormGroup({
+                    id: new FormControl(uuidv4()),
+                    ingredient: new FormControl(
+                      ingredient.name,
+                      Validators.required
+                    ),
+                    quantity: new FormControl(ingredient.quantity),
+                  })
+              ),
+            ],
+            Validators.required
+          ),
+          preparation: new FormControl(recipe.preparation),
+          hours: new FormControl(parseInt(recipe.preparationTime.hour)),
+          minutes: new FormControl(parseInt(recipe.preparationTime.minutes)),
+          coverPicture: new FormControl(recipe.coverImageUrl),
+          pictures: new FormArray([
+            ...recipe.imagesUrls.map((image) => new FormControl(image)),
+          ]),
+        });
+      });
+  }
+
   onSubmit(): void {
     console.warn(this.recipeForm.value);
+    if (!this.slug || this.slug === '') {
+      this.recipesService
+        .createRecipe(this.transformFormIntoRecipe(this.recipeForm))
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => {
+          this.router.navigate(['recipe/' + response.slug]);
+        });
+    } else {
+      this.recipesService
+        .editRecipe(this.transformFormIntoRecipe(this.recipeForm))
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => {
+          this.router.navigate(['recipe/' + response.slug]);
+        });
+    }
+  }
+
+  transformFormIntoRecipe(form: FormGroup): IRecipe {
+    console.log({
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: '',
+      title: form.controls['name'].getRawValue(),
+      slug: this.slug ? this.slug : undefined,
+      preparation: form.controls['preparation'].getRawValue(),
+      ingredients: form.controls['ingredients'].getRawValue(),
+      images: [],
+      imagesUrls: [],
+      preparationTime: {
+        hour: form.controls['hour'].getRawValue(),
+        minutes: form.controls['minutes'].getRawValue(),
+      },
+    });
+
+    return {
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: '',
+      title: form.controls['name'].getRawValue(),
+      slug: this.slug ? this.slug : undefined,
+      preparation: form.controls['preparation'].getRawValue(),
+      ingredients: form.controls['ingredients'].getRawValue(),
+      images: [],
+      imagesUrls: [],
+      preparationTime: {
+        hour: form.controls['hour'].getRawValue(),
+        minutes: form.controls['minutes'].getRawValue(),
+      },
+    };
   }
 
   addNewIngredient(): void {

@@ -1,21 +1,23 @@
 @use "../shared/overrides/variables.scss" as vars;
 
 .recipe-collection {
-  height: 100%;
+  padding: 20px 50px;
   .header {
     text-align: center;
     .title {
       font-size: 3rem;
+      margin-top: 0;
     }
   }
 
   .content {
     width: 90%;
+    border: 1px solid vars.$farro;
     background: vars.$whiteFlour;
     margin: auto;
-    padding: 50px;
+    padding: 20px 50px;
     border-radius: 50px;
-    height: calc(100vh - 200px);
+    height: calc(100vh - 270px);
     overflow: hidden;
 
     .search-bar {

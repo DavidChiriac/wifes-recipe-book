@@ -13,6 +13,10 @@
       color: vars.$crackedPepper;
     }
   }
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .add-recipe .p-button {
@@ -104,5 +108,28 @@
     color: vars.$crackedPepper;
     background: vars.$whiteFlour;
     border: 1px solid vars.$herbalWash;
+  }
+}
+
+.edit-button .p-button,
+.toggle-button .p-button {
+  color: vars.$crackedPepper;
+  border: 1px solid vars.$crackedPepper;
+
+  &:hover {
+    background: vars.$herbalWash;
+    color: vars.$whiteFlour;
+    border: none;
+  }
+}
+
+.delete-button .p-button {
+  background: vars.$crackedPepper;
+  color: vars.$whiteFlour;
+
+  &:hover {
+    background: vars.$saffronThread;
+    border: 1px solid vars.$crackedPepper;
+    color: vars.$crackedPepper;
   }
 }

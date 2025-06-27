@@ -13,4 +13,10 @@
       [routerLink]="'/new-recipe'"
     ></p-button>
   </div>
+  <br/>
+  <div class="recommended-recipes">
+    @for (recipe of recommendedRecipes; track $index) {
+      <app-recipe-card [card]="recipe"></app-recipe-card>
+    }
+  </div>
 </div>

@@ -1,9 +1,9 @@
 <div class="new-recipe">
-  <div class="header">
-    <h1 class="title">Add New Recipe</h1>
-  </div>
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     <div>
+      <div class="header">
+        <h1 class="title">Add New Recipe</h1>
+      </div>
       <div>
         <label for="name">Recipe Name: </label>
         <br />

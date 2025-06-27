@@ -1,29 +1,18 @@
 @use "../shared/overrides/variables.scss" as vars;
 
 .new-recipe {
+  padding: 20px 50px;
+  overflow: auto;
+
   .header {
     text-align: center;
     .title {
       font-size: 3rem;
+      margin-top: 0;
     }
   }
 
   form {
-    width: 90%;
-    background: vars.$whiteFlour;
-    margin: auto;
-    padding: 50px;
-    border-radius: 50px;
-    height: calc(100vh - 200px);
     overflow: auto;
   }
-}
-
-form::-webkit-scrollbar {
-  display: none;
-}
-
-form {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }

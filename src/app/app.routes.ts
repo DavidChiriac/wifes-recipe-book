@@ -9,7 +9,7 @@ import { EditRecipeComponent } from './edit-recipe/edit-recipe.component';
 export const routes: Routes = [
   { path: '', component: HomePageComponent, pathMatch: 'full' },
   { path: 'recipe/:id', component: ViewRecipeComponent, pathMatch: 'full' },
-  { path: 'recipe/:id/edit', component: EditRecipeComponent },
+  { path: 'recipe/:id/edit', component: NewRecipeComponent },
   { path: 'new-recipe', component: NewRecipeComponent },
   { path: 'recipe-collection', component: RecipeCollectionComponent },
   { path: 'my-recipes', component: MyRecipesComponent },

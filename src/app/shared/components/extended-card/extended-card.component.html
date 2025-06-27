@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="details">
+        <div class="image">
+            <img [src]="recipe.coverImageUrl"/>
+        </div>
+        <div class="title">{{recipe.title}}</div>
+    </div>
+    <div class="actions">
+        <p-button class="edit-button" label="View" (onClick)="view()"/>
+        <p-button class="edit-button" label="Edit" (onClick)="edit()"/>
+        <p-button class="toggle-button" [label]="recipe.enabled ? 'Draft' : 'Publish'" (onClick)="toggleStatus()"/>
+        <p-button class="delete-button" label="Delete" (onClick)="delete()"/>
+    </div>
+</div>
