@@ -1,1 +1,17 @@
-<p>recipe-collection works!</p>
+<div class="recipe-collection">
+  <div class="header">
+    <h1 class="title">Recipe Collection</h1>
+  </div>
+  <div class="content">
+    <div class="search-bar">
+        <input pInputText [(ngModel)]="searchTerm"/>
+        <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="search()" label=""/>
+        <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
+    </div>
+    <div class="recipes-container">
+        @for (recipe of recipes; track recipe.id) {
+            <app-recipe-card [card]="recipe"></app-recipe-card>
+        }
+    </div>
+  </div>
+</div>

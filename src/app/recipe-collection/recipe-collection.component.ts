@@ -1,11 +1,171 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { IRecipe } from '../shared/interfaces/recipe.interface';
+import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 
 @Component({
   selector: 'app-recipe-collection',
-  imports: [],
+  imports: [InputTextModule, ButtonModule, FormsModule, RecipeCardComponent],
   templateUrl: './recipe-collection.component.html',
-  styleUrl: './recipe-collection.component.scss'
+  styleUrl: './recipe-collection.component.scss',
 })
 export class RecipeCollectionComponent {
+  searchTerm = '';
 
+  recipes: IRecipe[] = [
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/logo/logo.png',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+    {
+      id: 0,
+      coverImage: {
+        url: '',
+      },
+      coverImageUrl: 'assets/images/homepage.jpg',
+      title: 'Recipe 1',
+    },
+  ];
+
+  clear(): void {
+    this.searchTerm = '';
+  }
+
+  search(): void {
+    console.log(this.searchTerm);
+  }
 }

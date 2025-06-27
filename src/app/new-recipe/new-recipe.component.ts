@@ -88,7 +88,6 @@ export class NewRecipeComponent {
   }
 
   onUpload(event: FileSelectEvent): void {
-    console.log(event);
     this.uploadedFiles = event.currentFiles;
     this.uploadedFiles.forEach((file: File) => {
       this.pictures.push(new FormControl(file));
@@ -107,7 +106,6 @@ export class NewRecipeComponent {
   }
 
   onUploadCoverPicture(event: FileSelectEvent): void {
-    console.log(event);
     this.uploadedCoverPicture = event.currentFiles[0];
     this.coverPicture.setValue(new FormControl(event.currentFiles[0]));
     this.uploadedCoverPicture = undefined;

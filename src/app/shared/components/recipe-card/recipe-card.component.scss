@@ -1,0 +1,31 @@
+@use "../../overrides/variables.scss" as vars;
+
+.card {
+  max-width: 200px;
+  max-height: 400px;
+  height: 100%;
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+
+  &:hover {
+    cursor: pointer;
+    border: 1px solid vars.$crackedPepper;
+    box-shadow: 2px 2px 2px;
+  }
+
+  .image {
+    width: 100%;
+    height: 60%;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .title {
+    padding: 10px;
+  }
+}

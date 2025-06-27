@@ -93,3 +93,16 @@
     background: vars.$farro;
   }
 }
+
+.search .p-button,
+.clear .p-button {
+  color: vars.$whiteFlour;
+  background: vars.$herbalWash;
+  height: 36px;
+
+  &:hover {
+    color: vars.$crackedPepper;
+    background: vars.$whiteFlour;
+    border: 1px solid vars.$herbalWash;
+  }
+}
