@@ -85,6 +85,54 @@
         minutes
       </div>
       <br />
+      <div>
+        <label for="coverPicture">Cover Picture: </label>
+        <p-fileupload
+          url="https://www.primefaces.org/cdn/api/upload.php"
+          (onUpload)="onUploadCoverPicture($event)"
+          [multiple]="false"
+          accept="image/*"
+          maxFileSize="1000000"
+          mode="advanced"
+        >
+          <ng-template #empty>
+            <div>Drag and drop files to here to upload.</div>
+          </ng-template>
+          <ng-template #content>
+            @if (uploadedCoverPicture) {
+            <ul>
+              <li>{{ uploadedCoverPicture.name }} - {{ uploadedCoverPicture.size }} bytes</li>
+            </ul>
+            }
+          </ng-template>
+        </p-fileupload>
+      </div>
+      <div formArrayName="pictures">
+        <label for="pictures">Pictures: </label>
+        <p-fileupload
+          url="https://www.primefaces.org/cdn/api/upload.php"
+          (onUpload)="onUpload($event)"
+          [multiple]="true"
+          accept="image/*"
+          maxFileSize="1000000"
+          mode="advanced"
+        >
+          <ng-template #empty>
+            <div>Drag and drop files to here to upload.</div>
+          </ng-template>
+          <ng-template #content>
+            @if (uploadedFiles.length) {
+            <ul>
+              @for (file of uploadedFiles; track $index) {
+              <li>{{ file.name }} - {{ file.size }} bytes</li>
+              }
+            </ul>
+            }
+          </ng-template>
+        </p-fileupload>
+      </div>
+      <br />
+      <br />
       <p-button
         type="submit"
         class="submit-recipe"
