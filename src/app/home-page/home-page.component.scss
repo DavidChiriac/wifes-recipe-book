@@ -3,6 +3,7 @@
 .homepage {
   width: 100%;
   height: 100%;
+  padding: 20px;
   overflow: hidden;
   font-family: "MyCustomFont", sans-serif;
 
@@ -11,11 +12,11 @@
     text-align: center;
 
     .title {
-      font-size: 6rem;
+      font-size: 5rem;
     }
 
     .description {
-      font-size: 2rem;
+      font-size: 1.7rem;
       width: 70%;
       text-align: center;
       margin: auto;
