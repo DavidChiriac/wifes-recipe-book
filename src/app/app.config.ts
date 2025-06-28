@@ -12,9 +12,12 @@ import Aura from '@primeng/themes/aura';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import {
   provideNgxWebstorage,
+  withLocalStorage,
   withNgxWebstorageConfig,
   withSessionStorage,
 } from 'ngx-webstorage';
+import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -35,7 +38,22 @@ export const appConfig: ApplicationConfig = {
     }),
     provideNgxWebstorage(
       withNgxWebstorageConfig({ separator: ':', caseSensitive: true }),
-      withSessionStorage()
+      withSessionStorage(),
+      withLocalStorage()
     ),
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: true,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '109546617287-8v3o6quekpeituq54h5cebmg3ushfvk7.apps.googleusercontent.com'
+            ),
+          },
+        ],
+      } as SocialAuthServiceConfig,
+    },
   ],
 };

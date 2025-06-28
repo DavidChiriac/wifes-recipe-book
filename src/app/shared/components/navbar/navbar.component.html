@@ -2,17 +2,17 @@
   <div class="left" [routerLink]="''">
     <img src="assets/logo/logo.png" alt="wife's recipe book logo" />
     @if (!isMobile) {
-    <h1 class="title">Home</h1>
+      <h1 class="title">Home</h1>
     }
   </div>
   <div class="navigation">
     @if (signedIn) {
-    <p-button
-      class="add-recipe"
-      [ngClass]="{ mobile: isMobile }"
-      label="+Add"
-      [routerLink]="'/new-recipe'"
-    />
+      <p-button
+        class="add-recipe"
+        [ngClass]="{ mobile: isMobile }"
+        label="+Add"
+        [routerLink]="'/new-recipe'"
+      />
     }
     <p-button
       class="recipe-collection"
@@ -21,29 +21,32 @@
       [routerLink]="'/recipe-collection'"
     />
 
-    @if(!isMobile){ @if (signedIn) {
-    <p-button
-      class="my-recipes"
-      [ngClass]="{ mobile: isMobile }"
-      label="My Recipes"
-      [routerLink]="'/my-recipes'"
-    />
-    } @if(signedIn) {
-    <p-button
-      class="sign-in"
-      [ngClass]="{ mobile: isMobile }"
-      label="Sign Out"
-      (onClick)="signOut()"
-    />
-    } } @else { @if (signedIn) {
-    <p-menubar [model]="items" />
-    } } @if (!signedIn) {
-    <p-button
-      class="sign-in"
-      [ngClass]="{ mobile: isMobile }"
-      label="Sign In"
-      (onClick)="signIn()"
-    />
+    @if(!isMobile){ 
+      @if (signedIn) {
+        <p-button
+          class="my-recipes"
+          [ngClass]="{ mobile: isMobile }"
+          label="My Recipes"
+          [routerLink]="'/my-recipes'"
+        />
+      } 
+      @if(signedIn) {
+        <p-button
+          class="sign-in"
+          GoogleSigninButtonDirective 
+          [ngClass]="{ mobile: isMobile }"
+          label="Sign Out"
+          (onClick)="signOut()"
+        />
+        <div class="user-image">
+          <img src="{{ user.photoUrl }}" [pTooltip]="user.name" tooltipPosition="bottom" referrerpolicy="no-referrer" [alt]="user.name">
+        </div>
+      } 
+    } @else if (signedIn) {
+      <p-menubar [model]="items" />
+    } 
+    @if (!signedIn) {
+      <asl-google-signin-button class="login-button" type='icon' size='medium'></asl-google-signin-button>
     }
   </div>
 </div>
