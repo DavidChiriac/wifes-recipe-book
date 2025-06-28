@@ -69,7 +69,6 @@ export class NavbarComponent implements OnInit {
     if (!cachedUser) {
       this.authService.authState.pipe(untilDestroyed(this)).subscribe({
         next: (user) => {
-          console.log(user);
           this.localStorageService.store('user', user);
           this.localAuthService.user$.next(user);
           this.user = user;
@@ -85,6 +84,7 @@ export class NavbarComponent implements OnInit {
 
   signOut(): void {
     this.localStorageService.clear('user');
+    this.authService.signOut();
     this.signIn();
   }
 }
