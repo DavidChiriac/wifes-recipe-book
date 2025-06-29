@@ -18,6 +18,7 @@ import {
 } from 'ngx-webstorage';
 import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
 import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+import { environment } from '../environments/environment.prod';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -48,9 +49,7 @@ export const appConfig: ApplicationConfig = {
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(
-              '109546617287-8v3o6quekpeituq54h5cebmg3ushfvk7.apps.googleusercontent.com'
-            ),
+            provider: new GoogleLoginProvider(environment.clientID),
           },
         ],
       } as SocialAuthServiceConfig,
