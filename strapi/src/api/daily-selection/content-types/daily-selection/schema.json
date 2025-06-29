@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "daily_selections",
+  "info": {
+    "singularName": "daily-selection",
+    "pluralName": "daily-selections",
+    "displayName": "DailySelection"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "recipes": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::recipe.recipe"
+    }
+  }
+}

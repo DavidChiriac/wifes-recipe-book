@@ -99,7 +99,7 @@ export class NewRecipeComponent implements OnInit {
             Validators.required
           ),
           preparation: new FormControl(recipe.preparation),
-          hours: new FormControl(parseInt(recipe.preparationTime.hour)),
+          hours: new FormControl(parseInt(recipe.preparationTime.hours)),
           minutes: new FormControl(parseInt(recipe.preparationTime.minutes)),
           coverPicture: new FormControl(recipe.coverImageUrl),
           pictures: new FormArray([
@@ -147,18 +147,14 @@ export class NewRecipeComponent implements OnInit {
     });
 
     return {
-      coverImage: {
-        url: '',
-      },
       coverImageUrl: '',
       title: form.controls['name'].getRawValue(),
       slug: this.slug ? this.slug : undefined,
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients'].getRawValue(),
-      images: [],
       imagesUrls: [],
       preparationTime: {
-        hour: form.controls['hour'].getRawValue(),
+        hours: form.controls['hour'].getRawValue(),
         minutes: form.controls['minutes'].getRawValue(),
       },
     };

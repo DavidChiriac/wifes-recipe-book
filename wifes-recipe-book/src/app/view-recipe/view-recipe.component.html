@@ -19,14 +19,14 @@
             <div class="card">
                 <div class="font-bold">Preparation: </div>
                 <br />
-                <div class="font-italic">{{recipe.preparation}}</div>
+                <div class="font-italic" [innerHTML]="recipe.preparation | markdown | async"></div>
             </div>
             <br />
             <div class="card">
                 <span class="font-bold">Preparation Time: </span>
                     <span class="font-italic">
-                        @if (recipe.preparationTime.hour && recipe.preparationTime.hour !== '0') {
-                        {{recipe.preparationTime.hour}} hour@if (recipe.preparationTime.hour !== '1') {s}
+                        @if (recipe.preparationTime.hours && recipe.preparationTime.hours !== '0') {
+                        {{recipe.preparationTime.hours}} hour@if (recipe.preparationTime.hours !== '1') {s}
                         }
                         @if (recipe.preparationTime.minutes && recipe.preparationTime.minutes !== '0') {
                         {{recipe.preparationTime.minutes}} minute@if (recipe.preparationTime.minutes !== '1') {s}

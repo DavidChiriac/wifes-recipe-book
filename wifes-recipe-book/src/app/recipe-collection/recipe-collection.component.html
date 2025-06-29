@@ -15,5 +15,5 @@
     </div>
   </div>
   <br/>
-  <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.rows ?? 20" [totalRecords]="totalRecords" [rowsPerPageOptions]="[20, 50, 100]" />
+  <p-paginator (onPageChange)="onLazyLoad($event)" [alwaysShow]="true" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords"/>
 </div>

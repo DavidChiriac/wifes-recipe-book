@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { RecipesService } from '../shared/services/recipes.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-recipe-collection',
   imports: [
@@ -18,40 +21,35 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
   templateUrl: './recipe-collection.component.html',
   styleUrl: './recipe-collection.component.scss',
 })
-export class RecipeCollectionComponent {
+export class RecipeCollectionComponent implements OnInit {
   searchTerm = '';
 
-  recipes: IRecipe[] = [
-    {
-      id: 0,
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: 'assets/images/homepage.jpg',
-      title: 'Recipe 1',
-      slug: 'recipe-1',
-      preparation: '',
-      ingredients: [],
-      images: [],
-      imagesUrls: [],
-      preparationTime: {
-        hour: '',
-        minutes: '',
-      },
-    },
-  ];
+  recipes: IRecipe[] = [];
 
   requestParams: {
-    page: number | undefined;
+    pageNumber: number | undefined;
+    pageSize: number | undefined;
     first: number | undefined;
-    rows: number | undefined;
+    sortField: string | undefined;
+    sortDirection: 'asc' | 'desc' | undefined;
   } = {
-    page: 0,
+    pageNumber: 0,
+    pageSize: 20,
     first: 0,
-    rows: 20,
+    sortField: undefined,
+    sortDirection: undefined,
   };
 
+  sortField: string | undefined;
+  sortDirection: 'asc' | 'desc' | undefined;
+
   totalRecords = 0;
+
+  constructor(private readonly recipesService: RecipesService) {}
+
+  ngOnInit(): void {
+    this.onLazyLoad();
+  }
 
   clear(): void {
     this.searchTerm = '';
@@ -61,15 +59,25 @@ export class RecipeCollectionComponent {
     console.log(this.searchTerm);
   }
 
-  onLazyLoad(event: PaginatorState): void {
-    this.requestParams = {
-      page: event.page,
-      first: event.first,
-      rows: event.rows,
-    };
+  onLazyLoad(event?: PaginatorState): void {
+    if (event) {
+      this.requestParams = {
+        pageNumber: event.page,
+        pageSize: event.rows,
+        first: event.first,
+        sortField: this.sortField,
+        sortDirection: this.sortDirection,
+      };
+    }
 
-    //TODO request
+    console.log(this.requestParams);
 
-    this.totalRecords = 100;
+    this.recipesService
+      .getRecipes(this.requestParams)
+      .pipe(untilDestroyed(this))
+      .subscribe((recipes) => {
+        this.recipes = [...recipes.data];
+        this.totalRecords = recipes.meta.total;
+      });
   }
 }

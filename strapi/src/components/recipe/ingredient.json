@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_recipe_ingredients",
+  "info": {
+    "displayName": "ingredient"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "quantity": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
