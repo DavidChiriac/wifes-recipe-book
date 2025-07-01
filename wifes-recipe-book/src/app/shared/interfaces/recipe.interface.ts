@@ -1,10 +1,10 @@
 export interface IRecipe {
   id?: number;
-  coverImageUrl: string;
+  coverImage?: { url: string; id: string; name: string };
   title: string;
   slug?: string;
   preparation: string;
   ingredients: { name: string; quantity: string }[];
-  imagesUrls: string[];
-  preparationTime: { hours: string; minutes: string };
+  images?: { url: string; id: string; name: string }[];
+  preparationTime?: { hours: string; minutes: string };
 }

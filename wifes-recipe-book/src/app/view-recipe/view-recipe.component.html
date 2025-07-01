@@ -35,12 +35,12 @@
             </div>
         </div>
         <div class="cover-image w-4">
-            <img [src]="recipe.coverImageUrl" [alt]="recipe.title" />
+            <img [src]="recipe.coverImage" [alt]="recipe.title" />
         </div>
     </div>
     <br />
     <div class="small-images">
-        @for (image of recipe.imagesUrls; track $index) {
+        @for (image of recipe.images; track $index) {
         <div class="image">
             <p-image
                 [src]="image"

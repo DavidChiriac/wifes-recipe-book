@@ -39,6 +39,7 @@ import { EditorModule } from 'primeng/editor';
 })
 export class NewRecipeComponent implements OnInit {
   recipeForm = new FormGroup({
+    id: new FormControl(),
     name: new FormControl('', Validators.required),
     ingredients: new FormArray(
       [
@@ -53,14 +54,14 @@ export class NewRecipeComponent implements OnInit {
     preparation: new FormControl(''),
     hours: new FormControl(0),
     minutes: new FormControl(30),
-    coverPicture: new FormControl(),
-    pictures: new FormArray([] as FormControl[]),
+    coverImage: new FormControl(),
+    images: new FormArray([] as FormControl[]),
   });
 
   uploadedFiles: File[] = [];
-  uploadedCoverPicture: File | undefined;
+  uploadedcoverImage: File | undefined;
 
-  slug = '';
+  slug = 'margarina';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -75,6 +76,7 @@ export class NewRecipeComponent implements OnInit {
         this.populateForm();
       }
     });
+    this.populateForm();
   }
 
   populateForm(): void {
@@ -83,10 +85,11 @@ export class NewRecipeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((recipe) => {
         this.recipeForm = new FormGroup({
+          id: new FormControl(recipe.id),
           name: new FormControl(recipe.title, Validators.required),
           ingredients: new FormArray(
             [
-              ...recipe.ingredients.map(
+              ...recipe.ingredients?.map(
                 (ingredient) =>
                   new FormGroup({
                     id: new FormControl(uuidv4()),
@@ -101,17 +104,49 @@ export class NewRecipeComponent implements OnInit {
             Validators.required
           ),
           preparation: new FormControl(recipe.preparation),
-          hours: new FormControl(parseInt(recipe.preparationTime.hours)),
-          minutes: new FormControl(parseInt(recipe.preparationTime.minutes)),
-          coverPicture: new FormControl(recipe.coverImageUrl),
-          pictures: new FormArray([
-            ...recipe.imagesUrls.map((image) => new FormControl(image)),
-          ]),
+          hours: new FormControl(parseInt(recipe.preparationTime?.hours || '')),
+          minutes: new FormControl(
+            parseInt(recipe.preparationTime?.minutes || '')
+          ),
+          coverImage: new FormControl(''),
+          images: new FormArray([] as FormControl[]),
         });
+
+        (recipe.images ?? []).forEach((image) => {
+          this.uploadedFiles.push(new File([image.url], image.name));
+        });
+
+        this.uploadedcoverImage = new File(
+          [recipe.coverImage?.url ?? ''],
+          recipe.coverImage?.name ?? ''
+        );
       });
   }
 
   onSubmit(): void {
+    if (this.images.length > 0) {
+      this.recipesService
+        .uploadImages(this.images.getRawValue())
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => {
+          this.images.clear();
+          response.forEach((image: { documentId: string }) => {
+            this.images.push(new FormControl(image.documentId));
+          });
+        });
+    }
+
+    if (Boolean(this.coverImage.getRawValue())) {
+      const filesArray = new FormArray([this.coverImage.value]);
+
+      this.recipesService
+        .uploadImages(filesArray.getRawValue())
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => {
+          this.coverImage.setValue(new FormControl(response[0].documentId));
+        });
+    }
+
     console.warn(this.recipeForm.value);
     if (!this.slug || this.slug === '') {
       this.recipesService
@@ -131,35 +166,21 @@ export class NewRecipeComponent implements OnInit {
   }
 
   transformFormIntoRecipe(form: FormGroup): IRecipe {
-    console.log({
-      coverImage: {
-        url: '',
-      },
-      coverImageUrl: '',
+    const recipe: IRecipe = {
+      id: form.controls['id'].getRawValue(),
+      coverImage: form.controls['coverImage'].getRawValue(),
       title: form.controls['name'].getRawValue(),
       slug: this.slug ? this.slug : undefined,
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients'].getRawValue(),
       images: [],
-      imagesUrls: [],
       preparationTime: {
-        hour: form.controls['hour'].getRawValue(),
-        minutes: form.controls['minutes'].getRawValue(),
-      },
-    });
-
-    return {
-      coverImageUrl: '',
-      title: form.controls['name'].getRawValue(),
-      slug: this.slug ? this.slug : undefined,
-      preparation: form.controls['preparation'].getRawValue(),
-      ingredients: form.controls['ingredients'].getRawValue(),
-      imagesUrls: [],
-      preparationTime: {
-        hours: form.controls['hour'].getRawValue(),
+        hours: form.controls['hours'].getRawValue(),
         minutes: form.controls['minutes'].getRawValue(),
       },
     };
+
+    return recipe;
   }
 
   addNewIngredient(): void {
@@ -184,35 +205,37 @@ export class NewRecipeComponent implements OnInit {
     return this.recipeForm.get('ingredients') as FormArray;
   }
 
-  get pictures(): FormArray<FormControl> {
-    return this.recipeForm.get('pictures') as FormArray;
+  get images(): FormArray<FormControl> {
+    return this.recipeForm.get('images') as FormArray;
   }
 
-  get coverPicture(): FormControl {
-    return this.recipeForm.get('coverPicture') as FormControl;
+  get coverImage(): FormControl {
+    return this.recipeForm.get('coverImage') as FormControl;
   }
 
   onUpload(event: FileSelectEvent): void {
-    this.uploadedFiles = event.currentFiles;
-    this.uploadedFiles.forEach((file: File) => {
-      this.pictures.push(new FormControl(file));
+    event.currentFiles.forEach((file: File) => {
+      this.images.push(new FormControl(file));
     });
-    this.uploadedFiles = [];
+    console.log(this.images);
   }
 
   onRemove(event: FileRemoveEvent): void {
-    this.pictures.removeAt(
-      this.pictures.getRawValue().findIndex((file) => file === event.file)
+    this.images.removeAt(
+      this.images.getRawValue().findIndex((file) => file === event.file)
     );
   }
 
-  onRemoveCoverPicture(): void {
-    this.coverPicture.setValue(undefined);
+  onRemovecoverImage(): void {
+    this.coverImage.setValue(undefined);
   }
 
-  onUploadCoverPicture(event: FileSelectEvent): void {
-    this.uploadedCoverPicture = event.currentFiles[0];
-    this.coverPicture.setValue(new FormControl(event.currentFiles[0]));
-    this.uploadedCoverPicture = undefined;
+  onUploadcoverImage(event: FileSelectEvent): void {
+    this.coverImage.setValue(new FormControl(event.currentFiles[0] as File));
+    console.log(this.coverImage);
+  }
+
+  removeFile(file: File): void {
+    this.uploadedFiles = this.uploadedFiles.filter((image) => image !== file);
   }
 }

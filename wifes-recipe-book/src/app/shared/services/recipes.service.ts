@@ -107,33 +107,84 @@ export class RecipesService {
   }
 
   createRecipe(recipe: IRecipe): Observable<IRecipe> {
-    return of();
+    return this.http
+      .post<{ data: IRecipe }>(environment.apiUrl + '/api/recipes', {
+        ...this.createRecipeMapper(recipe),
+      })
+      .pipe(map((recipe) => recipe.data));
   }
 
   editRecipe(recipe: IRecipe): Observable<IRecipe> {
-    return of();
+    return this.http
+      .put<{ data: IRecipe }>(
+        environment.apiUrl + '/api/recipes/' + recipe.id,
+        {
+          data: { ...this.createRecipeMapper(recipe) },
+          meta: {},
+        }
+      )
+      .pipe(map((recipe) => recipe.data));
   }
 
   deleteRecipe(recipe: IRecipe): Observable<void> {
     return of();
   }
 
+  uploadImages(files: File[]): Observable<any> {
+    const formData = new FormData();
+    console.log(files);
+    files.forEach((file) => {
+      formData.append('files', file, file.name);
+    });
+    return this.http.post(environment.apiUrl + '/api/upload', formData);
+  }
+
   mapRecipe(recipe: any): IRecipe {
     return {
-      coverImageUrl:
-        (environment.prod ? '' : environment.apiUrl) + recipe.coverImage.url,
-      title: recipe.title,
-      preparation: recipe.preparation,
-      ingredients: recipe.ingredients,
-      imagesUrls: recipe.images?.map(
-        (image: { url: string }) =>
-          (environment.prod ? '' : environment.apiUrl) + image.url
+      id: recipe.id,
+      coverImage: {
+        url:
+          (environment.prod ? '' : environment.apiUrl) + recipe?.coverImage.url,
+        id: recipe.coverImage.id,
+        name: recipe.coverImage.name,
+      },
+      title: recipe?.title,
+      preparation: recipe?.preparation,
+      ingredients: recipe?.ingredients,
+      images: recipe?.images?.map(
+        (image: { url: string; id: string; name: string }) => {
+          return {
+            url: (environment.prod ? '' : environment.apiUrl) + image.url,
+            id: image.id,
+            name: image.name,
+          };
+        }
       ),
       preparationTime: {
-        hours: recipe.preparationTime?.hours.toString(),
-        minutes: recipe.preparationTime?.minutes.toString(),
+        hours: recipe?.preparationTime?.hours.toString(),
+        minutes: recipe?.preparationTime?.minutes.toString(),
       },
-      slug: recipe.slug,
+      slug: recipe?.slug,
+    };
+  }
+
+  createRecipeMapper(recipe: IRecipe): any {
+    const body = {
+      ...recipe,
+      ingredients: [
+        ...recipe?.ingredients.map((ingredient) => {
+          return { ingredient: ingredient.name, quantity: ingredient.quantity };
+        }),
+      ],
+    };
+
+    delete body['id'];
+    delete body['slug'];
+    delete body['coverImage'];
+    delete body['images'];
+
+    return {
+      ...body,
     };
   }
 }
