@@ -7,5 +7,4 @@ export interface IRecipe {
   ingredients: { name: string; quantity: string }[];
   imagesUrls: string[];
   preparationTime: { hours: string; minutes: string };
-  enabled?: boolean;
 }

@@ -34,11 +34,4 @@ export class ExtendedCardComponent {
       .pipe(untilDestroyed(this))
       .subscribe();
   }
-
-  toggleStatus(): void {
-    this.recipesService
-      .editRecipe({ ...this.recipe, enabled: !this.recipe.enabled })
-      .pipe(untilDestroyed(this))
-      .subscribe((response) => (this.recipe = { ...response }));
-  }
 }

@@ -70,8 +70,6 @@ export class RecipeCollectionComponent implements OnInit {
       };
     }
 
-    console.log(this.requestParams);
-
     this.recipesService
       .getRecipes(this.requestParams)
       .pipe(untilDestroyed(this))

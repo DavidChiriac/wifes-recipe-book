@@ -57,6 +57,11 @@
       "options": {
         "pattern": "title"
       }
+    },
+    "author": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

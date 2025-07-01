@@ -20,6 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
+import { EditorModule } from 'primeng/editor';
 
 @UntilDestroy()
 @Component({
@@ -31,6 +32,7 @@ import { IRecipe } from '../shared/interfaces/recipe.interface';
     TextareaModule,
     FormsModule,
     FileUploadModule,
+    EditorModule,
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',

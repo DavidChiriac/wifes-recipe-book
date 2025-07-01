@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "wifes-repice-book": {
+    "wifes-recipe-book": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/wifes-repice-book",
+            "outputPath": "dist/wifes-recipe-book",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -77,10 +77,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "wifes-repice-book:build:production"
+              "buildTarget": "wifes-recipe-book:build:production"
             },
             "development": {
-              "buildTarget": "wifes-repice-book:build:development"
+              "buildTarget": "wifes-recipe-book:build:development"
             }
           },
           "defaultConfiguration": "development"

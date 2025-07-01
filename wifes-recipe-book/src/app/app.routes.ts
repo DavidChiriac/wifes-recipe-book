@@ -5,6 +5,7 @@ import { MyRecipesComponent } from './my-recipes/my-recipes.component';
 import { NewRecipeComponent } from './new-recipe/new-recipe.component';
 import { ViewRecipeComponent } from './view-recipe/view-recipe.component';
 import { socialAuthGuard } from './shared/guards/auth/social-auth.guard';
+import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent, pathMatch: 'full' },
@@ -25,4 +26,5 @@ export const routes: Routes = [
     component: MyRecipesComponent,
     canActivate: [socialAuthGuard],
   },
+  { path: 'auth/google/callback', component: AuthCallbackComponent },
 ];

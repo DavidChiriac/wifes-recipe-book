@@ -38,15 +38,19 @@
           label="Sign Out"
           (onClick)="signOut()"
         />
-        <div class="user-image">
-          <img [src]="user.photoUrl" [pTooltip]="user.name" tooltipPosition="bottom" referrerpolicy="no-referrer" [alt]="user.name">
-        </div>
       } 
     } @else if (signedIn) {
       <p-menubar [model]="items" />
     } 
     @if (!signedIn) {
-      <asl-google-signin-button class="login-button" type='standard' size='medium'></asl-google-signin-button>
+      <p-button
+          class="sign-in"
+          GoogleSigninButtonDirective 
+          [ngClass]="{ mobile: isMobile }"
+          label="Sign In"
+          (onClick)="sign()"
+        />
+      <!-- <asl-google-signin-button class="login-button" type='standard' size='medium'></asl-google-signin-button> -->
     }
   </div>
 </div>

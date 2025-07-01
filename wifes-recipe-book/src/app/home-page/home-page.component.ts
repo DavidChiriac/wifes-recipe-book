@@ -2,11 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { DeviceService } from '../shared/services/device.service';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
+import { LocalAuthService } from '../shared/services/local-auth.service';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +24,10 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     private readonly deviceService: DeviceService,
-    private readonly recipesService: RecipesService
+    private readonly recipesService: RecipesService,
+    private readonly route: ActivatedRoute,
+    private readonly localAuthService: LocalAuthService,
+    private readonly localStorageService: LocalStorageService
   ) {
     this.isMobile = deviceService.isMobile();
   }
@@ -32,7 +37,6 @@ export class HomePageComponent implements OnInit {
       .getRecommendedRecipes()
       .pipe(untilDestroyed(this))
       .subscribe((recipes) => {
-        console.log(recipes);
         this.recommendedRecipes = [...recipes];
       });
   }

@@ -4,6 +4,7 @@ import { map, Observable, of } from 'rxjs';
 import { IRecipe } from '../interfaces/recipe.interface';
 import { environment } from '../../../environments/environment';
 import qs from 'qs';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,10 @@ export class RecipesService {
       encodeValuesOnly: true,
     }
   );
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly localStorageService: LocalStorageService
+  ) {}
 
   getRecipes(params: {
     pageNumber: number | undefined;
@@ -71,6 +75,35 @@ export class RecipesService {
           `/api/recipes?filters[slug][$eq]=${slug}&${this.recipesQuery}`
       )
       .pipe(map((response) => this.mapRecipe(response.data[0])));
+  }
+
+  getMyRecipes(params: {
+    pageNumber: number | undefined;
+    pageSize: number | undefined;
+    sortField: string | undefined;
+    sortDirection: string | undefined;
+  }): Observable<{ data: IRecipe[]; meta: { total: number } }> {
+    let sorting = '';
+    if (params.sortDirection && params.sortField) {
+      sorting += `&sort=${params.sortField}:${params.sortDirection}`;
+    }
+    return this.http
+      .get<{ data: IRecipe[]; meta: { total: number } }>(
+        environment.apiUrl +
+          `/api/recipes?${this.recipesQuery}&filters[author][email][$eq]=${
+            this.localStorageService.retrieve('user').email
+          }&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
+            params.pageSize
+          }${sorting}`
+      )
+      .pipe(
+        map((response) => {
+          return {
+            data: response.data.map((recipe) => this.mapRecipe(recipe)),
+            meta: response.meta,
+          };
+        })
+      );
   }
 
   createRecipe(recipe: IRecipe): Observable<IRecipe> {

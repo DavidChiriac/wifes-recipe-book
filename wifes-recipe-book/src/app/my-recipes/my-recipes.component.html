@@ -4,7 +4,7 @@
     </div>
     <div class="search-bar">
         <input pInputText [(ngModel)]="searchTerm"/>
-        <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="search()" label=""/>
+        <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="onLazyLoad()" label=""/>
         <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
     </div>
     <div class="recipes-container">
@@ -13,5 +13,5 @@
             <br/>
         }
     </div>
-    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.rows ?? 20" [totalRecords]="totalRecords" [rowsPerPageOptions]="[20, 50, 100]" />
+    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="false" />
 </div>
