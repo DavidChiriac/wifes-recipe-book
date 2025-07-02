@@ -11,7 +11,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "title": {
       "type": "string"
     },
     "coverImage": {
@@ -23,9 +23,6 @@
         "videos",
         "audios"
       ]
-    },
-    "title": {
-      "type": "string"
     },
     "preparation": {
       "type": "richtext"

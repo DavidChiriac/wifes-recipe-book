@@ -106,20 +106,28 @@ export class RecipesService {
       );
   }
 
-  createRecipe(recipe: IRecipe): Observable<IRecipe> {
+  createRecipe(
+    recipe: IRecipe,
+    existingImagesIds: { id: string; name: string; url: string }[] = []
+  ): Observable<IRecipe> {
     return this.http
       .post<{ data: IRecipe }>(environment.apiUrl + '/api/recipes', {
-        ...this.createRecipeMapper(recipe),
+        ...this.createRecipeMapper(recipe, existingImagesIds),
       })
       .pipe(map((recipe) => recipe.data));
   }
 
-  editRecipe(recipe: IRecipe): Observable<IRecipe> {
+  editRecipe(
+    recipe: IRecipe,
+    existingImagesIds: { id: string; name: string; url: string }[] = []
+  ): Observable<IRecipe> {
     return this.http
       .put<{ data: IRecipe }>(
         environment.apiUrl + '/api/recipes/' + recipe.id,
         {
-          data: { ...this.createRecipeMapper(recipe) },
+          data: {
+            ...this.createRecipeMapper(recipe, existingImagesIds),
+          },
           meta: {},
         }
       )
@@ -132,7 +140,6 @@ export class RecipesService {
 
   uploadImages(files: File[]): Observable<any> {
     const formData = new FormData();
-    console.log(files);
     files.forEach((file) => {
       formData.append('files', file, file.name);
     });
@@ -141,13 +148,16 @@ export class RecipesService {
 
   mapRecipe(recipe: any): IRecipe {
     return {
-      id: recipe.id,
-      coverImage: {
-        url:
-          (environment.prod ? '' : environment.apiUrl) + recipe?.coverImage.url,
-        id: recipe.coverImage.id,
-        name: recipe.coverImage.name,
-      },
+      id: recipe.documentId,
+      coverImage: recipe.coverImage
+        ? {
+            url:
+              (environment.prod ? '' : environment.apiUrl) +
+              recipe?.coverImage?.url,
+            id: recipe.coverImage?.id,
+            name: recipe.coverImage?.name,
+          }
+        : undefined,
       title: recipe?.title,
       preparation: recipe?.preparation,
       ingredients: recipe?.ingredients,
@@ -168,20 +178,28 @@ export class RecipesService {
     };
   }
 
-  createRecipeMapper(recipe: IRecipe): any {
+  createRecipeMapper(
+    recipe: IRecipe,
+    existingImagesIds: { id: string; name: string; url: string }[]
+  ): any {
+    console.log(recipe);
     const body = {
       ...recipe,
       ingredients: [
         ...recipe?.ingredients.map((ingredient) => {
-          return { ingredient: ingredient.name, quantity: ingredient.quantity };
+          return { name: ingredient.name, quantity: ingredient.quantity };
         }),
       ],
+      images: [
+        ...(recipe.images ?? []),
+        ...existingImagesIds.map((image) => image.id),
+      ],
+      coverImage: recipe.coverImage,
     };
 
     delete body['id'];
     delete body['slug'];
-    delete body['coverImage'];
-    delete body['images'];
+    delete body['documentId'];
 
     return {
       ...body,

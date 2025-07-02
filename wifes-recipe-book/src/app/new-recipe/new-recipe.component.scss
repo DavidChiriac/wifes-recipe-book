@@ -15,4 +15,19 @@
   form {
     overflow: auto;
   }
+
+  .preview-image {
+    overflow: hidden;
+
+    .image {
+      height: 100px;
+      width: fit-content;
+
+      img {
+        height: 90%;
+        width: fit-content;
+        object-fit: contain;
+      }
+    }
+  }
 }

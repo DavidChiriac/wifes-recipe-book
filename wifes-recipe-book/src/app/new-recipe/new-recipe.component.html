@@ -21,16 +21,16 @@
         >
           <div class="flex flex-wrap row-gap-2 gap-5">
             <div>
-              <label for="ingredient">Name: </label>
+              <label for="name">Name: </label>
               <input
                 pInputText
                 [id]="'ingredients' + $index"
                 type="text"
-                formControlName="ingredient"
+                formControlName="name"
               />
             </div>
             <div>
-              <label for="ingredient">Quantity: </label>
+              <label for="qunatity">Quantity: </label>
               <input
                 pInputText
                 [id]="'ingredients' + $index"
@@ -100,15 +100,15 @@
           [showCancelButton]="false"
           [multiple]="false"
           accept="image/*"
-          maxFileSize="1000000"
+          maxFileSize="10000000"
           mode="advanced"
         >
           <ng-template #empty>
             <div>Drag and drop files to here to upload.</div>
           </ng-template>
           <ng-template #content>
-            @if (uploadedcoverImage) {
-              <div class="overflow-auto font-bold">{{ uploadedcoverImage.name }} - {{ uploadedcoverImage.size }} bytes</div>
+            @if (existingCoverImageId) {
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImageId.url"/></div> {{ existingCoverImageId.name }}</li>
             }
           </ng-template>
         </p-fileupload>
@@ -124,17 +124,17 @@
           [showCancelButton]="false"
           [multiple]="true"
           accept="image/*"
-          maxFileSize="1000000"
+          maxFileSize="10000000"
           mode="advanced"
         >
           <ng-template #empty>
             <div>Drag and drop files to here to upload.</div>
           </ng-template>
           <ng-template #content>
-            @if (uploadedFiles.length) {
+            @if (existingImagesIds.length) {
             <ul>
-              @for (file of uploadedFiles; track $index) {
-              <li class="overflow-auto font-bold"> {{ file.name }} - {{ file.size }} bytes <p-button icon="pi pi-times" (onClick)="removeFile(file)"/></li>
+              @for (file of existingImagesIds; track $index) {
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url"/></div> {{ file.name }} <p-button icon="pi pi-times" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
               }
             </ul>
             }

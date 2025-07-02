@@ -471,7 +471,6 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       'api::recipe.recipe'
     > &
       Schema.Attribute.Private;
-    name: Schema.Attribute.String;
     preparation: Schema.Attribute.RichText;
     preparationTime: Schema.Attribute.Component<
       'recipe.preparation-time',

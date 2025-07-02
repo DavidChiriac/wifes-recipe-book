@@ -1,6 +1,6 @@
 <div class="card" (click)="viewRecipe()" onkeydown="">
     <div class="image">
-        <img [src]="card.coverImage" [alt]="card.title" />
+        <img [src]="card.coverImage?.url" [alt]="card.title" />
     </div>
     <div class="title">
         {{card.title}}
