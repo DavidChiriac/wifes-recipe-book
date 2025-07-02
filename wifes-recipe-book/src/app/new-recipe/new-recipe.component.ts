@@ -60,8 +60,8 @@ export class NewRecipeComponent implements OnInit {
     images: new FormArray([] as FormControl[]),
   });
 
-  existingCoverImageId: { id: string; name: string; url: string } | undefined;
-  existingImagesIds: { id: string; name: string; url: string }[] = [];
+  existingCoverImage: { id: string; name: string; url: string } | undefined;
+  existingImages: { id: string; name: string; url: string }[] = [];
 
   slug = 'margarina';
 
@@ -112,13 +112,13 @@ export class NewRecipeComponent implements OnInit {
         });
 
         (recipe.images ?? []).forEach((image) => {
-          this.existingImagesIds.push({
+          this.existingImages.push({
             ...image,
             url: (environment.prod ? '' : environment.apiUrl) + image.url,
           });
         });
 
-        this.existingCoverImageId = {
+        this.existingCoverImage = {
           ...recipe.coverImage!,
           url:
             (environment.prod ? '' : environment.apiUrl) +
@@ -128,7 +128,7 @@ export class NewRecipeComponent implements OnInit {
   }
 
   onSubmit(): void {
-    let uploadedImageIds: string[] = [];
+    let uploadedImages: string[] = [];
 
     let uploadImages$ =
       this.images.length > 0
@@ -136,12 +136,10 @@ export class NewRecipeComponent implements OnInit {
             .uploadImages(this.images.controls.map((control) => control.value))
             .pipe(
               tap((response) => {
-                uploadedImageIds = response.map(
-                  (img: { id: string }) => img.id
-                );
+                uploadedImages = response;
                 this.images.clear();
-                uploadedImageIds.forEach((id) =>
-                  this.images.push(new FormControl(id))
+                uploadedImages.forEach((image) =>
+                  this.images.push(new FormControl(image))
                 );
               })
             )
@@ -155,13 +153,11 @@ export class NewRecipeComponent implements OnInit {
         )
       : of(null).pipe(
           tap(() => {
-            this.coverImage.setValue(this.existingCoverImageId);
+            this.coverImage.setValue(this.existingCoverImage);
           })
         );
 
-    this.existingImagesIds.forEach((id) =>
-      this.images.push(new FormControl(id))
-    );
+    this.existingImages.forEach((id) => this.images.push(new FormControl(id)));
 
     uploadImages$
       .pipe(
@@ -169,11 +165,8 @@ export class NewRecipeComponent implements OnInit {
         concatMap(() => {
           const recipeData = this.transformFormIntoRecipe(this.recipeForm);
           return this.slug
-            ? this.recipesService.editRecipe(recipeData, this.existingImagesIds)
-            : this.recipesService.createRecipe(
-                recipeData,
-                this.existingImagesIds
-              );
+            ? this.recipesService.editRecipe(recipeData, this.existingImages)
+            : this.recipesService.createRecipe(recipeData, this.existingImages);
         }),
         untilDestroyed(this)
       )
@@ -192,7 +185,7 @@ export class NewRecipeComponent implements OnInit {
       slug: this.slug ? this.slug : undefined,
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients'].getRawValue(),
-      images: [...this.images.getRawValue()?.map((image) => image.id ?? image)],
+      images: [...this.images.getRawValue()],
       preparationTime: {
         hours: form.controls['hours'].getRawValue(),
         minutes: form.controls['minutes'].getRawValue(),
@@ -253,7 +246,7 @@ export class NewRecipeComponent implements OnInit {
   }
 
   removeUploadedFile(file: { id: string }): void {
-    this.existingImagesIds = this.existingImagesIds.filter(
+    this.existingImages = this.existingImages.filter(
       (image) => image.id !== file.id
     );
   }

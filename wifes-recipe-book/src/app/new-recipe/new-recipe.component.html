@@ -107,8 +107,8 @@
             <div>Drag and drop files to here to upload.</div>
           </ng-template>
           <ng-template #content>
-            @if (existingCoverImageId) {
-              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImageId.url"/></div> {{ existingCoverImageId.name }}</li>
+            @if (existingCoverImage) {
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImage.url"/></div> {{ existingCoverImage.name }}</li>
             }
           </ng-template>
         </p-fileupload>
@@ -131,9 +131,9 @@
             <div>Drag and drop files to here to upload.</div>
           </ng-template>
           <ng-template #content>
-            @if (existingImagesIds.length) {
+            @if (existingImages.length) {
             <ul>
-              @for (file of existingImagesIds; track $index) {
+              @for (file of existingImages; track $index) {
               <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url"/></div> {{ file.name }} <p-button icon="pi pi-times" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
               }
             </ul>

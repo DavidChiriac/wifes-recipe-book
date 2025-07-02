@@ -108,25 +108,25 @@ export class RecipesService {
 
   createRecipe(
     recipe: IRecipe,
-    existingImagesIds: { id: string; name: string; url: string }[] = []
+    existingImages: { id: string; name: string; url: string }[] = []
   ): Observable<IRecipe> {
     return this.http
       .post<{ data: IRecipe }>(environment.apiUrl + '/api/recipes', {
-        ...this.createRecipeMapper(recipe, existingImagesIds),
+        ...this.createRecipeMapper(recipe, existingImages),
       })
       .pipe(map((recipe) => recipe.data));
   }
 
   editRecipe(
     recipe: IRecipe,
-    existingImagesIds: { id: string; name: string; url: string }[] = []
+    existingImages: { id: string; name: string; url: string }[] = []
   ): Observable<IRecipe> {
     return this.http
       .put<{ data: IRecipe }>(
         environment.apiUrl + '/api/recipes/' + recipe.id,
         {
           data: {
-            ...this.createRecipeMapper(recipe, existingImagesIds),
+            ...this.createRecipeMapper(recipe, existingImages),
           },
           meta: {},
         }
@@ -180,7 +180,7 @@ export class RecipesService {
 
   createRecipeMapper(
     recipe: IRecipe,
-    existingImagesIds: { id: string; name: string; url: string }[]
+    existingImages: { id: string; name: string; url: string }[]
   ): any {
     console.log(recipe);
     const body = {
@@ -190,10 +190,9 @@ export class RecipesService {
           return { name: ingredient.name, quantity: ingredient.quantity };
         }),
       ],
-      images: [
-        ...(recipe.images ?? []),
-        ...existingImagesIds.map((image) => image.id),
-      ],
+      images: [...(recipe.images ?? []), ...existingImages].map(
+        (image) => image.id
+      ),
       coverImage: recipe.coverImage,
     };
 
