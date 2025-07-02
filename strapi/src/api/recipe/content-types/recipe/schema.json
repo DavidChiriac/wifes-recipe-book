@@ -47,14 +47,6 @@
       "component": "recipe.preparation-time",
       "repeatable": false
     },
-    "slug": {
-      "type": "customField",
-      "customField": "plugin::auto-locales-slug.auto-locales-slug",
-      "required": true,
-      "options": {
-        "pattern": "title"
-      }
-    },
     "author": {
       "type": "relation",
       "relation": "oneToOne",

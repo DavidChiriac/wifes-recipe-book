@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
@@ -15,23 +15,27 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class ExtendedCardComponent {
   @Input() recipe!: IRecipe;
 
+  @Output() deleted = new EventEmitter<boolean>();
+
   constructor(
     private readonly router: Router,
     private readonly recipesService: RecipesService
   ) {}
 
   view(): void {
-    this.router.navigate(['recipe/' + this.recipe.slug]);
+    this.router.navigate(['recipe/' + this.recipe.documentId]);
   }
 
   edit(): void {
-    this.router.navigate(['recipe/' + this.recipe.slug + '/edit']);
+    this.router.navigate(['recipe/' + this.recipe.documentId + '/edit']);
   }
 
   delete(): void {
     this.recipesService
-      .deleteRecipe(this.recipe)
+      .deleteRecipe(this.recipe.documentId ?? '')
       .pipe(untilDestroyed(this))
-      .subscribe();
+      .subscribe(() => {
+        this.deleted.emit(true);
+      });
   }
 }

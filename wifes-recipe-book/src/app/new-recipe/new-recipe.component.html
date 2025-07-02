@@ -100,6 +100,7 @@
           [showCancelButton]="false"
           [multiple]="false"
           accept="image/*"
+          [ngClass]="{'invalid': recipeForm.controls['coverImage'].invalid && !existingCoverImage}"
           maxFileSize="10000000"
           mode="advanced"
         >
@@ -108,7 +109,7 @@
           </ng-template>
           <ng-template #content>
             @if (existingCoverImage) {
-              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImage.url"/></div> {{ existingCoverImage.name }}</li>
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImage.url" alt="Cover Image"/></div> {{ existingCoverImage.name }}</li>
             }
           </ng-template>
         </p-fileupload>
@@ -134,7 +135,7 @@
             @if (existingImages.length) {
             <ul>
               @for (file of existingImages; track $index) {
-              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url"/></div> {{ file.name }} <p-button icon="pi pi-times" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url" alt="image"/></div> {{ file.name }} <p-button icon="pi pi-times" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
               }
             </ul>
             }

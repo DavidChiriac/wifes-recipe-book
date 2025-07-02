@@ -16,7 +16,7 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './view-recipe.component.scss',
 })
 export class ViewRecipeComponent implements OnInit {
-  recipe!: IRecipe;
+  recipe: IRecipe | undefined;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -27,10 +27,13 @@ export class ViewRecipeComponent implements OnInit {
     this.getRecipe(this.route.snapshot.params['id']);
   }
 
-  getRecipe(slug: string): void {
+  getRecipe(documentId: string): void {
     this.recipesService
-      .getSingleRecipe(slug)
+      .getSingleRecipe(documentId)
       .pipe(untilDestroyed(this))
-      .subscribe((recipe) => (this.recipe = { ...recipe }));
+      .subscribe((recipe) => {
+        console.log(recipe);
+        this.recipe = { ...recipe };
+      });
   }
 }

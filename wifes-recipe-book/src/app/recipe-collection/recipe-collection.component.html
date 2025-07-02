@@ -9,7 +9,7 @@
         <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
     </div>
     <div class="recipes-container">
-        @for (recipe of recipes; track recipe.id) {
+        @for (recipe of recipes; track recipe.documentId) {
             <app-recipe-card [card]="recipe"></app-recipe-card>
         }
     </div>

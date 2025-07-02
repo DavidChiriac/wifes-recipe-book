@@ -15,6 +15,6 @@ export class RecipeCardComponent {
   constructor(private readonly router: Router) {}
 
   viewRecipe(): void {
-    this.router.navigate(['/recipe/' + this.card.slug]);
+    this.router.navigate(['/recipe/' + this.card.documentId]);
   }
 }

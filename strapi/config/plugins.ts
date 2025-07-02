@@ -1,9 +1,1 @@
-module.exports = ({ env }) => ({
-	upload: {
-		config: {
-			provider: "local",
-			providerOptions: {},
-			breakpoints: false,
-		},
-	},
-});
+export default () => ({});

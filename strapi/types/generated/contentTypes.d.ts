@@ -477,14 +477,6 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       false
     >;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.String &
-      Schema.Attribute.Required &
-      Schema.Attribute.CustomField<
-        'plugin::auto-locales-slug.auto-locales-slug',
-        {
-          pattern: 'title';
-        }
-      >;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

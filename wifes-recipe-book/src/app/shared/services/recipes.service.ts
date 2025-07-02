@@ -68,13 +68,12 @@ export class RecipesService {
       );
   }
 
-  getSingleRecipe(slug: string): Observable<IRecipe> {
+  getSingleRecipe(documentId: string): Observable<IRecipe> {
     return this.http
       .get<{ data: IRecipe[] }>(
-        environment.apiUrl +
-          `/api/recipes?filters[slug][$eq]=${slug}&${this.recipesQuery}`
+        environment.apiUrl + `/api/recipes/${documentId}?${this.recipesQuery}`
       )
-      .pipe(map((response) => this.mapRecipe(response.data[0])));
+      .pipe(map((response) => this.mapRecipe(response.data)));
   }
 
   getMyRecipes(params: {
@@ -112,7 +111,11 @@ export class RecipesService {
   ): Observable<IRecipe> {
     return this.http
       .post<{ data: IRecipe }>(environment.apiUrl + '/api/recipes', {
-        ...this.createRecipeMapper(recipe, existingImages),
+        data: {
+          ...this.createRecipeMapper(recipe, existingImages),
+          author: this.localStorageService.retrieve('user').documentId,
+        },
+        meta: {},
       })
       .pipe(map((recipe) => recipe.data));
   }
@@ -123,7 +126,7 @@ export class RecipesService {
   ): Observable<IRecipe> {
     return this.http
       .put<{ data: IRecipe }>(
-        environment.apiUrl + '/api/recipes/' + recipe.id,
+        environment.apiUrl + '/api/recipes/' + recipe.documentId,
         {
           data: {
             ...this.createRecipeMapper(recipe, existingImages),
@@ -134,8 +137,10 @@ export class RecipesService {
       .pipe(map((recipe) => recipe.data));
   }
 
-  deleteRecipe(recipe: IRecipe): Observable<void> {
-    return of();
+  deleteRecipe(documentId: string): Observable<void> {
+    return this.http.delete<void>(
+      environment.apiUrl + `/api/recipes/${documentId}`
+    );
   }
 
   uploadImages(files: File[]): Observable<any> {
@@ -148,8 +153,8 @@ export class RecipesService {
 
   mapRecipe(recipe: any): IRecipe {
     return {
-      id: recipe.documentId,
-      coverImage: recipe.coverImage
+      documentId: recipe?.documentId,
+      coverImage: recipe?.coverImage
         ? {
             url:
               (environment.prod ? '' : environment.apiUrl) +
@@ -174,7 +179,6 @@ export class RecipesService {
         hours: recipe?.preparationTime?.hours.toString(),
         minutes: recipe?.preparationTime?.minutes.toString(),
       },
-      slug: recipe?.slug,
     };
   }
 
@@ -182,7 +186,6 @@ export class RecipesService {
     recipe: IRecipe,
     existingImages: { id: string; name: string; url: string }[]
   ): any {
-    console.log(recipe);
     const body = {
       ...recipe,
       ingredients: [
@@ -196,8 +199,6 @@ export class RecipesService {
       coverImage: recipe.coverImage,
     };
 
-    delete body['id'];
-    delete body['slug'];
     delete body['documentId'];
 
     return {

@@ -11,3 +11,7 @@
     padding-left: 0;
   }
 }
+
+.invalid .p-fileupload {
+  border: 1px solid red;
+}

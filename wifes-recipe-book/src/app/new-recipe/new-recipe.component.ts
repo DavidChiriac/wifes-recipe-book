@@ -23,6 +23,7 @@ import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { EditorModule } from 'primeng/editor';
 import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
+import { CommonModule } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -35,13 +36,13 @@ import { environment } from '../../environments/environment.prod';
     FormsModule,
     FileUploadModule,
     EditorModule,
+    CommonModule,
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
 })
 export class NewRecipeComponent implements OnInit {
   recipeForm = new FormGroup({
-    id: new FormControl(),
     name: new FormControl('', Validators.required),
     ingredients: new FormArray(
       [
@@ -56,14 +57,14 @@ export class NewRecipeComponent implements OnInit {
     preparation: new FormControl(''),
     hours: new FormControl(0),
     minutes: new FormControl(30),
-    coverImage: new FormControl(),
+    coverImage: new FormControl(undefined, Validators.required),
     images: new FormArray([] as FormControl[]),
   });
 
   existingCoverImage: { id: string; name: string; url: string } | undefined;
   existingImages: { id: string; name: string; url: string }[] = [];
 
-  slug = 'margarina';
+  documentId = '';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -74,20 +75,19 @@ export class NewRecipeComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
       if (params?.['id']) {
-        this.slug = params['id'];
+        this.documentId = params['id'];
+        console.log(this.documentId);
         this.populateForm();
       }
     });
-    this.populateForm();
   }
 
   populateForm(): void {
     this.recipesService
-      .getSingleRecipe(this.slug)
+      .getSingleRecipe(this.documentId)
       .pipe(untilDestroyed(this))
       .subscribe((recipe) => {
         this.recipeForm = new FormGroup({
-          id: new FormControl(recipe.id),
           name: new FormControl(recipe.title, Validators.required),
           ingredients: new FormArray(
             [
@@ -118,12 +118,14 @@ export class NewRecipeComponent implements OnInit {
           });
         });
 
-        this.existingCoverImage = {
-          ...recipe.coverImage!,
-          url:
-            (environment.prod ? '' : environment.apiUrl) +
-            recipe.coverImage?.url,
-        };
+        this.existingCoverImage = recipe.coverImage
+          ? {
+              ...recipe.coverImage!,
+              url:
+                (environment.prod ? '' : environment.apiUrl) +
+                recipe.coverImage?.url,
+            }
+          : undefined;
       });
   }
 
@@ -164,25 +166,23 @@ export class NewRecipeComponent implements OnInit {
         concatMap(() => uploadCoverImage$),
         concatMap(() => {
           const recipeData = this.transformFormIntoRecipe(this.recipeForm);
-          return this.slug
+          return this.documentId
             ? this.recipesService.editRecipe(recipeData, this.existingImages)
             : this.recipesService.createRecipe(recipeData, this.existingImages);
         }),
         untilDestroyed(this)
       )
       .subscribe((response) => {
-        this.router.navigate(['recipe/' + response.slug]);
+        this.router.navigate(['recipe/' + response.documentId]);
       });
   }
 
   transformFormIntoRecipe(form: FormGroup): IRecipe {
     const recipe: IRecipe = {
-      id: form.controls['id'].getRawValue(),
       coverImage:
-        form.controls['coverImage'].getRawValue().id ??
+        form.controls['coverImage'].getRawValue()?.id ??
         form.controls['coverImage'].getRawValue(),
       title: form.controls['name'].getRawValue(),
-      slug: this.slug ? this.slug : undefined,
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients'].getRawValue(),
       images: [...this.images.getRawValue()],
