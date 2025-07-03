@@ -13,7 +13,6 @@ export default {
 					}
 				);
 
-				console.log(recipes);
 				const shuffled = recipes.sort(() => 0.5 - Math.random());
 
 				const existing = await strapi.entityService.findMany(
@@ -24,7 +23,6 @@ export default {
 						filters: { recommended: true },
 					}
 				);
-				console.log(existing);
 
 				const newRecipes = shuffled.filter(
 					(recipe) =>
@@ -33,8 +31,6 @@ export default {
 						)
 				);
 				const selected = newRecipes.slice(0, 4);
-
-				console.log(selected);
 
 				if (selected?.length > 0) {
 					existing.forEach(async (recipe) => {
