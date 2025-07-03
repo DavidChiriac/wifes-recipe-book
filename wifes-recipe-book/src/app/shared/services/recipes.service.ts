@@ -52,19 +52,19 @@ export class RecipesService {
   getRecommendedRecipes(): Observable<IRecipe[]> {
     const query = qs.stringify(
       {
-        populate: ['recipes', 'recipes.coverImage', 'recipes.images'],
+        populate: ['coverImage'],
       },
       {
         encodeValuesOnly: true,
       }
     );
     return this.http
-      .get<{ data: { recipes: IRecipe[] } }>(
-        environment.apiUrl + `/api/daily-selection?${query}`
+      .get<{ data: IRecipe[]  }>(
+        environment.apiUrl + `/api/recipes?filters[recommended][$eq]=true&${query}`
       )
       .pipe(
         map((response) =>
-          response.data.recipes?.map((recipe) => this.mapRecipe(recipe))
+          response.data?.map((recipe) => this.mapRecipe(recipe))
         )
       );
   }

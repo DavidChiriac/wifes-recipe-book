@@ -5,41 +5,68 @@ export default {
 
 			const selectRandomRecipes = async () => {
 				const recipes = await strapi.entityService.findMany(
-				"api::recipe.recipe",
-				{ fields: ["id"], publicationState: 'live' }
+					"api::recipe.recipe",
+					{
+						fields: ["id", "recommended"],
+						publicationState: "live",
+						filtes: {$not: {recommended: true}}
+					}
 				);
 
+				console.log(recipes);
 				const shuffled = recipes.sort(() => 0.5 - Math.random());
 
 				const existing = await strapi.entityService.findMany(
-				"api::daily-selection.daily-selection",
-				{ populate: ["recipes"] }
+					"api::recipe.recipe",
+					{
+						fields: ["id", "recommended"],
+						publicationState: "live",
+						filters: { recommended: true },
+					}
 				);
+				console.log(existing);
 
-				const dailySelectionId = existing.id;
-
-				const newRecipes = shuffled.filter(recipe => !existing.recipes?.some(existingRecipe => existingRecipe.id === recipe.id))
+				const newRecipes = shuffled.filter(
+					(recipe) =>
+						!existing.recipes?.some(
+							(existingRecipe) => existingRecipe.id === recipe.id
+						)
+				);
 				const selected = newRecipes.slice(0, 4);
 
+				console.log(selected);
+
 				if (selected?.length > 0) {
-					await strapi.entityService.update(
-						"api::daily-selection.daily-selection",
-						dailySelectionId,
-						{
-							data: {
-								recipes: [...selected, ...shuffled.slice(0,4)].slice(0,4)?.map((recipe) => recipe?.id),
-							},
-							populate: ["recipes"] 
-						}
-					);
+					existing.forEach(async (recipe) => {
+						await strapi.entityService.update(
+							"api::recipe.recipe",
+							recipe?.id,
+							{
+								data: {
+									recommended: false,
+								},
+							}
+						);
+					});
+
+					[...selected, ...shuffled.slice(0, 4)]
+						.slice(0, 4)
+						?.map((recipe) => recipe?.id)
+						.forEach(async (id) => {
+							await strapi.entityService.update("api::recipe.recipe", id, {
+								data: {
+									recommended: true,
+								},
+							});
+						});
 					console.log("✅ Updated daily selection with random recipes");
 				} else {
 					console.warn("⚠️ No daily-selection found");
 				}
 			};
 
-			await selectRandomRecipes();
-			},
+			await selectRandomRecipes()
+		},
 
 		options: { rule: "0 0 * * *" },
 	},

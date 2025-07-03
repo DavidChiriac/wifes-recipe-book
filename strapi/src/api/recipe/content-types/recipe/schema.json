@@ -7,7 +7,7 @@
     "displayName": "Recipe"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
@@ -51,6 +51,11 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
+    },
+    "recommended": {
+      "type": "boolean",
+      "required": false,
+      "default": false
     }
   }
 }
