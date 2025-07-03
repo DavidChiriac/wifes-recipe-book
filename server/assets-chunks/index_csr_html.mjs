@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+export default `<!DOCTYPE html>
 <html lang="en" data-beasties-container="">
   <head>
     <meta charset="utf-8">
     <title>Wife's recipe Book</title>
-    <base href="https://davidchiriac.github.io/wifes-recipe-book/wifes-recipe-book/">
+    <base href="https://davidchiriac.github.io/wifes-recipe-book/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="logo.png">
     <link rel="stylesheet" href="https://unpkg.com/primeflex@latest/primeflex.css">
@@ -12,3 +12,4 @@
     <app-root></app-root>
   <link rel="modulepreload" href="chunk-U6JS57U5.js"><link rel="modulepreload" href="chunk-RD34HPQE.js"><script src="polyfills-B6TNHZQ6.js" type="module"></script><script src="main-B5J7TG6C.js" type="module"></script></body>
 </html>
+`;
