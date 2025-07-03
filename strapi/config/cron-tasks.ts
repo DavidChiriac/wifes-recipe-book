@@ -1,41 +1,45 @@
 export default {
 	myJob: {
-		task: ({ strapi }) => {
+		task: async ({ strapi }) => {
+			console.log("⏰ Cron job triggered");
+
 			const selectRandomRecipes = async () => {
 				const recipes = await strapi.entityService.findMany(
-					"api::recipe.recipe",
-					{
-						fields: ["id"],
-					}
+				"api::recipe.recipe",
+				{ fields: ["id"], publicationState: 'live' }
 				);
 
 				const shuffled = recipes.sort(() => 0.5 - Math.random());
-				const selected = shuffled.slice(0, 4);
 
-				// Fetch the existing single type
 				const existing = await strapi.entityService.findMany(
-					"api::daily-selection.daily-selection",
-					{
-						populate: ["recipes"],
-					}
+				"api::daily-selection.daily-selection",
+				{ populate: ["recipes"] }
 				);
 
-				const id = existing?.[0]?.id;
+				const dailySelectionId = existing.id;
 
-				// Update the single type
-				if (id) {
+				const newRecipes = shuffled.filter(recipe => !existing.recipes?.some(existingRecipe => existingRecipe.id === recipe.id))
+				const selected = newRecipes.slice(0, 4);
+
+				if (selected?.length > 0) {
 					await strapi.entityService.update(
 						"api::daily-selection.daily-selection",
-						id,
+						dailySelectionId,
 						{
 							data: {
-								recipes: selected.map((recipe) => recipe.id),
+								recipes: [...selected, ...shuffled.slice(0,4)].slice(0,4)?.map((recipe) => recipe?.id),
 							},
+							populate: ["recipes"] 
 						}
 					);
+					console.log("✅ Updated daily selection with random recipes");
+				} else {
+					console.warn("⚠️ No daily-selection found");
 				}
 			};
-		},
+
+			await selectRandomRecipes();
+			},
 
 		options: { rule: "0 0 * * *" },
 	},

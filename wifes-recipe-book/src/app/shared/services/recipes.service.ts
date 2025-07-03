@@ -18,6 +18,7 @@ export class RecipesService {
       encodeValuesOnly: true,
     }
   );
+
   constructor(
     private readonly http: HttpClient,
     private readonly localStorageService: LocalStorageService

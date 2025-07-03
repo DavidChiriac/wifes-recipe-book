@@ -419,7 +419,7 @@ export interface ApiDailySelectionDailySelection
     singularName: 'daily-selection';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
