@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'personal-website';
+  title = 'Wife\'s Recipe Book';
 
   isMobile!: boolean;
 

@@ -5,7 +5,6 @@ import { DeviceService } from '../../services/device.service';
 import { CommonModule } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
-import { GoogleSigninButtonModule } from '@abacritt/angularx-social-login';
 import { LocalStorageService } from 'ngx-webstorage';
 import { TooltipModule } from 'primeng/tooltip';
 import { environment } from '../../../../environments/environment.prod';
@@ -20,7 +19,6 @@ import { LocalAuthService } from '../../services/local-auth.service';
     ButtonModule,
     RouterModule,
     MenubarModule,
-    GoogleSigninButtonModule,
     TooltipModule,
   ],
   templateUrl: './navbar.component.html',

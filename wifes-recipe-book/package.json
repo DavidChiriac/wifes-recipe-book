@@ -8,12 +8,11 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr": "node dist/wifes-recipe-book/server/server.mjs",
-    "dev:ssr": "ng run wifes-recipe-book:serve-ssr:development",
-    "build:ssr": "ng build && ng run dist/wifes-recipe-book/server:server"
+    "build:ssr": "ng build && ng run dist/wifes-recipe-book:server",
+    "deploy-prod": "ng build --configuration production --base-href \"https://davidchiriac.github.io/wifes-recipe-book/\" && npx angular-cli-ghpages --dir=dist/wifes-recipe-book/browser"
   },
   "private": true,
   "dependencies": {
-    "@abacritt/angularx-social-login": "^2.4.0",
     "@angular/common": "^19.2.0",
     "@angular/compiler": "^19.2.0",
     "@angular/core": "^19.2.0",

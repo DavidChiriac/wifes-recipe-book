@@ -21,9 +21,6 @@ import {
   withNgxWebstorageConfig,
   withSessionStorage,
 } from 'ngx-webstorage';
-import { SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
-import { environment } from '../environments/environment.prod';
 import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
@@ -48,18 +45,6 @@ export const appConfig: ApplicationConfig = {
       withSessionStorage(),
       withLocalStorage()
     ),
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: true,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.clientID),
-          },
-        ],
-      } as SocialAuthServiceConfig,
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
