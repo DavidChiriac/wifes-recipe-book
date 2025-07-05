@@ -48,11 +48,6 @@
   }
 }
 
-.mobile .p-button {
-  font-size: 0.8rem;
-  padding: 0.2rem 0.4rem;
-}
-
 .add-recipe-homepage .p-button {
   background: vars.$crackedPepper;
   color: vars.$whiteFlour;
@@ -132,5 +127,14 @@
     background: vars.$saffronThread;
     border: 1px solid vars.$crackedPepper;
     color: vars.$crackedPepper;
+  }
+}
+
+.mobile .p-button {
+  font-size: 1rem;
+  padding: 0.4rem 0.4rem;
+
+  .p-button-label{
+    height: 1rem;
   }
 }

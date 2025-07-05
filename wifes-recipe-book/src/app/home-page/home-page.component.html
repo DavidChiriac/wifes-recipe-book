@@ -5,10 +5,9 @@
       Welcome to your recipe book! Add, View and Edit recipes as you like.<br />
       Be independent in your kitchen and your life!
     </div>
-    <br />
-    <br />
     <p-button
       class="add-recipe-homepage"
+      [ngClass]="{'mobile': isMobile}"
       label="Add new Recipe"
       [routerLink]="'/new-recipe'"
     ></p-button>
@@ -16,7 +15,9 @@
   <br/>
   <div class="recommended-recipes">
     @for (recipe of recommendedRecipes; track $index) {
-      <app-recipe-card [card]="recipe"></app-recipe-card>
+      <div class="recipe">
+        <app-recipe-card [card]="recipe"></app-recipe-card>
+      </div>
     }
   </div>
 </div>

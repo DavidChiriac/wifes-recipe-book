@@ -1,6 +1,6 @@
 <div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': !isMobile }">
   <div class="left" [routerLink]="''">
-    <img src="assets/logo/logo.png" alt="wife's recipe book logo" />
+    <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
     @if (!isMobile) {
       <h1 class="title">Home</h1>
     }
@@ -21,16 +21,14 @@
       [routerLink]="'/recipe-collection'"
     />
 
-    @if(!isMobile){ 
-      @if (signedIn) {
+    @if(signedIn){
+      @if(!isMobile){ 
         <p-button
           class="my-recipes"
           [ngClass]="{ mobile: isMobile }"
           label="My Recipes"
           [routerLink]="'/my-recipes'"
         />
-      } 
-      @if(signedIn) {
         <p-button
           class="sign-in"
           GoogleSigninButtonDirective 
@@ -38,10 +36,11 @@
           label="Sign Out"
           (onClick)="signOut()"
         />
+      } @else {
+        <p-menubar [model]="items" />
       } 
-    } @else if (signedIn) {
-      <p-menubar [model]="items" />
-    } 
+    }
+
     @if (!signedIn) {
       <p-button
           class="sign-in"

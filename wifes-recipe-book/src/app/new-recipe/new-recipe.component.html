@@ -1,4 +1,4 @@
-<div class="new-recipe">
+<div class="new-recipe" [ngClass]="{'new-recipe-mobile': isMobile, 'new-recipe': !isMobile}">
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     <div>
       <div class="header">
@@ -16,24 +16,27 @@
         <br />
         @for (item of ingredients.controls; track item.controls['id'];) {
         <div
-          class="flex gap-3 align-items-center mb-3"
+          class="flex gap-3 mb-3"
+          [ngClass]="{'align-items-center': !isMobile, 'align-items-start': isMobile}"
           [formGroupName]="$index"
         >
           <div class="flex flex-wrap row-gap-2 gap-5">
-            <div>
+            <div [ngClass]="{'flex gap-1 align-items-center': isMobile}">
               <label for="name">Name: </label>
               <input
                 pInputText
                 [id]="'ingredients' + $index"
+                [ngClass]="{mobile: isMobile}"
                 type="text"
                 formControlName="name"
               />
             </div>
-            <div>
+            <div [ngClass]="{'flex gap-1 align-items-center': isMobile}">
               <label for="qunatity">Quantity: </label>
               <input
                 pInputText
                 [id]="'ingredients' + $index"
+                [ngClass]="{mobile: isMobile}"
                 type="text"
                 formControlName="quantity"
               />
@@ -41,12 +44,14 @@
           </div>
           <p-button
             class="delete-ingredient"
+            [ngClass]="{mobile: isMobile}"
             label="-"
             (onClick)="removeIngredient($index)"
           />
-          @if ($index === 0) {
+          @if ($index === recipeForm.controls['ingredients'].length - 1) {
           <p-button
             class="new-ingredient"
+            [ngClass]="{mobile: isMobile}"
             label="+"
             (onClick)="addNewIngredient()"
           />
@@ -135,7 +140,7 @@
             @if (existingImages.length) {
             <ul>
               @for (file of existingImages; track $index) {
-              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url" alt="image"/></div> {{ file.name }} <p-button icon="pi pi-times" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
+              <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="file.url" alt="image"/></div> {{ file.name }} <p-button icon="pi pi-times" [ngClass]="{mobile: isMobile}" class="ml-auto delete-button" (onClick)="removeUploadedFile(file)"/></li>
               }
             </ul>
             }
@@ -146,6 +151,7 @@
       <br />
       <p-button
         type="submit"
+        [ngClass]="{mobile: isMobile}"
         class="submit-recipe"
         label="Save Recipe"
         [disabled]="recipeForm.invalid"

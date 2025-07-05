@@ -2,6 +2,7 @@
 
 .new-recipe {
   padding: 20px 50px;
+  height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
@@ -14,6 +15,40 @@
 
   form {
     overflow: auto;
+  }
+
+  .preview-image {
+    overflow: hidden;
+
+    .image {
+      height: 100px;
+      width: fit-content;
+
+      img {
+        height: 90%;
+        width: fit-content;
+        object-fit: contain;
+      }
+    }
+  }
+}
+
+.new-recipe-mobile {
+  padding: 10px 20px;
+  height: calc(100vh - 60px);
+  overflow: auto;
+
+  .header {
+    text-align: center;
+    .title {
+      font-size: 2rem;
+      margin-top: 0;
+    }
+  }
+
+  form {
+    overflow: auto;
+    font-size: 0.8rem;
   }
 
   .preview-image {

@@ -2,6 +2,9 @@
 
 .recipe-collection {
   padding: 20px 50px;
+  height: calc(100vh - 60px);
+  overflow: auto;
+
   .header {
     text-align: center;
     .title {
@@ -38,6 +41,54 @@
       gap: 2rem;
       row-gap: 1rem;
       display: flex;
+    }
+  }
+}
+
+.recipe-collection-mobile {
+  padding: 10px 20px;
+  height: calc(100vh - 60px);
+  overflow: auto;
+
+  .header {
+    text-align: center;
+    .title {
+      font-size: 2rem;
+      margin-top: 0;
+    }
+  }
+
+  .content {
+    width: 100%;
+    border: 1px solid vars.$farro;
+    background: vars.$whiteFlour;
+    margin: auto;
+    padding: 10px 20px;
+    border-radius: 20px;
+    height: calc(100vh - 220px);
+    overflow: auto;
+
+    .search-bar {
+      width: 100%;
+      padding: 5px 10px 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .recipes-container {
+      width: 100%;
+      height: calc(100% - 50px - 1rem);
+      margin-top: 1rem;
+      overflow: auto;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      row-gap: 1rem;
+      display: flex;
+
+      .recipe{
+        width: 48%;
+      }
     }
   }
 }

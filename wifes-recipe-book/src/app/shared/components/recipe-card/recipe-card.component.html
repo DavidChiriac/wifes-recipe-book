@@ -1,6 +1,10 @@
 <div class="card" (click)="viewRecipe()" onkeydown="">
     <div class="image">
-        <img [src]="card.coverImage?.url" [alt]="card.title" />
+        @if(card.coverImage){
+            <img [src]="card.coverImage.url" [alt]="card.title" />
+        } @else {
+            <img src="assets/images/recipe-placeholder.png" [alt]="card.title"/>
+        }
     </div>
     <div class="title">
         {{card.title}}

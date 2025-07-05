@@ -1,9 +1,9 @@
-<div class="recipe-collection">
+<div [ngClass]="{'my-recipes': !isMobile, 'my-recipes-mobile': isMobile}">
     <div class="header">
         <h1 class="title">My Recipes</h1>
     </div>
     <div class="search-bar">
-        <input pInputText [(ngModel)]="searchTerm"/>
+        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile}"/>
         <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="onLazyLoad()" label=""/>
         <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
     </div>
@@ -13,5 +13,5 @@
             <br/>
         }
     </div>
-    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="false" />
+    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="true" />
 </div>

@@ -7,6 +7,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ExtendedCardComponent } from '../shared/components/extended-card/extended-card.component';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CommonModule } from '@angular/common';
+import { DeviceService } from '../shared/services/device.service';
 
 @UntilDestroy()
 @Component({
@@ -17,6 +19,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     ExtendedCardComponent,
     InputTextModule,
     PaginatorModule,
+    CommonModule
   ],
   templateUrl: './my-recipes.component.html',
   styleUrl: './my-recipes.component.scss',
@@ -44,7 +47,11 @@ export class MyRecipesComponent implements OnInit {
   sortDirection: 'asc' | 'desc' | undefined;
   totalRecords = 0;
 
-  constructor(private readonly recipesService: RecipesService) {}
+  isMobile!: boolean;
+
+  constructor(private readonly recipesService: RecipesService, private readonly deviceService: DeviceService) {
+    this.isMobile = deviceService.isMobile();
+  }
 
   ngOnInit(): void {
     this.onLazyLoad();

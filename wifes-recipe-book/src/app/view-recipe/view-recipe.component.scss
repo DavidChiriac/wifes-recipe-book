@@ -2,7 +2,9 @@
 
 .recipe {
   width: 100%;
-  padding: 50px;
+  padding: 20px 50px;
+  height: calc(100vh - 60px);
+  overflow: auto;
 
   .ingredients {
     max-width: 25%;
@@ -35,6 +37,46 @@
 
   .preparation {
     overflow-wrap: break-word;
+  }
+}
+
+.recipe-mobile {
+  width: 100%;
+  padding: 10px 20px;
+  height: calc(100vh - 60px);
+  overflow: auto;
+  font-size: 0.8rem;
+
+  .cover-image {
+    width: 80%;
+    margin: auto;
+
+    img {
+      width: 100%;
+      object-fit: contain;
+      margin-left: auto;
+    }
+  }
+
+  .small-images {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 30px;
+    row-gap: 20px;
+    width: 100%;
+
+    .image {
+      width: 49%;
+    }
+  }
+
+  .preparation {
+    overflow-wrap: break-word;
+  }
+
+  .ingredient{
+    word-break: break-all;
   }
 }
 

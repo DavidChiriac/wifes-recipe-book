@@ -24,6 +24,7 @@ import { EditorModule } from 'primeng/editor';
 import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
+import { DeviceService } from '../shared/services/device.service';
 
 @UntilDestroy()
 @Component({
@@ -66,11 +67,16 @@ export class NewRecipeComponent implements OnInit {
 
   documentId = '';
 
+  isMobile!: boolean;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
-    private readonly router: Router
-  ) {}
+    private readonly router: Router,
+    private readonly deviceService: DeviceService
+  ) {
+    this.isMobile = deviceService.isMobile();
+  }
 
   ngOnInit(): void {
     this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {

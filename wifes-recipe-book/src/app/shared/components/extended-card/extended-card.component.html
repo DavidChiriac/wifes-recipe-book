@@ -1,12 +1,18 @@
-<div class="card">
+<div class="cursor-pointer" [ngClass]="{'card': !isMobile, 'card-mobile': isMobile}" (onClick)="view()">
     <div class="details">
         <div class="image">
-            <img [src]="recipe.coverImage?.url" [alt]="recipe.title"/>
+            @if (recipe.coverImage) {
+                <img [src]="recipe.coverImage.url" [alt]="recipe.title"/>
+            } @else {
+                <img src="assets/images/recipe-placeholder.png" [alt]="recipe.title"/>
+            }
         </div>
         <div class="title">{{recipe.title}}</div>
     </div>
     <div class="actions">
-        <p-button class="edit-button" label="View" (onClick)="view()"/>
+        @if (!isMobile) {
+            <p-button class="edit-button" label="View" (onClick)="view()"/>
+        }
         <p-button class="edit-button" label="Edit" (onClick)="edit()"/>
         <p-button class="delete-button" label="Delete" (onClick)="delete()"/>
     </div>

@@ -1,16 +1,18 @@
-<div class="recipe-collection">
+<div [ngClass]="{'recipe-collection': !isMobile, 'recipe-collection-mobile': isMobile}">
   <div class="header">
     <h1 class="title">Recipe Collection</h1>
   </div>
   <div class="content">
     <div class="search-bar">
-        <input pInputText [(ngModel)]="searchTerm"/>
+        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile}"/>
         <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="search()" label=""/>
         <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
     </div>
     <div class="recipes-container">
         @for (recipe of recipes; track recipe.documentId) {
+          <div class="recipe">
             <app-recipe-card [card]="recipe"></app-recipe-card>
+          </div>
         }
     </div>
   </div>
