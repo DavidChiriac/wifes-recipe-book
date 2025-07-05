@@ -8,8 +8,7 @@ export default {
 					"api::recipe.recipe",
 					{
 						fields: ["id", "recommended"],
-						publicationState: "live",
-						filtes: {$not: {recommended: true}}
+						filters: { $not: { recommended: true } },
 					}
 				);
 
@@ -19,34 +18,31 @@ export default {
 					"api::recipe.recipe",
 					{
 						fields: ["id", "recommended"],
-						publicationState: "live",
 						filters: { recommended: true },
 					}
 				);
-
-				const newRecipes = shuffled.filter(
-					(recipe) =>
-						!existing.recipes?.some(
-							(existingRecipe) => existingRecipe.id === recipe.id
-						)
-				);
-				const selected = newRecipes.slice(0, 4);
+				const selected = [
+					...shuffled.slice(0, 4),
+					...existing.sort(() => 0.5 - Math.random()).slice(0, 4),
+				].slice(0, 4);
 
 				if (selected?.length > 0) {
-					existing.forEach(async (recipe) => {
-						await strapi.entityService.update(
-							"api::recipe.recipe",
-							recipe?.id,
-							{
-								data: {
-									recommended: false,
-								},
-							}
-						);
-					});
+					existing
+						.filter((recipe) => !selected.some(newRecipe => newRecipe.id === recipe.id))
+						.forEach(async (recipe) => {
+							await strapi.entityService.update(
+								"api::recipe.recipe",
+								recipe?.id,
+								{
+									data: {
+										recommended: false,
+									},
+								}
+							);
+						});
 
-					[...selected, ...shuffled.slice(0, 4)]
-						.slice(0, 4)
+					selected
+						.filter((recipe) => recipe.recommended !== true)
 						?.map((recipe) => recipe?.id)
 						.forEach(async (id) => {
 							await strapi.entityService.update("api::recipe.recipe", id, {
@@ -61,7 +57,7 @@ export default {
 				}
 			};
 
-			await selectRandomRecipes()
+			await selectRandomRecipes();
 		},
 
 		options: { rule: "0 0 * * *" },
