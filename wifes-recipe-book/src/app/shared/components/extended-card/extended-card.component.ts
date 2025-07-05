@@ -17,9 +17,11 @@ import { DeviceService } from '../../services/device.service';
 export class ExtendedCardComponent {
   @Input() recipe!: IRecipe;
 
-  @Output() deleted = new EventEmitter<boolean>();
+  @Output() deleted = new EventEmitter<string>();
 
   isMobile!: boolean;
+
+  deleteModalVisible = false;
 
   constructor(
     private readonly router: Router,
@@ -38,11 +40,6 @@ export class ExtendedCardComponent {
   }
 
   delete(): void {
-    this.recipesService
-      .deleteRecipe(this.recipe.documentId ?? '')
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.deleted.emit(true);
-      });
+    this.deleted.emit(this.recipe.documentId ?? '');
   }
 }

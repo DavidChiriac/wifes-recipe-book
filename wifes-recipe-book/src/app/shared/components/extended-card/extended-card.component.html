@@ -1,5 +1,5 @@
-<div class="cursor-pointer" [ngClass]="{'card': !isMobile, 'card-mobile': isMobile}" (onClick)="view()">
-    <div class="details">
+<div class="cursor-pointer" [ngClass]="{'card': !isMobile, 'card-mobile': isMobile}">
+    <div class="details" (click)="view()">
         <div class="image">
             @if (recipe.coverImage) {
                 <img [src]="recipe.coverImage.url" [alt]="recipe.title"/>
@@ -10,9 +10,6 @@
         <div class="title">{{recipe.title}}</div>
     </div>
     <div class="actions">
-        @if (!isMobile) {
-            <p-button class="edit-button" label="View" (onClick)="view()"/>
-        }
         <p-button class="edit-button" label="Edit" (onClick)="edit()"/>
         <p-button class="delete-button" label="Delete" (onClick)="delete()"/>
     </div>

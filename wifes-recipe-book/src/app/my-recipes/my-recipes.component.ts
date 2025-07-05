@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { InputTextModule } from 'primeng/inputtext';
+import { DialogModule } from 'primeng/dialog';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ExtendedCardComponent } from '../shared/components/extended-card/extended-card.component';
 import { RecipesService } from '../shared/services/recipes.service';
@@ -19,7 +20,8 @@ import { DeviceService } from '../shared/services/device.service';
     ExtendedCardComponent,
     InputTextModule,
     PaginatorModule,
-    CommonModule
+    CommonModule,
+    DialogModule
   ],
   templateUrl: './my-recipes.component.html',
   styleUrl: './my-recipes.component.scss',
@@ -48,6 +50,9 @@ export class MyRecipesComponent implements OnInit {
   totalRecords = 0;
 
   isMobile!: boolean;
+
+  deleteDialogVisible = false;
+  recipeToBeDeleted: IRecipe | undefined;
 
   constructor(private readonly recipesService: RecipesService, private readonly deviceService: DeviceService) {
     this.isMobile = deviceService.isMobile();
@@ -78,6 +83,26 @@ export class MyRecipesComponent implements OnInit {
       .subscribe((recipes) => {
         this.recipes = [...recipes.data];
         this.totalRecords = recipes.meta.total;
+      });
+  }
+
+  deleteRecipe(id: string): void{
+    this.deleteDialogVisible = true;
+    this.recipeToBeDeleted = this.recipes.find(recipe => recipe.documentId === id);
+  }
+
+  cancel(): void {
+    this.recipeToBeDeleted = undefined;
+    this.deleteDialogVisible = false;
+  }
+
+  delete(): void {
+    this.deleteDialogVisible = false;
+    this.recipesService
+      .deleteRecipe(this.recipeToBeDeleted?.documentId ?? '')
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.onLazyLoad();
       });
   }
 }

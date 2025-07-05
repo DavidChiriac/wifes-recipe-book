@@ -25,6 +25,7 @@ import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
+import { DialogModule } from 'primeng/dialog';
 
 @UntilDestroy()
 @Component({
@@ -38,6 +39,7 @@ import { DeviceService } from '../shared/services/device.service';
     FileUploadModule,
     EditorModule,
     CommonModule,
+    DialogModule,
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
@@ -68,6 +70,14 @@ export class NewRecipeComponent implements OnInit {
   documentId = '';
 
   isMobile!: boolean;
+
+  imageDeleteDialogVisible = false;
+  imageToBeDeleted: { id: string; name: string; url: string } | undefined;
+
+  uploading = false;
+
+  errorModalVisible = false;
+  errorMessage = 'banana';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -138,6 +148,8 @@ export class NewRecipeComponent implements OnInit {
   onSubmit(): void {
     let uploadedImages: string[] = [];
 
+    this.uploading = true;
+
     let uploadImages$ =
       this.images.length > 0
         ? this.recipesService
@@ -178,13 +190,21 @@ export class NewRecipeComponent implements OnInit {
         }),
         untilDestroyed(this)
       )
-      .subscribe((response) => {
-        this.router.navigate(['recipe/' + response.documentId]);
+      .subscribe({
+        next: (response) => {
+          this.uploading = false;
+          this.router.navigate(['recipe/' + response.documentId]);
+        },
+        error: (error) => {
+          this.errorModalVisible = true;
+          this.errorMessage = error.message;
+        },
       });
   }
 
   transformFormIntoRecipe(form: FormGroup): IRecipe {
     const recipe: IRecipe = {
+      documentId: this.documentId,
       coverImage:
         form.controls['coverImage'].getRawValue()?.id ??
         form.controls['coverImage'].getRawValue(),
@@ -252,8 +272,24 @@ export class NewRecipeComponent implements OnInit {
   }
 
   removeUploadedFile(file: { id: string }): void {
-    this.existingImages = this.existingImages.filter(
-      (image) => image.id !== file.id
+    this.imageDeleteDialogVisible = true;
+    this.imageToBeDeleted = this.existingImages.find(
+      (image) => image.id === file.id
     );
+    console.log(this.imageToBeDeleted);
+  }
+
+  confirmUploadedFileDelete(): void {
+    this.imageDeleteDialogVisible = false;
+    this.existingImages = this.existingImages.filter(
+      (image) => image.id !== this.imageToBeDeleted?.id
+    );
+  }
+
+  cancel(): void {
+    this.imageDeleteDialogVisible = false;
+    this.errorMessage = '';
+    this.errorModalVisible = false;
+    this.imageToBeDeleted = undefined;
   }
 }

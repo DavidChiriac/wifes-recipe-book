@@ -10,6 +10,10 @@
   ul {
     padding-left: 0;
   }
+
+  .p-fileupload-file-remove-button{
+    color: vars.$crackedPepper;
+  }
 }
 
 .invalid .p-fileupload {
