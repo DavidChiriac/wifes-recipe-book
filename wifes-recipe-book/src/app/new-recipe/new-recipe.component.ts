@@ -212,7 +212,7 @@ export class NewRecipeComponent implements OnInit {
         },
         error: (error) => {
           this.errorModalVisible = true;
-          this.errorMessage = error.message;
+          this.errorMessage = error.error.message;
         },
       });
   }
@@ -330,7 +330,7 @@ export class NewRecipeComponent implements OnInit {
       .subscribe({
         error: (error) => {
           this.errorModalVisible = true;
-          this.errorMessage = error.message;
+          this.errorMessage = error.error.message;
         },
       });
   }

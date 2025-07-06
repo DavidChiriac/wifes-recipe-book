@@ -44,7 +44,7 @@ export class RecipesService {
       queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
     }
     if (searchTerm) {
-      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}&filters[$or][1][preparation][$containsi]=${searchTerm}`;
+      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}&filters[$or][1][preparation][$containsi]=${searchTerm}&filters[$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(
@@ -106,7 +106,7 @@ export class RecipesService {
     if (searchTerm) {
       queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}
       &filters[$or][1][preparation][$containsi]=${searchTerm}
-      &filters[$or][3][ingredients][ingredients][name][$containsi]=${searchTerm}`;
+      &filters[$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(

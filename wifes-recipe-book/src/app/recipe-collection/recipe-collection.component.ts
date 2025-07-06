@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,7 +8,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceService } from '../shared/services/device.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -59,14 +59,18 @@ export class RecipeCollectionComponent implements OnInit {
   constructor(
     private readonly recipesService: RecipesService,
     private readonly deviceService: DeviceService,
-    private readonly sessionStorageService: SessionStorageService
+    private readonly sessionStorageService: SessionStorageService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
-    this.searchTerm = this.sessionStorageService.retrieve('collectionSearchTerm') ?? '';
-    this.onLazyLoad();
+    if (isPlatformBrowser(this.platformId)) {
+      this.searchTerm =
+        this.sessionStorageService.retrieve('collectionSearchTerm') ?? '';
+      this.onLazyLoad();
+    }
   }
 
   clear(): void {
@@ -95,12 +99,12 @@ export class RecipeCollectionComponent implements OnInit {
           this.totalRecords = recipes.meta.total;
         },
         error: (error) => {
-          this.errorMessage = error.message;
+          this.errorMessage = error.error.message;
           this.errorModalVisible = true;
         },
       });
   }
-  
+
   cancel(): void {
     this.errorModalVisible = false;
     this.errorMessage = '';
