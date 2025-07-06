@@ -10,13 +10,16 @@
             }
             <div class="card">
                 <div class="font-bold">Ingredients: </div>
-                <ul>
-                    @for (ingredient of recipe?.ingredients; track $index;) {
-                    <li class="mb-3 font-italic ingredient">
-                        {{ingredient.name}} - {{ingredient.quantity}}
-                    </li>
-                    }
-                </ul>
+                @for (section of recipe?.ingredients; track $index) {
+                    <div>{{section?.sectionName}}</div>
+                    <ul>
+                        @for (ingredient of section?.ingredients; track $index;) {
+                        <li class="mb-3 font-italic ingredient">
+                            {{ingredient.name}} - {{ingredient.quantity}}
+                        </li>
+                        }
+                    </ul>
+                }
             </div>
             <div class="card">
                 <div class="font-bold">Preparation: </div>
@@ -46,13 +49,16 @@
                 <br />
                 <div class="card">
                     <div class="font-bold">Ingredients: </div>
-                    <ul>
-                        @for (ingredient of recipe?.ingredients; track $index;) {
-                        <li class=" mb-3 font-italic">
-                            {{ingredient.name}} @if(ingredient.quantity){- {{ingredient.quantity}}}
-                        </li>
-                        }
-                    </ul>
+                    @for (section of recipe?.ingredients; track $index) {
+                        <div>{{section?.sectionName}}</div>
+                        <ul>
+                            @for (ingredient of section?.ingredients; track $index;) {
+                            <li class=" mb-3 font-italic">
+                                {{ingredient.name}} @if(ingredient.quantity){- {{ingredient.quantity}}}
+                            </li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
             <div class="w-5">

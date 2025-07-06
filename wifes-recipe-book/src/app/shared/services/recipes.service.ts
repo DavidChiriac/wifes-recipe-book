@@ -12,7 +12,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 export class RecipesService {
   recipesQuery = qs.stringify(
     {
-      populate: ['coverImage', 'images', 'ingredients', 'preparationTime'],
+      populate: ['coverImage', 'images', 'ingredients', 'ingredients.ingredients', 'preparationTime'],
     },
     {
       encodeValuesOnly: true,
@@ -194,8 +194,10 @@ export class RecipesService {
     const body = {
       ...recipe,
       ingredients: [
-        ...recipe?.ingredients.map((ingredient) => {
-          return { name: ingredient.name, quantity: ingredient.quantity };
+        ...recipe?.ingredients.map((section) => {
+          return { sectionName: section.sectionName, ingredients: section.ingredients.map(ingredient => {
+            return { name: ingredient.name, quantity: ingredient.quantity} })
+          }
         }),
       ],
       images: [...(recipe.images ?? []), ...existingImages].map(

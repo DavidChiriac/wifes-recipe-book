@@ -21,7 +21,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { EditorModule } from 'primeng/editor';
-import { concatMap, of, tap } from 'rxjs';
+import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
@@ -51,8 +51,14 @@ export class NewRecipeComponent implements OnInit {
       [
         new FormGroup({
           id: new FormControl(uuidv4()),
-          name: new FormControl('', Validators.required),
-          quantity: new FormControl(''),
+          sectionName: new FormControl(),
+          ingredients: new FormArray([
+            new FormGroup({
+              id: new FormControl(uuidv4()),
+              name: new FormControl('', Validators.required),
+              quantity: new FormControl(''),
+            }),
+          ]),
         }),
       ],
       Validators.required
@@ -106,16 +112,25 @@ export class NewRecipeComponent implements OnInit {
         this.recipeForm = new FormGroup({
           name: new FormControl(recipe.title, Validators.required),
           ingredients: new FormArray(
-            [
-              ...recipe.ingredients?.map(
-                (ingredient) =>
-                  new FormGroup({
-                    id: new FormControl(uuidv4()),
-                    name: new FormControl(ingredient.name, Validators.required),
-                    quantity: new FormControl(ingredient.quantity),
-                  })
-              ),
-            ],
+            recipe.ingredients?.map((section) => {
+              return new FormGroup({
+                id: new FormControl(uuidv4()),
+                sectionName: new FormControl(section.sectionName),
+                ingredients: new FormArray(
+                  section.ingredients.map(
+                    (ingredient) =>
+                      new FormGroup({
+                        id: new FormControl(uuidv4()),
+                        name: new FormControl(
+                          ingredient.name,
+                          Validators.required
+                        ),
+                        quantity: new FormControl(ingredient.quantity),
+                      })
+                  )
+                ),
+              });
+            }) || [],
             Validators.required
           ),
           preparation: new FormControl(recipe.preparation),
@@ -143,6 +158,8 @@ export class NewRecipeComponent implements OnInit {
             }
           : undefined;
       });
+
+    console.log(this.ingredients.controls[0].controls['ingredients']);
   }
 
   onSubmit(): void {
@@ -221,8 +238,12 @@ export class NewRecipeComponent implements OnInit {
     return recipe;
   }
 
-  addNewIngredient(): void {
-    this.ingredients.push(
+  addNewIngredient(index: number): void {
+    const ingredientGroup = this.ingredients.at(index) as FormGroup;
+
+    const nestedIngredients = ingredientGroup.get('ingredients') as FormArray;
+
+    nestedIngredients.push(
       new FormGroup({
         id: new FormControl(uuidv4()),
         name: new FormControl('', Validators.required),
@@ -231,16 +252,38 @@ export class NewRecipeComponent implements OnInit {
     );
   }
 
-  removeIngredient(index: number): void {
-    if (index === 0 && this.ingredients.controls.length === 1) {
-      this.ingredients.reset();
-    } else if (this.ingredients.controls.length > 1) {
-      this.ingredients.removeAt(index);
+  addNewIngredientSection(): void {
+    this.ingredients.push(
+      new FormGroup({
+        sectionName: new FormControl(''),
+        ingredients: new FormArray([
+          new FormGroup({
+            id: new FormControl(uuidv4()),
+            name: new FormControl('', Validators.required),
+            quantity: new FormControl(''),
+          }),
+        ]),
+      })
+    );
+  }
+
+  removeIngredient(i: number, j: number): void {
+    const section = this.ingredients.at(i) as FormGroup;
+    const ingredientsArray = section.get('ingredients') as FormArray;
+
+    if (j === 0 && ingredientsArray.length === 1) {
+      ingredientsArray.at(0).reset();
+    } else if (ingredientsArray.length > 1) {
+      ingredientsArray.removeAt(j);
     }
   }
 
   get ingredients(): FormArray<FormGroup> {
     return this.recipeForm.get('ingredients') as FormArray;
+  }
+
+  getNestedIngredients(index: number): FormArray {
+    return this.ingredients.at(index).get('ingredients') as FormArray;
   }
 
   get images(): FormArray<FormControl> {
@@ -283,12 +326,15 @@ export class NewRecipeComponent implements OnInit {
     this.existingImages = this.existingImages.filter(
       (image) => image.id !== this.imageToBeDeleted?.id
     );
-    this.recipesService.deleteImage(this.imageToBeDeleted?.id ?? '').pipe(untilDestroyed(this)).subscribe({
-      error: (error) => {
+    this.recipesService
+      .deleteImage(this.imageToBeDeleted?.id ?? '')
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        error: (error) => {
           this.errorModalVisible = true;
           this.errorMessage = error.message;
         },
-    });
+      });
   }
 
   cancel(): void {
@@ -296,5 +342,26 @@ export class NewRecipeComponent implements OnInit {
     this.errorMessage = '';
     this.errorModalVisible = false;
     this.imageToBeDeleted = undefined;
+  }
+
+  deleteSection(index: number): void {
+    if (this.ingredients.length > 1) {
+      this.ingredients.removeAt(index);
+    } else {
+      const section = this.ingredients.at(0) as FormGroup;
+      section.reset();
+
+      const nestedIngredients = section.get('ingredients') as FormArray;
+
+      while (nestedIngredients.length) {
+        nestedIngredients.removeAt(0);
+      }
+
+      nestedIngredients.push(new FormGroup({
+        id: new FormControl(uuidv4()),
+        name: new FormControl('', Validators.required),
+        quantity: new FormControl(''),
+      }));
+    }
   }
 }

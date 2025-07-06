@@ -27,11 +27,6 @@
     "preparation": {
       "type": "richtext"
     },
-    "ingredients": {
-      "type": "component",
-      "component": "recipe.ingredient",
-      "repeatable": true
-    },
     "images": {
       "type": "media",
       "multiple": true,
@@ -56,6 +51,11 @@
       "type": "boolean",
       "required": false,
       "default": false
+    },
+    "ingredients": {
+      "type": "component",
+      "component": "recipe.ingredients-section",
+      "repeatable": true
     }
   }
 }

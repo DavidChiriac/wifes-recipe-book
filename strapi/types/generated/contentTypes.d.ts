@@ -435,7 +435,7 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    ingredients: Schema.Attribute.Component<'recipe.ingredient', true>;
+    ingredients: Schema.Attribute.Component<'recipe.ingredients-section', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

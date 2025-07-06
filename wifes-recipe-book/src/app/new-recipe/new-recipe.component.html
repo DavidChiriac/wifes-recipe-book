@@ -11,54 +11,81 @@
       </div>
       <br />
       <div formArrayName="ingredients">
-        <label for="ingredients">Ingredients: </label>
-        <br />
-        <br />
-        @for (item of ingredients.controls; track item.controls['id'];) {
-        <div
-          class="flex gap-3 mb-3"
-          [ngClass]="{'align-items-center': !isMobile, 'align-items-start': isMobile}"
-          [formGroupName]="$index"
+        <label>Ingredients:</label>
+        @for (section of ingredients.controls; track section.get('id'); let i = $index) {
+        <div  
+          [formGroupName]="i"
         >
-          <div class="flex flex-wrap row-gap-2 gap-5">
-            <div [ngClass]="{'flex gap-1 align-items-center': isMobile}">
-              <label for="name">Name: </label>
-              <input
-                pInputText
-                [id]="'ingredients' + $index"
-                [ngClass]="{mobile: isMobile}"
-                type="text"
-                formControlName="name"
-              />
-            </div>
-            <div [ngClass]="{'flex gap-1 align-items-center': isMobile}">
-              <label for="qunatity">Quantity: </label>
-              <input
-                pInputText
-                [id]="'ingredients' + $index"
-                [ngClass]="{mobile: isMobile}"
-                type="text"
-                formControlName="quantity"
-              />
-            </div>
+          <div class="mb-2 flex gap-2 align-items-center">
+            <label for="sectionName">Section Name:</label>
+            <input
+              pInputText
+              formControlName="sectionName"
+              [id]="'sectionName' + i"
+              placeholder="e.g. Sauce, Dough, Topping"
+            />
+            <p-button class="submit-recipe" label="Delete section" (onClick)="deleteSection(i)"/>
           </div>
-          <p-button
-            class="delete-ingredient"
-            [ngClass]="{mobile: isMobile}"
-            label="-"
-            (onClick)="removeIngredient($index)"
-          />
-          @if ($index === recipeForm.controls['ingredients'].length - 1) {
-          <p-button
-            class="new-ingredient"
-            [ngClass]="{mobile: isMobile}"
-            label="+"
-            (onClick)="addNewIngredient()"
-          />
-          }
+
+          <div formArrayName="ingredients">
+            @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
+              <div
+                [formGroupName]="j"
+              >
+                <div
+                  class="flex gap-3 mb-3"
+                  [ngClass]="{
+                    'align-items-center': !isMobile,
+                    'align-items-start': isMobile
+                  }"
+                >
+                  <div class="flex flex-wrap row-gap-2 gap-5">
+                    <div [ngClass]="{ 'flex gap-1 align-items-center': isMobile }">
+                      <label>Name: </label>
+                      <input
+                        pInputText
+                        formControlName="name"
+                        [ngClass]="{ mobile: isMobile }"
+                        type="text"
+                      />
+                    </div>
+                    <div [ngClass]="{ 'flex gap-1 align-items-center': isMobile }">
+                      <label>Quantity: </label>
+                      <input
+                        pInputText
+                        formControlName="quantity"
+                        [ngClass]="{ mobile: isMobile }"
+                        type="text"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Optional buttons -->
+                  <p-button
+                    class="delete-ingredient"
+                    [ngClass]="{ mobile: isMobile }"
+                    label="-"
+                    (onClick)="removeIngredient(i, j)"
+                  ></p-button>
+
+                  @if (getNestedIngredients(i).controls.length - 1 === j) {
+
+                    <p-button
+                      class="new-ingredient"
+                      [ngClass]="{ mobile: isMobile }"
+                      label="+"
+                      (onClick)="addNewIngredient(i)"
+                    ></p-button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
         </div>
-        }
+      }
+      <p-button class="submit-recipe" label="Add new ingredients section" (onClick)="addNewIngredientSection()"/>
       </div>
+
       <br />
       <div>
         <label for="preparation">Preparation: </label>
