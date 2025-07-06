@@ -1,4 +1,4 @@
-<div class="new-recipe" [ngClass]="{'new-recipe-mobile': isMobile, 'new-recipe': !isMobile}">
+<div [ngClass]="{'new-recipe-mobile': isMobile, 'new-recipe': !isMobile}">
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     <div>
       <div class="header">
@@ -22,6 +22,7 @@
               pInputText
               formControlName="sectionName"
               [id]="'sectionName' + i"
+              [ngClass]="{mobile: isMobile}"
               placeholder="e.g. Sauce, Dough, Topping"
             />
             <p-button class="submit-recipe" label="Delete section" (onClick)="deleteSection(i)"/>

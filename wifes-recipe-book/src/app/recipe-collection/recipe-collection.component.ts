@@ -10,6 +10,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceService } from '../shared/services/device.service';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { SessionStorageService } from 'ngx-webstorage';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +28,7 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './recipe-collection.component.scss',
 })
 export class RecipeCollectionComponent implements OnInit {
-  searchTerm = '';
+  searchTerm!: string;
 
   recipes: IRecipe[] = [];
 
@@ -57,24 +58,24 @@ export class RecipeCollectionComponent implements OnInit {
 
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceService,
+    private readonly sessionStorageService: SessionStorageService
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
+    this.searchTerm = this.sessionStorageService.retrieve('collectionSearchTerm') ?? '';
     this.onLazyLoad();
   }
 
   clear(): void {
     this.searchTerm = '';
-  }
-
-  search(): void {
-    console.log(this.searchTerm);
+    this.onLazyLoad();
   }
 
   onLazyLoad(event?: PaginatorState): void {
+    this.sessionStorageService.store('collectionSearchTerm', this.searchTerm);
     if (event) {
       this.requestParams = {
         pageNumber: event.page,
@@ -86,7 +87,7 @@ export class RecipeCollectionComponent implements OnInit {
     }
 
     this.recipesService
-      .getRecipes(this.requestParams)
+      .getRecipes(this.requestParams, this.searchTerm)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipes) => {

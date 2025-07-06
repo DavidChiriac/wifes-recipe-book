@@ -98,7 +98,7 @@ export class NewRecipeComponent implements OnInit {
     this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
       if (params?.['id']) {
         this.documentId = params['id'];
-        console.log(this.documentId);
+        (this.documentId);
         this.populateForm();
       }
     });
@@ -158,8 +158,6 @@ export class NewRecipeComponent implements OnInit {
             }
           : undefined;
       });
-
-    console.log(this.ingredients.controls[0].controls['ingredients']);
   }
 
   onSubmit(): void {

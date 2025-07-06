@@ -10,6 +10,7 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
+import { SessionStorageService } from 'ngx-webstorage';
 
 @UntilDestroy()
 @Component({
@@ -59,20 +60,24 @@ export class MyRecipesComponent implements OnInit {
 
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceService,
+    private readonly sessionStorageService: SessionStorageService
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
+    this.searchTerm = this.sessionStorageService.retrieve('myRecipesSearchTerm') ?? '';
     this.onLazyLoad();
   }
 
   clear(): void {
     this.searchTerm = '';
+    this.onLazyLoad();
   }
 
   onLazyLoad(event?: PaginatorState): void {
+    this.sessionStorageService.store('myRecipesSearchTerm', this.searchTerm)
     if (event) {
       this.requestParams = {
         pageNumber: event.page,
@@ -84,7 +89,7 @@ export class MyRecipesComponent implements OnInit {
     }
 
     this.recipesService
-      .getMyRecipes(this.requestParams)
+      .getMyRecipes(this.requestParams, this.searchTerm)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipes) => {

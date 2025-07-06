@@ -12,7 +12,13 @@ import { LocalStorageService } from 'ngx-webstorage';
 export class RecipesService {
   recipesQuery = qs.stringify(
     {
-      populate: ['coverImage', 'images', 'ingredients', 'ingredients.ingredients', 'preparationTime'],
+      populate: [
+        'coverImage',
+        'images',
+        'ingredients',
+        'ingredients.ingredients',
+        'preparationTime',
+      ],
     },
     {
       encodeValuesOnly: true,
@@ -24,20 +30,26 @@ export class RecipesService {
     private readonly localStorageService: LocalStorageService
   ) {}
 
-  getRecipes(params: {
-    pageNumber: number | undefined;
-    pageSize: number | undefined;
-    sortField: string | undefined;
-    sortDirection: string | undefined;
-  }): Observable<{ data: IRecipe[]; meta: { total: number } }> {
-    let sorting = '';
+  getRecipes(
+    params: {
+      pageNumber: number | undefined;
+      pageSize: number | undefined;
+      sortField: string | undefined;
+      sortDirection: string | undefined;
+    },
+    searchTerm: string
+  ): Observable<{ data: IRecipe[]; meta: { total: number } }> {
+    let queryParams = '';
     if (params.sortDirection && params.sortField) {
-      sorting += `&sort=${params.sortField}:${params.sortDirection}`;
+      queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
+    }
+    if (searchTerm) {
+      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}&filters[$or][1][preparation][$containsi]=${searchTerm}`;
     }
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(
         environment.apiUrl +
-          `/api/recipes?${this.recipesQuery}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${params.pageSize}${sorting}`
+          `/api/recipes?${this.recipesQuery}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${params.pageSize}${queryParams}`
       )
       .pipe(
         map((response) => {
@@ -59,8 +71,9 @@ export class RecipesService {
       }
     );
     return this.http
-      .get<{ data: IRecipe[]  }>(
-        environment.apiUrl + `/api/recipes?filters[recommended][$eq]=true&${query}`
+      .get<{ data: IRecipe[] }>(
+        environment.apiUrl +
+          `/api/recipes?filters[recommended][$eq]=true&${query}`
       )
       .pipe(
         map((response) =>
@@ -77,15 +90,23 @@ export class RecipesService {
       .pipe(map((response) => this.mapRecipe(response.data)));
   }
 
-  getMyRecipes(params: {
-    pageNumber: number | undefined;
-    pageSize: number | undefined;
-    sortField: string | undefined;
-    sortDirection: string | undefined;
-  }): Observable<{ data: IRecipe[]; meta: { total: number } }> {
-    let sorting = '';
+  getMyRecipes(
+    params: {
+      pageNumber: number | undefined;
+      pageSize: number | undefined;
+      sortField: string | undefined;
+      sortDirection: string | undefined;
+    },
+    searchTerm: string
+  ): Observable<{ data: IRecipe[]; meta: { total: number } }> {
+    let queryParams = '';
     if (params.sortDirection && params.sortField) {
-      sorting += `&sort=${params.sortField}:${params.sortDirection}`;
+      queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
+    }
+    if (searchTerm) {
+      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}
+      &filters[$or][1][preparation][$containsi]=${searchTerm}
+      &filters[$or][3][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(
@@ -94,7 +115,7 @@ export class RecipesService {
             this.localStorageService.retrieve('user').email
           }&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
             params.pageSize
-          }${sorting}`
+          }${queryParams}`
       )
       .pipe(
         map((response) => {
@@ -153,7 +174,9 @@ export class RecipesService {
   }
 
   deleteImage(id: string): Observable<void> {
-    return this.http.delete<void>(environment.apiUrl + '/api/upload/files/' + id)
+    return this.http.delete<void>(
+      environment.apiUrl + '/api/upload/files/' + id
+    );
   }
 
   mapRecipe(recipe: any): IRecipe {
@@ -195,9 +218,12 @@ export class RecipesService {
       ...recipe,
       ingredients: [
         ...recipe?.ingredients.map((section) => {
-          return { sectionName: section.sectionName, ingredients: section.ingredients.map(ingredient => {
-            return { name: ingredient.name, quantity: ingredient.quantity} })
-          }
+          return {
+            sectionName: section.sectionName,
+            ingredients: section.ingredients.map((ingredient) => {
+              return { name: ingredient.name, quantity: ingredient.quantity };
+            }),
+          };
         }),
       ],
       images: [...(recipe.images ?? []), ...existingImages].map(

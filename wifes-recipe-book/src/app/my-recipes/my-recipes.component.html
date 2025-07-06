@@ -3,9 +3,9 @@
         <h1 class="title">My Recipes</h1>
     </div>
     <div class="search-bar">
-        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile}"/>
-        <p-button class="search" icon="pi pi-search" [disabled]="searchTerm.length < 3" (onClick)="onLazyLoad()" label=""/>
-        <p-button class="clear" icon="pi pi-times" [disabled]="!searchTerm" (onClick)="clear()" label=""/>
+        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile}" (keydown.enter)="onLazyLoad()"/>
+        <p-button class="search" icon="pi pi-search" (onClick)="onLazyLoad()"/>
+        <p-button class="clear" icon="pi pi-times" (onClick)="clear()"/>
     </div>
     <div class="recipes-container">
         @for (recipe of recipes; track recipe.documentId) {
