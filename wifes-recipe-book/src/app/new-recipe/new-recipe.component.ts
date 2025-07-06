@@ -21,7 +21,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { EditorModule } from 'primeng/editor';
-import { concatMap, of, tap, map } from 'rxjs';
+import { concatMap, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';

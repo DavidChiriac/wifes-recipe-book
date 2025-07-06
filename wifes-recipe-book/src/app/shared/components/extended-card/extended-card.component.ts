@@ -2,12 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import { RecipesService } from '../../services/recipes.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../../services/device.service';
 
-@UntilDestroy()
 @Component({
   selector: 'app-extended-card',
   imports: [ButtonModule, CommonModule],
@@ -25,7 +22,6 @@ export class ExtendedCardComponent {
 
   constructor(
     private readonly router: Router,
-    private readonly recipesService: RecipesService,
     private readonly deviceService: DeviceService,
   ) {
     this.isMobile = deviceService.isMobile();

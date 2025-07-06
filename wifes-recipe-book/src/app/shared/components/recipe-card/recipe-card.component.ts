@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { Router } from '@angular/router';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-recipe-card',

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, of } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { IRecipe } from '../interfaces/recipe.interface';
 import { environment } from '../../../environments/environment';
 import qs from 'qs';
