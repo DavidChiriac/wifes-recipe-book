@@ -8,11 +8,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MarkdownPipe } from '../shared/pipes/safe-html.pipe';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 
 @UntilDestroy()
 @Component({
   selector: 'app-view-recipe',
-  imports: [TextareaModule, ImageModule, MarkdownPipe, AsyncPipe, CommonModule],
+  imports: [TextareaModule, ImageModule, MarkdownPipe, AsyncPipe, CommonModule, DialogModule, ButtonModule],
   templateUrl: './view-recipe.component.html',
   styleUrl: './view-recipe.component.scss',
 })
@@ -20,6 +22,9 @@ export class ViewRecipeComponent implements OnInit {
   recipe: IRecipe | undefined;
 
   isMobile!: boolean;
+
+  errorModalVisible = false;
+  errorMessage = '';
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -37,9 +42,19 @@ export class ViewRecipeComponent implements OnInit {
     this.recipesService
       .getSingleRecipe(documentId)
       .pipe(untilDestroyed(this))
-      .subscribe((recipe) => {
-        console.log(recipe);
-        this.recipe = { ...recipe };
+      .subscribe({
+        next: (recipe) => {
+          this.recipe = { ...recipe };
+        },
+        error: (error) => {
+          this.errorMessage = error.message;
+          this.errorModalVisible = true;
+        }
       });
+  }
+
+  cancel(): void {
+    this.errorModalVisible = false;
+    this.errorMessage = '';
   }
 }

@@ -24,3 +24,10 @@
         <p-button label="Delete" class="add-recipe" (click)="delete()" />
     </div>
 </p-dialog>
+
+<p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">
+    <h3 class="mb-3 text-center">{{errorMessage}}</h3>
+    <div class="flex justify-content-center gap-2">
+        <p-button label="Close" class="delete-button" severity="secondary" (click)="cancel()" />
+    </div>
+</p-dialog>

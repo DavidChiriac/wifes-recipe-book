@@ -9,6 +9,7 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceService } from '../shared/services/device.service';
 import { CommonModule } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +20,8 @@ import { CommonModule } from '@angular/common';
     FormsModule,
     RecipeCardComponent,
     PaginatorModule,
-    CommonModule
+    CommonModule,
+    DialogModule,
   ],
   templateUrl: './recipe-collection.component.html',
   styleUrl: './recipe-collection.component.scss',
@@ -49,6 +51,9 @@ export class RecipeCollectionComponent implements OnInit {
   totalRecords = 0;
 
   isMobile!: boolean;
+
+  errorModalVisible = false;
+  errorMessage = '';
 
   constructor(
     private readonly recipesService: RecipesService,
@@ -83,9 +88,20 @@ export class RecipeCollectionComponent implements OnInit {
     this.recipesService
       .getRecipes(this.requestParams)
       .pipe(untilDestroyed(this))
-      .subscribe((recipes) => {
-        this.recipes = [...recipes.data];
-        this.totalRecords = recipes.meta.total;
+      .subscribe({
+        next: (recipes) => {
+          this.recipes = [...recipes.data];
+          this.totalRecords = recipes.meta.total;
+        },
+        error: (error) => {
+          this.errorMessage = error.message;
+          this.errorModalVisible = true;
+        },
       });
+  }
+  
+  cancel(): void {
+    this.errorModalVisible = false;
+    this.errorMessage = '';
   }
 }

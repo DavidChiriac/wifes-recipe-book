@@ -283,7 +283,12 @@ export class NewRecipeComponent implements OnInit {
     this.existingImages = this.existingImages.filter(
       (image) => image.id !== this.imageToBeDeleted?.id
     );
-    this.recipesService.deleteImage(this.imageToBeDeleted?.id ?? '').pipe(untilDestroyed(this)).subscribe();
+    this.recipesService.deleteImage(this.imageToBeDeleted?.id ?? '').pipe(untilDestroyed(this)).subscribe({
+      error: (error) => {
+          this.errorModalVisible = true;
+          this.errorMessage = error.message;
+        },
+    });
   }
 
   cancel(): void {

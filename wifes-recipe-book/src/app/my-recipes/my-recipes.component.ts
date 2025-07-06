@@ -21,7 +21,7 @@ import { DeviceService } from '../shared/services/device.service';
     InputTextModule,
     PaginatorModule,
     CommonModule,
-    DialogModule
+    DialogModule,
   ],
   templateUrl: './my-recipes.component.html',
   styleUrl: './my-recipes.component.scss',
@@ -54,7 +54,13 @@ export class MyRecipesComponent implements OnInit {
   deleteDialogVisible = false;
   recipeToBeDeleted: IRecipe | undefined;
 
-  constructor(private readonly recipesService: RecipesService, private readonly deviceService: DeviceService) {
+  errorModalVisible = false;
+  errorMessage = '';
+
+  constructor(
+    private readonly recipesService: RecipesService,
+    private readonly deviceService: DeviceService
+  ) {
     this.isMobile = deviceService.isMobile();
   }
 
@@ -80,20 +86,31 @@ export class MyRecipesComponent implements OnInit {
     this.recipesService
       .getMyRecipes(this.requestParams)
       .pipe(untilDestroyed(this))
-      .subscribe((recipes) => {
+      .subscribe({
+        next: (recipes) => {
         this.recipes = [...recipes.data];
         this.totalRecords = recipes.meta.total;
-      });
+        },
+        error: (error) => {
+          this.errorMessage = error.message;
+          this.errorModalVisible = true;
+        }
+    });
   }
 
-  deleteRecipe(id: string): void{
+  deleteRecipe(id: string): void {
     this.deleteDialogVisible = true;
-    this.recipeToBeDeleted = this.recipes.find(recipe => recipe.documentId === id);
+    this.recipeToBeDeleted = this.recipes.find(
+      (recipe) => recipe.documentId === id
+    );
   }
 
   cancel(): void {
     this.recipeToBeDeleted = undefined;
     this.deleteDialogVisible = false;
+
+    this.errorModalVisible = false;
+    this.errorMessage = '';
   }
 
   delete(): void {
@@ -101,8 +118,14 @@ export class MyRecipesComponent implements OnInit {
     this.recipesService
       .deleteRecipe(this.recipeToBeDeleted?.documentId ?? '')
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        this.onLazyLoad();
+      .subscribe({
+        next: () => {
+          this.onLazyLoad();
+        },
+        error: (error) => {
+          this.errorModalVisible = true;
+          this.errorMessage = error.message;
+        },
       });
   }
 }
