@@ -47,7 +47,7 @@ export class ViewRecipeComponent implements OnInit {
           this.recipe = { ...recipe };
         },
         error: (error) => {
-          this.errorMessage = error.error.message;
+          this.errorMessage = error.message;
           this.errorModalVisible = true;
         }
       });

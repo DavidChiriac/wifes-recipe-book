@@ -99,7 +99,7 @@ export class RecipeCollectionComponent implements OnInit {
           this.totalRecords = recipes.meta.total;
         },
         error: (error) => {
-          this.errorMessage = error.error.message;
+          this.errorMessage = error.message;
           this.errorModalVisible = true;
         },
       });

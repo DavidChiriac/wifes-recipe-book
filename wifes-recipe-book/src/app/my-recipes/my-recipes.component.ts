@@ -97,7 +97,7 @@ export class MyRecipesComponent implements OnInit {
         this.totalRecords = recipes.meta.total;
         },
         error: (error) => {
-          this.errorMessage = error.error.message;
+          this.errorMessage = error.message;
           this.errorModalVisible = true;
         }
     });
@@ -129,7 +129,7 @@ export class MyRecipesComponent implements OnInit {
         },
         error: (error) => {
           this.errorModalVisible = true;
-          this.errorMessage = error.error.message;
+          this.errorMessage = error.message;
         },
       });
   }
