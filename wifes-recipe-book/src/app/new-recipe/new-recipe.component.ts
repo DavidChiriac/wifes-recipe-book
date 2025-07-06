@@ -253,6 +253,7 @@ export class NewRecipeComponent implements OnInit {
   addNewIngredientSection(): void {
     this.ingredients.push(
       new FormGroup({
+        id: new FormControl(uuidv4()),
         sectionName: new FormControl(''),
         ingredients: new FormArray([
           new FormGroup({
