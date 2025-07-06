@@ -152,6 +152,10 @@ export class RecipesService {
     return this.http.post(environment.apiUrl + '/api/upload', formData);
   }
 
+  deleteImage(id: string): Observable<void> {
+    return this.http.delete<void>(environment.apiUrl + '/api/upload/files/' + id)
+  }
+
   mapRecipe(recipe: any): IRecipe {
     return {
       documentId: recipe?.documentId,

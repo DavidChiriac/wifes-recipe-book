@@ -276,7 +276,6 @@ export class NewRecipeComponent implements OnInit {
     this.imageToBeDeleted = this.existingImages.find(
       (image) => image.id === file.id
     );
-    console.log(this.imageToBeDeleted);
   }
 
   confirmUploadedFileDelete(): void {
@@ -284,6 +283,7 @@ export class NewRecipeComponent implements OnInit {
     this.existingImages = this.existingImages.filter(
       (image) => image.id !== this.imageToBeDeleted?.id
     );
+    this.recipesService.deleteImage(this.imageToBeDeleted?.id ?? '').pipe(untilDestroyed(this)).subscribe();
   }
 
   cancel(): void {
