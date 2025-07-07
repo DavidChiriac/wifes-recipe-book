@@ -56,10 +56,11 @@ export class RecipeCollectionComponent implements OnInit {
   errorModalVisible = false;
   errorMessage = '';
 
+  navigatingWithinModule = false;
+
   constructor(
     private readonly recipesService: RecipesService,
     private readonly deviceService: DeviceService,
-    private readonly sessionStorageService: SessionStorageService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
@@ -67,8 +68,6 @@ export class RecipeCollectionComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.searchTerm =
-        this.sessionStorageService.retrieve('collectionSearchTerm') ?? '';
       this.onLazyLoad();
     }
   }
@@ -79,7 +78,6 @@ export class RecipeCollectionComponent implements OnInit {
   }
 
   onLazyLoad(event?: PaginatorState): void {
-    this.sessionStorageService.store('collectionSearchTerm', this.searchTerm);
     if (event) {
       this.requestParams = {
         pageNumber: event.page,
@@ -103,6 +101,10 @@ export class RecipeCollectionComponent implements OnInit {
           this.errorModalVisible = true;
         },
       });
+  }
+
+  navigate(): void {
+    this.navigatingWithinModule = true;
   }
 
   cancel(): void {

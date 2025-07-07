@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { Router } from '@angular/router';
 
@@ -10,10 +10,11 @@ import { Router } from '@angular/router';
 })
 export class RecipeCardComponent {
   @Input() card!: IRecipe;
-
+  @Output() navigate = new EventEmitter();
   constructor(private readonly router: Router) {}
 
   viewRecipe(): void {
+    this.navigate.emit();
     this.router.navigate(['/recipe/' + this.card.documentId]);
   }
 }

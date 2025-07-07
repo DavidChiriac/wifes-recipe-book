@@ -61,13 +61,11 @@ export class MyRecipesComponent implements OnInit {
   constructor(
     private readonly recipesService: RecipesService,
     private readonly deviceService: DeviceService,
-    private readonly sessionStorageService: SessionStorageService
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
-    this.searchTerm = this.sessionStorageService.retrieve('myRecipesSearchTerm') ?? '';
     this.onLazyLoad();
   }
 
@@ -77,7 +75,6 @@ export class MyRecipesComponent implements OnInit {
   }
 
   onLazyLoad(event?: PaginatorState): void {
-    this.sessionStorageService.store('myRecipesSearchTerm', this.searchTerm)
     if (event) {
       this.requestParams = {
         pageNumber: event.page,
