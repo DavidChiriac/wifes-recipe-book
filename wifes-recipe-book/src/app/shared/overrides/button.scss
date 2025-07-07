@@ -76,9 +76,10 @@
 }
 
 .new-ingredient .p-button {
-  width: 34px;
   height: 34px;
+  padding: 0.8rem 1rem;
   background: vars.$herbalWash;
+  height: 1.3rem;
 
   &:hover {
     background: vars.$farro;

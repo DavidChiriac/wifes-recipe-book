@@ -31,3 +31,7 @@
         <p-button label="Close" class="delete-button" severity="secondary" (click)="cancel()" />
     </div>
 </p-dialog>
+
+<p-dialog [modal]="true" [showHeader]="false" [(visible)]="deleting" [style]="{ width: '25rem' }">
+    <h3 class="mb-3 text-center">Deleting...</h3>
+</p-dialog>

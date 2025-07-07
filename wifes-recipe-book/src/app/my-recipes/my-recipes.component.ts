@@ -10,7 +10,7 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
-import { SessionStorageService } from 'ngx-webstorage';
+import { catchError, concatMap, from, of, toArray } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -58,9 +58,11 @@ export class MyRecipesComponent implements OnInit {
   errorModalVisible = false;
   errorMessage = '';
 
+  deleting = false;
+
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceService
   ) {
     this.isMobile = deviceService.isMobile();
   }
@@ -90,14 +92,14 @@ export class MyRecipesComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipes) => {
-        this.recipes = [...recipes.data];
-        this.totalRecords = recipes.meta.total;
+          this.recipes = [...recipes.data];
+          this.totalRecords = recipes.meta.total;
         },
         error: (error) => {
           this.errorMessage = error.message;
           this.errorModalVisible = true;
-        }
-    });
+        },
+      });
   }
 
   deleteRecipe(id: string): void {
@@ -117,15 +119,36 @@ export class MyRecipesComponent implements OnInit {
 
   delete(): void {
     this.deleteDialogVisible = false;
-    this.recipesService
-      .deleteRecipe(this.recipeToBeDeleted?.documentId ?? '')
-      .pipe(untilDestroyed(this))
+    this.deleting = true;
+
+    const imageIds = [
+      this.recipeToBeDeleted?.coverImage?.id,
+      ...(this.recipeToBeDeleted?.images?.map((recipe) => recipe.id) ?? []),
+    ].filter(Boolean);
+
+    from(imageIds)
+      .pipe(
+        concatMap((imageId) =>
+          this.recipesService.deleteImage(imageId ?? '').pipe(
+            catchError(() => of(null))
+          )
+        ),
+        toArray(),
+        concatMap(() =>
+          this.recipesService.deleteRecipe(
+            this.recipeToBeDeleted?.documentId ?? ''
+          )
+        ),
+        untilDestroyed(this)
+      )
       .subscribe({
         next: () => {
           this.onLazyLoad();
+          this.deleting = false;
         },
         error: (error) => {
           this.errorModalVisible = true;
+          this.deleting = false;
           this.errorMessage = error.message;
         },
       });

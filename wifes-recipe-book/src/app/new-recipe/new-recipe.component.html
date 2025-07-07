@@ -4,35 +4,38 @@
       <div class="header">
         <h1 class="title">Add New Recipe</h1>
       </div>
-      <div>
+      <p-floatLabel>
         <label for="name">Recipe Name: </label>
-        <br />
         <input pInputText id="name" type="text" formControlName="name" />
-      </div>
+      </p-floatLabel>
       <br />
       <div formArrayName="ingredients">
         <label>Ingredients:</label>
         @for (section of ingredients.controls; track section.get('id'); let i = $index) {
-        <div  
-          [formGroupName]="i"
-        >
-          <div class="mb-2 flex gap-2 align-items-center">
+        <div [formGroupName]="i">
+          <br/>
+          @if (isMobile) {
+            <br/>
+          }
+          <p-floatLabel class="flex gap-2">
             <label for="sectionName">Section Name:</label>
             <input
               pInputText
               formControlName="sectionName"
               [id]="'sectionName' + i"
               [ngClass]="{mobile: isMobile}"
-              placeholder="e.g. Sauce, Dough, Topping"
             />
             <p-button class="submit-recipe" label="Delete section" (onClick)="deleteSection(i)"/>
-          </div>
+          </p-floatLabel>
+          <br/>
+
+          @if (isMobile) {
+            <br/>
+          }
 
           <div formArrayName="ingredients">
             @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
-              <div
-                [formGroupName]="j"
-              >
+              <div [formGroupName]="j">
                 <div
                   class="flex gap-3 mb-3"
                   [ngClass]="{
@@ -40,57 +43,57 @@
                     'align-items-start': isMobile
                   }"
                 >
-                  <div class="flex flex-wrap row-gap-2 gap-5">
-                    <div [ngClass]="{ 'flex gap-1 align-items-center': isMobile }">
+                  <div class="flex gap-2">
+                    <p-floatLabel>
                       <label>Name: </label>
                       <input
                         pInputText
                         formControlName="name"
+                        class="w-12"
                         [ngClass]="{ mobile: isMobile }"
                         type="text"
                       />
-                    </div>
-                    <div [ngClass]="{ 'flex gap-1 align-items-center': isMobile }">
+                    </p-floatLabel>
+                    <p-floatLabel>
                       <label>Quantity: </label>
                       <input
                         pInputText
                         formControlName="quantity"
+                        class="w-12"
                         [ngClass]="{ mobile: isMobile }"
                         type="text"
                       />
-                    </div>
+                    </p-floatLabel>
                   </div>
 
-                  <!-- Optional buttons -->
-                  <p-button
-                    class="delete-ingredient"
-                    [ngClass]="{ mobile: isMobile }"
-                    label="-"
-                    (onClick)="removeIngredient(i, j)"
-                  ></p-button>
-
-                  @if (getNestedIngredients(i).controls.length - 1 === j) {
-
+                  <div class="w-2">
                     <p-button
-                      class="new-ingredient"
+                      class="delete-ingredient"
                       [ngClass]="{ mobile: isMobile }"
-                      label="+"
-                      (onClick)="addNewIngredient(i)"
+                      label="-"
+                      (onClick)="removeIngredient(i, j)"
                     ></p-button>
-                  }
+                  </div>
                 </div>
               </div>
+              
             }
+            <p-button
+              class="new-ingredient"
+              [ngClass]="{ mobile: isMobile }"
+              label="+Add ingredient"
+              (onClick)="addNewIngredient(i)"
+            ></p-button>
           </div>
         </div>
       }
+      <br/>
       <p-button class="submit-recipe" label="Add new ingredients section" (onClick)="addNewIngredientSection()"/>
       </div>
 
       <br />
       <div>
         <label for="preparation">Preparation: </label>
-        <br />
         <p-editor
           rows="10"
           [style]="{height: '400px'}"

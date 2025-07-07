@@ -26,6 +26,7 @@ import { environment } from '../../environments/environment.prod';
 import { CommonModule } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
 import { DialogModule } from 'primeng/dialog';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @UntilDestroy()
 @Component({
@@ -40,6 +41,7 @@ import { DialogModule } from 'primeng/dialog';
     EditorModule,
     CommonModule,
     DialogModule,
+    FloatLabelModule
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
