@@ -103,17 +103,14 @@ export class RecipesService {
     if (params.sortDirection && params.sortField) {
       queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
     }
+    searchTerm = searchTerm.trim();
     if (searchTerm) {
-      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}
-      &filters[$or][1][preparation][$containsi]=${searchTerm}
-      &filters[$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
+      queryParams += `&filters[$and][1][$or][0][title][$containsi]=${searchTerm}&filters[$and][1][$or][1][preparation][$containsi]=${searchTerm}&filters[$and][1][$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(
         environment.apiUrl +
-          `/api/recipes?${this.recipesQuery}&filters[author][email][$eq]=${
-            this.localStorageService.retrieve('user').email
-          }&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
+          `/api/recipes?${this.recipesQuery}&filters[$and][0][author][email][$eq]=${this.localStorageService.retrieve('user').email}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
             params.pageSize
           }${queryParams}`
       )
