@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_recipe_ingredients_sections",
+  "info": {
+    "displayName": "ingredients-section"
+  },
+  "options": {},
+  "attributes": {
+    "sectionName": {
+      "type": "string"
+    },
+    "ingredients": {
+      "type": "component",
+      "component": "recipe.ingredient",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

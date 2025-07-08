@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_recipe_preparation_times",
+  "info": {
+    "displayName": "preparationTime"
+  },
+  "options": {},
+  "attributes": {
+    "hours": {
+      "type": "integer"
+    },
+    "minutes": {
+      "type": "integer"
+    }
+  },
+  "config": {}
+}
