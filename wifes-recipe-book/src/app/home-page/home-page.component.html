@@ -13,11 +13,4 @@
     ></p-button>
   </div>
   <br/>
-  <div class="recommended-recipes">
-    @for (recipe of recommendedRecipes; track $index) {
-      <div class="recipe">
-        <app-recipe-card [card]="recipe"></app-recipe-card>
-      </div>
-    }
-  </div>
 </div>
