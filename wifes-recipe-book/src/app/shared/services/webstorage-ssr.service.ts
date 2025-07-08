@@ -14,7 +14,7 @@ export class WebstorageSsrService {
   getFromLocalStorage(key: string, defaultValue: any): any {
     if (isPlatformBrowser(this.platformId)) {
       const item = this.localSt.retrieve(key);
-      return item ? JSON.parse(item) : defaultValue;
+      return item ?? defaultValue;
     }
     
     return defaultValue;
