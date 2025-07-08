@@ -205,7 +205,7 @@ export class RecipesService {
       images: [...(recipe.images ?? []), ...existingImages].map(
         (image) => image.id
       ),
-      coverImage: recipe.coverImage,
+      coverImage: recipe.coverImage?.id,
     };
 
     delete body['documentId'];

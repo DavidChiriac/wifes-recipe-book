@@ -68,12 +68,15 @@ export class NewRecipeComponent implements OnInit {
     preparation: new FormControl(''),
     hours: new FormControl(0),
     minutes: new FormControl(30),
-    coverImage: new FormControl(undefined, Validators.required),
+    coverImage: new FormControl(undefined),
     images: new FormArray([] as FormControl[]),
   });
 
   existingCoverImage: { id: string; name: string; url: string } | undefined;
   existingImages: { id: string; name: string; url: string }[] = [];
+
+  newUploadedCoverImage: { id: string; name: string; url: string } | undefined;
+  newUploadedImages: { id: string; name: string; url: string }[] = [];
 
   documentId = '';
 
@@ -163,7 +166,7 @@ export class NewRecipeComponent implements OnInit {
   }
 
   onSubmit(): void {
-    let uploadedImages: string[] = [];
+    let uploadedImages: { id: string; name: string; url: string }[] = [];
 
     this.uploading = true;
 
@@ -176,7 +179,7 @@ export class NewRecipeComponent implements OnInit {
                 uploadedImages = response;
                 this.images.clear();
                 uploadedImages.forEach((image) =>
-                  this.images.push(new FormControl(image))
+                  this.newUploadedImages.push(image)
                 );
               })
             )
@@ -185,7 +188,8 @@ export class NewRecipeComponent implements OnInit {
     let uploadCoverImage$ = this.coverImage.value
       ? this.recipesService.uploadImages([this.coverImage.value]).pipe(
           tap((response) => {
-            this.coverImage.setValue(response[0].id);
+            this.coverImage.reset();
+            this.newUploadedCoverImage = response[0];
           })
         )
       : of(null).pipe(
@@ -214,6 +218,7 @@ export class NewRecipeComponent implements OnInit {
         },
         error: (error) => {
           this.errorModalVisible = true;
+          this.uploading = false;
           this.errorMessage = error.message;
         },
       });
@@ -222,13 +227,11 @@ export class NewRecipeComponent implements OnInit {
   transformFormIntoRecipe(form: FormGroup): IRecipe {
     const recipe: IRecipe = {
       documentId: this.documentId,
-      coverImage:
-        form.controls['coverImage'].getRawValue()?.id ??
-        form.controls['coverImage'].getRawValue(),
+      coverImage: this.newUploadedCoverImage,
       title: form.controls['name'].getRawValue(),
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients'].getRawValue(),
-      images: [...this.images.getRawValue()],
+      images: [...this.newUploadedImages],
       preparationTime: {
         hours: form.controls['hours'].getRawValue(),
         minutes: form.controls['minutes'].getRawValue(),
@@ -307,11 +310,12 @@ export class NewRecipeComponent implements OnInit {
     );
   }
 
-  onRemovecoverImage(): void {
+  onRemoveCoverImage(): void {
+    this.newUploadedCoverImage = undefined;
     this.coverImage.setValue(undefined);
   }
 
-  onUploadcoverImage(event: FileSelectEvent): void {
+  onUploadCoverImage(event: FileSelectEvent): void {
     this.coverImage.setValue(event.currentFiles[0]);
   }
 
@@ -333,6 +337,7 @@ export class NewRecipeComponent implements OnInit {
       .subscribe({
         error: (error) => {
           this.errorModalVisible = true;
+          this.uploading = false;
           this.errorMessage = error.message;
         },
       });
