@@ -1,0 +1,18 @@
+{
+  "kind": "singleType",
+  "collectionName": "today_recommendeds",
+  "info": {
+    "singularName": "today-recommended",
+    "pluralName": "today-recommendeds",
+    "displayName": "Today Recommended"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "date": {
+      "type": "string"
+    }
+  }
+}
