@@ -10,7 +10,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceService } from '../shared/services/device.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { SessionStorageService } from 'ngx-webstorage';
 
 @UntilDestroy()
 @Component({

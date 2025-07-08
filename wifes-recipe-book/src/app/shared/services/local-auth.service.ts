@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { LocalStorageService } from 'ngx-webstorage';
+import { WebstorageSsrService } from './webstorage-ssr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class LocalAuthService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly localStorageService: LocalStorageService
+    private readonly localStorageService: WebstorageSsrService
   ) {}
 
   connect(jwt: string): Observable<any> {
@@ -26,6 +26,6 @@ export class LocalAuthService {
   }
 
   getToken(): string {
-    return this.localStorageService.retrieve('token');
+    return this.localStorageService.getFromLocalStorage('token', '');
   }
 }

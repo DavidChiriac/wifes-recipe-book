@@ -10,6 +10,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalAuthService } from '../../services/local-auth.service';
 import { environment } from '../../../../environments/environment';
+import { WebstorageSsrService } from '../../services/webstorage-ssr.service';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +34,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private readonly deviceService: DeviceService,
-    private readonly localStorageService: LocalStorageService,
+    private readonly localStorageService: WebstorageSsrService,
     private readonly localAuthService: LocalAuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -57,7 +58,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const user = this.localStorageService.retrieve('user');
+      const user = this.localStorageService.getFromLocalStorage('user', '');
 
       if (user) {
         this.signedIn = true;
@@ -77,8 +78,8 @@ export class NavbarComponent implements OnInit {
   }
 
   signOut(): void {
-    this.localStorageService.clear('token');
-    this.localStorageService.clear('user');
+    this.localStorageService.deleteFromLocalStorage('token');
+    this.localStorageService.deleteFromLocalStorage('user');
     this.localAuthService.userConnected.emit(false);
     this.signedIn = false;
     location.reload();

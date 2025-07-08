@@ -29,4 +29,8 @@ export class DeviceService {
   public isMac(): boolean {
     return window.navigator?.platform.includes('Mac') || false;
   }
+
+  public setDeviceInfo(info: any): void {
+    this.deviceService.setDeviceInfo(info)
+  }
 }
