@@ -9,8 +9,6 @@ export default (config: any, { strapi }: { strapi: any }) => {
         limit: 1,
       });
 
-      console.log(existingEntry);
-
       if (!existingEntry || existingEntry?.length === 0) {
         strapi.log.info('🕒 First request of the day: running daily recipe job');
 
@@ -25,6 +23,12 @@ export default (config: any, { strapi }: { strapi: any }) => {
           });
         } catch (err) {
           strapi.log.error('❌ Error running daily recipe job:', err);
+        }
+
+        try {
+          await strapi.service('api::recipe.recipe').deleteUnlinkedMedia();
+        } catch(err) {
+          strapi.log.error('❌ Error running daily images job:', err);
         }
       }
     } catch (err) {

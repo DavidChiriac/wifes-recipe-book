@@ -18,7 +18,7 @@ import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-car
 export class HomePageComponent implements OnInit {
   isMobile!: boolean;
 
-recommendedRecipes: IRecipe[] = [];
+  recommendedRecipes: IRecipe[] = [];
 
   constructor(
     private readonly deviceService: DeviceService,
@@ -27,7 +27,7 @@ recommendedRecipes: IRecipe[] = [];
     this.isMobile = deviceService.isMobile();
   }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
     this.recipesService
       .getRecommendedRecipes()
       .pipe(untilDestroyed(this))
