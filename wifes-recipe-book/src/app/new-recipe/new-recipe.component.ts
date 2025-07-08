@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -23,7 +23,7 @@ import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { EditorModule } from 'primeng/editor';
 import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -41,7 +41,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     EditorModule,
     CommonModule,
     DialogModule,
-    FloatLabelModule
+    FloatLabelModule,
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
@@ -94,19 +94,22 @@ export class NewRecipeComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
     private readonly router: Router,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
-      if (params?.['id']) {
-        this.documentId = params['id'];
-        (this.documentId);
-        this.populateForm();
-      }
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
+        if (params?.['id']) {
+          this.documentId = params['id'];
+          this.documentId;
+          this.populateForm();
+        }
+      });
+    }
   }
 
   populateForm(): void {
@@ -363,11 +366,13 @@ export class NewRecipeComponent implements OnInit {
         nestedIngredients.removeAt(0);
       }
 
-      nestedIngredients.push(new FormGroup({
-        id: new FormControl(uuidv4()),
-        name: new FormControl('', Validators.required),
-        quantity: new FormControl(''),
-      }));
+      nestedIngredients.push(
+        new FormGroup({
+          id: new FormControl(uuidv4()),
+          name: new FormControl('', Validators.required),
+          quantity: new FormControl(''),
+        })
+      );
     }
   }
 }

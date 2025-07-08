@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DeviceService } from '../../services/device.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -34,9 +34,12 @@ export class NavbarComponent implements OnInit {
   constructor(
     private readonly deviceService: DeviceService,
     private readonly localStorageService: LocalStorageService,
-    private readonly localAuthService: LocalAuthService
+    private readonly localAuthService: LocalAuthService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.isMobile = deviceService.isMobile();
+    if (isPlatformBrowser(this.platformId)) {
+      this.isMobile = deviceService.isMobile();
+    }
 
     this.items = [
       {
@@ -53,20 +56,24 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const user = this.localStorageService.retrieve('user');
+    if (isPlatformBrowser(this.platformId)) {
+      const user = this.localStorageService.retrieve('user');
 
-    if (user) {
-      this.signedIn = true;
-      this.localAuthService.userConnected.emit(true);
+      if (user) {
+        this.signedIn = true;
+        this.localAuthService.userConnected.emit(true);
+      }
+
+      this.localAuthService.userConnected
+        .pipe(untilDestroyed(this))
+        .subscribe((connected) => (this.signedIn = connected));
     }
-
-    this.localAuthService.userConnected
-      .pipe(untilDestroyed(this))
-      .subscribe((connected) => (this.signedIn = connected));
   }
 
   sign(): void {
-    window.location.href = environment.apiUrl + '/api/connect/google';
+    if (isPlatformBrowser(this.platformId)) {
+      window.location.href = environment.apiUrl + '/api/connect/google';
+    }
   }
 
   signOut(): void {

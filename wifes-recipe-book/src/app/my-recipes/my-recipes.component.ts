@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
@@ -8,7 +8,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ExtendedCardComponent } from '../shared/components/extended-card/extended-card.component';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeviceService } from '../shared/services/device.service';
 import { catchError, concatMap, from, of, toArray } from 'rxjs';
 
@@ -62,13 +62,16 @@ export class MyRecipesComponent implements OnInit {
 
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
-    this.onLazyLoad();
+    if (isPlatformBrowser(this.platformId)) {
+      this.onLazyLoad();
+    }
   }
 
   clear(): void {
@@ -129,9 +132,9 @@ export class MyRecipesComponent implements OnInit {
     from(imageIds)
       .pipe(
         concatMap((imageId) =>
-          this.recipesService.deleteImage(imageId ?? '').pipe(
-            catchError(() => of(null))
-          )
+          this.recipesService
+            .deleteImage(imageId ?? '')
+            .pipe(catchError(() => of(null)))
         ),
         toArray(),
         concatMap(() =>

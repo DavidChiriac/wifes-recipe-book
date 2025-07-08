@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { DeviceService } from '../shared/services/device.service';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
@@ -23,16 +23,19 @@ export class HomePageComponent implements OnInit {
   constructor(
     private readonly deviceService: DeviceService,
     private readonly recipesService: RecipesService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   ngOnInit(): void {
-    this.recipesService
-      .getRecommendedRecipes()
-      .pipe(untilDestroyed(this))
-      .subscribe((recipes) => {
-        this.recommendedRecipes = [...recipes];
-      });
+    if (isPlatformBrowser(this.platformId)) {
+      this.recipesService
+        .getRecommendedRecipes()
+        .pipe(untilDestroyed(this))
+        .subscribe((recipes) => {
+          this.recommendedRecipes = [...recipes];
+        });
+    }
   }
 }
