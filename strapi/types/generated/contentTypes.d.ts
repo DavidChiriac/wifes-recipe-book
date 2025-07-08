@@ -448,7 +448,6 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       false
     >;
     publishedAt: Schema.Attribute.DateTime;
-    recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

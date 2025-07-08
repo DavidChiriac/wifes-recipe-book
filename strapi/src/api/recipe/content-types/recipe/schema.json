@@ -47,11 +47,6 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user"
     },
-    "recommended": {
-      "type": "boolean",
-      "required": false,
-      "default": false
-    },
     "ingredients": {
       "type": "component",
       "component": "recipe.ingredients-section",
