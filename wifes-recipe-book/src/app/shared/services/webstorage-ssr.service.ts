@@ -22,7 +22,7 @@ export class WebstorageSsrService {
 
   setToLocalStorage(key: string, value: any): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.localSt.store(key, JSON.stringify(value));
+      this.localSt.store(key, value);
     }
   }
 
