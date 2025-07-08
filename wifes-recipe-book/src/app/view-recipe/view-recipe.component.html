@@ -17,7 +17,7 @@
                         <ul>
                             @for (ingredient of section?.ingredients; track $index;) {
                             <li class="mb-3 font-italic ingredient">
-                                {{ingredient.name}} - {{ingredient.quantity}}
+                                {{ingredient.name}} @if (ingredient.quantity) {- {{ingredient.quantity}}}
                             </li>
                             }
                         </ul>
