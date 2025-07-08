@@ -103,6 +103,27 @@ export class RecipesService {
       );
   }
 
+  getRecommendedRecipes(): Observable<IRecipe[]> {
+    const query = qs.stringify(
+      {
+        populate: ['coverImage'],
+      },
+      {
+        encodeValuesOnly: true,
+      }
+    );
+    return this.http
+      .get<{ data: IRecipe[] }>(
+        environment.apiUrl +
+          `/api/recipes?filters[recommended][$eq]=true&${query}`
+      )
+      .pipe(
+        map((response) =>
+          response.data?.map((recipe) => this.mapRecipe(recipe))
+        )
+      );
+  }
+
   createRecipe(
     recipe: IRecipe,
     existingImages: { id: string; name: string; url: string }[] = []
