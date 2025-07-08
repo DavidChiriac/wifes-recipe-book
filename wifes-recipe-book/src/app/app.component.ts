@@ -17,5 +17,11 @@ export class AppComponent {
 
   constructor(private readonly deviceService: DeviceService) {
     this.isMobile = deviceService.isMobile();
+
+    if('caches' in window){
+      caches.keys().then(names => {
+        names.forEach(name => caches.delete(name));
+      })
+    }
   }
 }
