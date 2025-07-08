@@ -1,4 +1,4 @@
-export default {
+export const cronTasks = {
 	myJob: {
 		task: async ({ strapi }) => {
 			console.log("⏰ Cron job triggered");
@@ -25,6 +25,9 @@ export default {
 					...shuffled.slice(0, 4),
 					...existing.sort(() => 0.5 - Math.random()).slice(0, 4),
 				].slice(0, 4);
+
+				console.log('selected: ', selected);
+				console.log('existing: ', existing);
 
 				if (selected?.length > 0) {
 					existing

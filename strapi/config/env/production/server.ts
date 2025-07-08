@@ -1,4 +1,4 @@
-import cronTasks from "src/cron-tasks";
+import { cronTasks } from "../../cron-tasks";
 
 export default ({ env }) => ({
 	host: env("HOST", "0.0.0.0"),

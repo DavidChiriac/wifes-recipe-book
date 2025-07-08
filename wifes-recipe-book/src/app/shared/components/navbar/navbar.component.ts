@@ -7,9 +7,9 @@ import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { LocalStorageService } from 'ngx-webstorage';
 import { TooltipModule } from 'primeng/tooltip';
-import { environment } from '../../../../environments/environment.prod';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalAuthService } from '../../services/local-auth.service';
+import { environment } from '../../../../environments/environment';
 
 @UntilDestroy()
 @Component({
