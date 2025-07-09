@@ -21,6 +21,7 @@
     "@strapi/provider-upload-local": "^5.17.0",
     "@strapi/strapi": "^5.17.0",
     "better-sqlite3": "^12.2.0",
+    "node-fetch": "^3.3.2",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.0.0",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.0.10",
+    "@types/node-fetch": "^2.6.12",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5"
