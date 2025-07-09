@@ -18,6 +18,7 @@ export class RecipesService {
         'ingredients',
         'ingredients.ingredients',
         'preparationTime',
+        'author'
       ],
     },
     {
