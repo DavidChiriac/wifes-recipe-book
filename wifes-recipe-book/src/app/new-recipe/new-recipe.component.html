@@ -1,4 +1,4 @@
-<div [ngClass]="{'new-recipe-mobile': isMobile, 'new-recipe': !isMobile}">
+<div [ngClass]="{'new-recipe-mobile': isMobile, 'new-recipe': isMobile === false}">
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
     <div>
       <div class="header">
@@ -39,7 +39,7 @@
                 <div
                   class="flex gap-3 mb-3"
                   [ngClass]="{
-                    'align-items-center': !isMobile,
+                    'align-items-center': isMobile === false,
                     'align-items-start': isMobile
                   }"
                 >

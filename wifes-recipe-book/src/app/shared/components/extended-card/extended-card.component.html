@@ -1,4 +1,4 @@
-<div class="cursor-pointer" [ngClass]="{'card': !isMobile, 'card-mobile': isMobile}">
+<div class="cursor-pointer" [ngClass]="{'card': isMobile === false, 'card-mobile': isMobile}">
     <div class="details" (click)="view()">
         <div class="image">
             @if (recipe.coverImage) {

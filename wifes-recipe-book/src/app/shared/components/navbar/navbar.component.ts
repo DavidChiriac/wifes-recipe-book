@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { DeviceService } from '../../services/device.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
@@ -10,7 +9,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalAuthService } from '../../services/local-auth.service';
 import { environment } from '../../../../environments/environment';
-import { WebstorageSsrService } from '../../services/webstorage-ssr.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -33,8 +32,8 @@ export class NavbarComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   constructor(
-    private readonly deviceService: DeviceService,
-    private readonly localStorageService: WebstorageSsrService,
+    private readonly deviceService: DeviceDetectorService,
+    private readonly localStorageService: LocalStorageService,
     private readonly localAuthService: LocalAuthService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
@@ -58,7 +57,7 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const user = this.localStorageService.getFromLocalStorage('user', '');
+      const user = this.localStorageService.retrieve('user');
 
       if (user) {
         this.signedIn = true;
@@ -78,8 +77,8 @@ export class NavbarComponent implements OnInit {
   }
 
   signOut(): void {
-    this.localStorageService.deleteFromLocalStorage('token');
-    this.localStorageService.deleteFromLocalStorage('user');
+    this.localStorageService.clear('token');
+    this.localStorageService.clear('user');
     this.localAuthService.userConnected.emit(false);
     this.signedIn = false;
     location.reload();

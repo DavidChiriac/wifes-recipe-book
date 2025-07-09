@@ -1,8 +1,8 @@
 import { Component, Inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { DeviceService } from './shared/services/device.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-root',
@@ -16,12 +16,12 @@ export class AppComponent {
   isMobile!: boolean;
 
   constructor(
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.isMobile = deviceService.isMobile();
-
     if (isPlatformBrowser(this.platformId)) {
+      this.isMobile = deviceService.isMobile();
+
       if ('caches' in window) {
         caches.keys().then((names) => {
           names.forEach((name) => caches.delete(name));

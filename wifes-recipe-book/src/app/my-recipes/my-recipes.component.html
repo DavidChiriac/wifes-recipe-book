@@ -1,4 +1,4 @@
-<div [ngClass]="{'my-recipes': !isMobile, 'my-recipes-mobile': isMobile}">
+<div [ngClass]="{'my-recipes': isMobile === false, 'my-recipes-mobile': isMobile}">
     <div class="header">
         <h1 class="title">My Recipes</h1>
     </div>

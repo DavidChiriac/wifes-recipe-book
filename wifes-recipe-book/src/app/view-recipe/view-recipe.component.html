@@ -1,4 +1,4 @@
-<div [ngClass]="{'recipe': !isMobile, 'recipe-mobile': isMobile}">
+<div [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
     @if(isMobile){
         <div>
             <h1 class="font-italic mt-0 mb-0">{{recipe?.title}}</h1>

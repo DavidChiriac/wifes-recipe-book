@@ -3,7 +3,7 @@ import { IRecipe } from '../../interfaces/recipe.interface';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { DeviceService } from '../../services/device.service';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-extended-card',
@@ -22,7 +22,7 @@ export class ExtendedCardComponent {
 
   constructor(
     private readonly router: Router,
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
   ) {
     this.isMobile = deviceService.isMobile();
   }

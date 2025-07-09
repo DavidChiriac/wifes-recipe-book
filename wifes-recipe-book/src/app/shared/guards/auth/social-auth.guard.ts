@@ -1,12 +1,12 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { WebstorageSsrService } from '../../services/webstorage-ssr.service';
+import { LocalStorageService } from 'ngx-webstorage';
 
 export const socialAuthGuard: CanActivateFn = () => {
-  const localStorage = inject(WebstorageSsrService);
+  const localStorage = inject(LocalStorageService);
   const router = inject(Router);
 
-  const user = localStorage.getFromLocalStorage('user', false);
+  const user = localStorage.retrieve('user');
 
   if (user) {
     return true;

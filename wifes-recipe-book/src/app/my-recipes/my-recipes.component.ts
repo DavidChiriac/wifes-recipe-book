@@ -9,8 +9,8 @@ import { ExtendedCardComponent } from '../shared/components/extended-card/extend
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DeviceService } from '../shared/services/device.service';
 import { catchError, concatMap, from, of, toArray } from 'rxjs';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -62,7 +62,7 @@ export class MyRecipesComponent implements OnInit {
 
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();

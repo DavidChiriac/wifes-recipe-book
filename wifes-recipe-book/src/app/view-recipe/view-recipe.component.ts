@@ -7,9 +7,9 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { MarkdownPipe } from '../shared/pipes/safe-html.pipe';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { DeviceService } from '../shared/services/device.service';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -29,7 +29,7 @@ export class ViewRecipeComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService
+    private readonly deviceService: DeviceDetectorService
   ) {
     this.isMobile = deviceService.isMobile();
   }

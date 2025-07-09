@@ -1,7 +1,7 @@
-<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': !isMobile }">
+<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': isMobile === false }">
   <div class="left" [routerLink]="''">
     <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
-    @if (!isMobile) {
+    @if (isMobile === false) {
       <h1 class="title">Home</h1>
     }
   </div>
@@ -22,7 +22,7 @@
     />
 
     @if(signedIn){
-      @if(!isMobile){ 
+      @if(isMobile === false){ 
         <p-button
           class="my-recipes"
           [ngClass]="{ mobile: isMobile }"

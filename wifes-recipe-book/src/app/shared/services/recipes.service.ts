@@ -4,7 +4,7 @@ import { map, Observable } from 'rxjs';
 import { IRecipe } from '../interfaces/recipe.interface';
 import { environment } from '../../../environments/environment';
 import qs from 'qs';
-import { WebstorageSsrService } from './webstorage-ssr.service';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +27,7 @@ export class RecipesService {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly localStorageService: WebstorageSsrService
+    private readonly localStorageService: LocalStorageService
   ) {}
 
   getRecipes(
@@ -89,7 +89,7 @@ export class RecipesService {
     return this.http
       .get<{ data: IRecipe[]; meta: { total: number } }>(
         environment.apiUrl +
-          `/api/recipes?${this.recipesQuery}&filters[$and][0][author][email][$eq]=${this.localStorageService.getFromLocalStorage('user', '').email}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
+          `/api/recipes?${this.recipesQuery}&filters[$and][0][author][email][$eq]=${this.localStorageService.retrieve('user').email}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
             params.pageSize
           }${queryParams}`
       )
@@ -132,7 +132,7 @@ export class RecipesService {
       .post<{ data: IRecipe }>(environment.apiUrl + '/api/recipes', {
         data: {
           ...this.createRecipeMapper(recipe, existingImages),
-          author: this.localStorageService.getFromLocalStorage('user', '').documentId,
+          author: this.localStorageService.retrieve('user').documentId,
         },
         meta: {},
       })

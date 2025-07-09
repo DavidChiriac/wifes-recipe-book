@@ -1,12 +1,12 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
-import { DeviceService } from '../shared/services/device.service';
 import { ButtonModule } from 'primeng/button';
 import { RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -21,7 +21,7 @@ export class HomePageComponent implements OnInit {
   recommendedRecipes: IRecipe[] = [];
 
   constructor(
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
     private readonly recipesService: RecipesService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {

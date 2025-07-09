@@ -24,9 +24,9 @@ import { EditorModule } from 'primeng/editor';
 import { concatMap, of, tap, map } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DeviceService } from '../shared/services/device.service';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -94,7 +94,7 @@ export class NewRecipeComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
     private readonly router: Router,
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();

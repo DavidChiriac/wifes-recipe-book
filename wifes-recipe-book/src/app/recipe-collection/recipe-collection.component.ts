@@ -7,9 +7,9 @@ import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-car
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { DeviceService } from '../shared/services/device.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @UntilDestroy()
 @Component({
@@ -59,7 +59,7 @@ export class RecipeCollectionComponent implements OnInit {
 
   constructor(
     private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceService,
+    private readonly deviceService: DeviceDetectorService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
