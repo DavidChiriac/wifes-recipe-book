@@ -6,4 +6,5 @@ export interface IRecipe {
   images?: { url: string; id: string; name: string }[];
   preparationTime?: { hours: string; minutes: string };
   documentId?: string;
+  author?: {documentId: string}
 }

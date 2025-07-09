@@ -205,6 +205,7 @@ export class RecipesService {
         hours: recipe?.preparationTime?.hours.toString(),
         minutes: recipe?.preparationTime?.minutes.toString(),
       },
+      author: recipe?.author
     };
   }
 
