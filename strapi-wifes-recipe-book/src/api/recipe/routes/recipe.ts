@@ -1,16 +1,30 @@
-/**
- * recipe router
- */
-
-import { factories } from '@strapi/strapi';
-
-export default factories.createCoreRouter('api::recipe.recipe', {
-  config: {
-    update: {
-      policies: ['api::recipe.is-owner-or-admin'],
-    },
-    delete: {
-      policies: ['api::recipe.is-owner-or-admin'],
-    },
-  },
-});
+export default {
+	routes: [
+		{
+			method: "PUT",
+			path: "/recipes/:id",
+			handler: "recipe.update",
+			config: {
+				policies: ["api::recipe.is-owner-or-admin"],
+			},
+		},
+		{
+			method: "DELETE",
+			path: "/recipes/:id",
+			handler: "recipe.delete",
+			config: {
+				policies: ["api::recipe.is-owner-or-admin"],
+			},
+		},
+		{
+			method: "GET",
+			path: "/recipes/:id",
+			handler: "recipe.findOne",
+		},
+		{
+			method: "GET",
+			path: "/recipes",
+			handler: "recipe.find",
+		},
+	],
+};

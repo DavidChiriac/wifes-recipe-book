@@ -1,26 +1,24 @@
-import { Context } from 'koa';
-
-export default async (ctx: Context, config: any, { strapi }: { strapi: any }) => {
-  const { id } = ctx.params;
+export default async (ctx, config, { strapi }) => {
   const user = ctx.state.user;
 
   if (!user) {
-    return ctx.unauthorized('You must be logged in.');
+    return false;
   }
 
-  const recipe = await strapi.entityService.findOne('api::recipe.recipe', id, {
+  const recipe = await strapi.entityService.findMany('api::recipe.recipe', {
+    filters: { documentId: ctx.params.id },
     populate: { author: true },
   });
 
   if (!recipe) {
-    return ctx.notFound('Recipe not found.');
+    return false;
   }
 
-  const isOwner = recipe.author?.id === user.id;
-  const isAdmin = user.roles?.some((role: any) => role.name === 'Admin');
+  const isOwner = recipe[0].author?.id === user.id;
+  const isAdmin = user.role === 'Admin';
 
   if (!isOwner && !isAdmin) {
-    return ctx.unauthorized('You are not allowed to modify this recipe.');
+    return false;
   }
 
   return true;

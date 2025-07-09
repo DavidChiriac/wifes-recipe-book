@@ -4,7 +4,7 @@ export default {
   /**
    * Cron job that runs every hour to keep the server awake.
    */
-  '*/30 * * * *': async () => {
+  '*/10 * * * *': async () => {
     const url = 'https://uplifting-happiness-124a800a1d.strapiapp.com/api/recipes';
 
     try {
