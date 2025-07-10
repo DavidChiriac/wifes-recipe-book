@@ -27,6 +27,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { AccordionModule } from 'primeng/accordion';
 
 @UntilDestroy()
 @Component({
@@ -42,6 +43,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     CommonModule,
     DialogModule,
     FloatLabelModule,
+    AccordionModule
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
@@ -59,6 +61,7 @@ export class NewRecipeComponent implements OnInit {
               id: new FormControl(uuidv4()),
               name: new FormControl('', Validators.required),
               quantity: new FormControl(''),
+              calories: new FormControl()
             }),
           ]),
         }),
@@ -134,6 +137,7 @@ export class NewRecipeComponent implements OnInit {
                           Validators.required
                         ),
                         quantity: new FormControl(ingredient.quantity),
+                        calories: new FormControl(ingredient.calories)
                       })
                   )
                 ),
@@ -254,6 +258,7 @@ export class NewRecipeComponent implements OnInit {
         id: new FormControl(uuidv4()),
         name: new FormControl('', Validators.required),
         quantity: new FormControl(''),
+        calories: new FormControl()
       })
     );
   }
@@ -262,12 +267,13 @@ export class NewRecipeComponent implements OnInit {
     this.ingredients.push(
       new FormGroup({
         id: new FormControl(uuidv4()),
-        sectionName: new FormControl(''),
+        sectionName: new FormControl(),
         ingredients: new FormArray([
           new FormGroup({
             id: new FormControl(uuidv4()),
-            name: new FormControl('', Validators.required),
-            quantity: new FormControl(''),
+            name: new FormControl(undefined, Validators.required),
+            quantity: new FormControl(),
+            calories: new FormControl()
           }),
         ]),
       })
@@ -371,6 +377,7 @@ export class NewRecipeComponent implements OnInit {
           id: new FormControl(uuidv4()),
           name: new FormControl('', Validators.required),
           quantity: new FormControl(''),
+          calories: new FormControl()
         })
       );
     }

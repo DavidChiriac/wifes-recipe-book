@@ -4,93 +4,86 @@
       <div class="header">
         <h1 class="title">Add New Recipe</h1>
       </div>
-      <p-floatLabel>
+      <p-floatLabel [ngClass]="{mobile: isMobile}">
         <label for="name">Recipe Name: </label>
         <input pInputText id="name" type="text" formControlName="name" />
       </p-floatLabel>
       <br />
-      <div formArrayName="ingredients">
-        <label>Ingredients:</label>
+      <label>Ingredients:</label>
+      <p-accordion [value]="0" formArrayName="ingredients">
         @for (section of ingredients.controls; track section.get('id'); let i = $index) {
-        <div [formGroupName]="i">
-          <br/>
-          @if (isMobile) {
-            <br/>
-          }
-          <p-floatLabel class="flex gap-2">
-            <label for="sectionName">Section Name:</label>
-            <input
-              pInputText
-              formControlName="sectionName"
-              [id]="'sectionName' + i"
-              [ngClass]="{mobile: isMobile}"
-            />
-            <p-button class="submit-recipe" label="Delete section" (onClick)="deleteSection(i)"/>
-          </p-floatLabel>
-          <br/>
+            <p-accordion-panel [value]="i" [formGroupName]="i">
+                <p-accordion-header><div class="flex gap-2 align-items-center">{{section.controls['sectionName'].value ?? `Section ${i + 1}`}}<p-button class="delete-section" label="Delete section" [ngClass]="{mobile: isMobile}" (onClick)="deleteSection(i)"/></div></p-accordion-header>
+                <p-accordion-content>
+                  <div formArrayName="ingredients">
+                    @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
+                      <div [formGroupName]="j">
+                        <div
+                          class="flex gap-3 mb-3"
+                          [ngClass]="{
+                            'align-items-center': isMobile === false,
+                            'align-items-start': isMobile
+                          }"
+                        >
+                          <div class="flex gap-2">
+                            <p-floatLabel [ngClass]="{mobile: isMobile}">
+                              <label>Name: </label>
+                              <input
+                                pInputText
+                                formControlName="name"
+                                class="w-12"
+                                [ngClass]="{ mobile: isMobile }"
+                                type="text"
+                              />
+                            </p-floatLabel>
+                            <p-floatLabel [ngClass]="{mobile: isMobile}">
+                              <label>Quantity: </label>
+                              <input
+                                pInputText
+                                formControlName="quantity"
+                                class="w-12"
+                                [ngClass]="{ mobile: isMobile }"
+                                type="text"
+                              />
+                            </p-floatLabel>
+                            <p-floatLabel [ngClass]="{mobile: isMobile}">
+                              <label>Calories: </label>
+                              <input
+                                pInputText
+                                formControlName="calories"
+                                class="w-12"
+                                [ngClass]="{ mobile: isMobile }"
+                                type="number"
+                              />
+                            </p-floatLabel>
+                          </div>
 
-          @if (isMobile) {
-            <br/>
-          }
-
-          <div formArrayName="ingredients">
-            @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
-              <div [formGroupName]="j">
-                <div
-                  class="flex gap-3 mb-3"
-                  [ngClass]="{
-                    'align-items-center': isMobile === false,
-                    'align-items-start': isMobile
-                  }"
-                >
-                  <div class="flex gap-2">
-                    <p-floatLabel>
-                      <label>Name: </label>
-                      <input
-                        pInputText
-                        formControlName="name"
-                        class="w-12"
-                        [ngClass]="{ mobile: isMobile }"
-                        type="text"
-                      />
-                    </p-floatLabel>
-                    <p-floatLabel>
-                      <label>Quantity: </label>
-                      <input
-                        pInputText
-                        formControlName="quantity"
-                        class="w-12"
-                        [ngClass]="{ mobile: isMobile }"
-                        type="text"
-                      />
-                    </p-floatLabel>
-                  </div>
-
-                  <div class="w-2">
+                          <div class="w-2">
+                            <p-button
+                              class="delete-ingredient"
+                              [ngClass]="{ mobile: isMobile }"
+                              label="-"
+                              (onClick)="removeIngredient(i, j)"
+                            ></p-button>
+                          </div>
+                        </div>
+                      </div>
+                      <br/>
+                    }
                     <p-button
-                      class="delete-ingredient"
+                      class="new-ingredient"
                       [ngClass]="{ mobile: isMobile }"
-                      label="-"
-                      (onClick)="removeIngredient(i, j)"
+                      label="+Add ingredient"
+                      (onClick)="addNewIngredient(i)"
                     ></p-button>
                   </div>
-                </div>
-              </div>
-              <br/>
-            }
-            <p-button
-              class="new-ingredient"
-              [ngClass]="{ mobile: isMobile }"
-              label="+Add ingredient"
-              (onClick)="addNewIngredient(i)"
-            ></p-button>
-          </div>
-        </div>
-      }
+                </p-accordion-content>
+            </p-accordion-panel>
+        }
+      </p-accordion>
       <br/>
       <p-button class="submit-recipe" label="Add new ingredients section" (onClick)="addNewIngredientSection()"/>
-      </div>
-
+      <br/>
       <br />
       <div>
         <label for="preparation">Preparation: </label>

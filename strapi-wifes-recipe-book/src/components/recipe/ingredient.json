@@ -10,6 +10,9 @@
     },
     "quantity": {
       "type": "string"
+    },
+    "calories": {
+      "type": "integer"
     }
   },
   "config": {}

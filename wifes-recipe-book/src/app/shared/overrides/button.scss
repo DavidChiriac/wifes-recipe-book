@@ -5,6 +5,7 @@
   color: vars.$whiteFlour;
   border: none;
   background: transparent;
+  border-radius: 6px;
 
   &:hover {
     background: vars.$whiteFlour;
@@ -137,5 +138,15 @@
 
   .p-button-label{
     height: 1rem;
+  }
+}
+
+.delete-section .p-button{
+  background-color: vars.$crackedPepper;
+  color: vars.$whiteFlour;
+
+  &:hover{
+    color: vars.$crackedPepper;
+    background: vars.$whiteFlour;
   }
 }

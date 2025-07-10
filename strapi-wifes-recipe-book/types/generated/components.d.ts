@@ -6,6 +6,7 @@ export interface RecipeIngredient extends Struct.ComponentSchema {
     displayName: 'ingredient';
   };
   attributes: {
+    calories: Schema.Attribute.Integer;
     name: Schema.Attribute.String;
     quantity: Schema.Attribute.String;
   };

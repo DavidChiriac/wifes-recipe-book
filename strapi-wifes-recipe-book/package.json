@@ -1,8 +1,8 @@
 {
   "name": "strapi-wifes-recipe-book",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
-  "description": "A Strapi application",
+  "description": "This is the backend server for the Wifes Recipe Book application",
   "scripts": {
     "build": "strapi build",
     "console": "strapi console",
@@ -12,8 +12,7 @@
     "start": "strapi start",
     "strapi": "strapi",
     "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry",
-    "deploy-prod": "ng build --configuration production --base-href \"https://davidchiriac.github.io/strapi-wifes-recipe-book/\" && npx angular-cli-ghpages --dir=dist/strapi-wifes-recipe-book/browser"
+    "upgrade:dry": "npx @strapi/upgrade latest --dry"
   },
   "dependencies": {
     "@strapi/plugin-cloud": "^5.17.0",
