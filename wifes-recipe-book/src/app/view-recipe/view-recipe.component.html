@@ -2,6 +2,7 @@
     @if(isMobile){
         <div>
             <h1 class="font-italic mt-0 mb-0">{{recipe?.title}}</h1>
+            <span class="font-italic">{{recipe?.totalCalories}}</span>
             <br />
             @if(recipe?.coverImage){
                 <div class="cover-image">
@@ -17,7 +18,9 @@
                         <ul>
                             @for (ingredient of section?.ingredients; track $index;) {
                             <li class="mb-3 font-italic ingredient">
-                                {{ingredient.name}} @if (ingredient.quantity) {- {{ingredient.quantity}}}
+                                {{ingredient.name}} @if (ingredient.quantity) {- {{ingredient.quantity}}}@if (ingredient.calories) {
+                                        {{` = ${ingredient.calories}`}} kcal
+                                    }
                             </li>
                             }
                         </ul>
@@ -28,7 +31,12 @@
                 <div class="card">
                     <div class="font-bold">Preparation: </div>
                     <br />
-                    <div class="font-italic preparation" [innerHTML]="recipe?.preparation ?? '' | markdown | async"></div>
+                    @for (step of recipe?.preparation; track $index) {
+                        <h1 class="preparation-step">{{$index+1}}</h1>
+                        <br/>
+                        <div class="font-italic preparation">{{step.step}}</div>
+                        <br/>
+                    }
                 </div>
                 <br />
             }
@@ -52,7 +60,8 @@
         <div class="flex justify-content-between gap-5">
             <div class="w-fit-content ingredients">
                 <br />
-                    <h1 class="font-italic mt-0 mb-0">{{recipe?.title}}</h1>
+                    <h1 class="font-italic mt-0 mb-2">{{recipe?.title}}</h1>
+                    <span class="font-italic">{{recipe?.totalCalories}} kcal</span>
                 <br />
                 @if (recipe?.ingredients) {
                     <div class="card">
@@ -62,8 +71,10 @@
                             <div class="font-bold">{{section?.sectionName}}</div>
                             <ul>
                                 @for (ingredient of section?.ingredients; track $index;) {
-                                <li class=" mb-3 font-italic">
-                                    {{ingredient.name}} @if(ingredient.quantity){- {{ingredient.quantity}}}
+                                <li class="mb-3 font-italic">
+                                    {{ingredient.name}} @if(ingredient.quantity){- {{ingredient.quantity}}}@if (ingredient.calories) {
+                                        {{` = ${ingredient.calories}`}} kcal
+                                    }
                                 </li>
                                 }
                             </ul>
@@ -76,7 +87,12 @@
                     <div class="card">
                         <div class="font-bold">Preparation: </div>
                         <br />
-                        <div class="font-italic preparation" [innerHTML]="recipe?.preparation ?? '' | markdown | async"></div>
+                        @for (step of recipe?.preparation; track $index) {
+                            <h1 class="preparation-step">{{$index+1}}</h1>
+                            <br/>
+                            <div class="font-italic preparation">{{step.step}}</div>
+                            <br/>
+                        }
                     </div>
                     <br />
                 }

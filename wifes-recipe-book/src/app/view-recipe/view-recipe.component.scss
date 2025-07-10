@@ -34,10 +34,15 @@
       width: 49%;
     }
   }
+}
 
-  .preparation {
-    overflow-wrap: break-word;
-  }
+.preparation-step{
+  border: 1px solid vars.$crackedPepper;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  margin: 0;
+  border-radius: 50%;
 }
 
 .recipe-mobile {
@@ -45,7 +50,6 @@
   padding: 10px 20px;
   height: calc(100vh - 60px);
   overflow: auto;
-  font-size: 0.8rem;
 
   .cover-image {
     width: 80%;

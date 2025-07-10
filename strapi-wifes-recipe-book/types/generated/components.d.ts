@@ -23,6 +23,16 @@ export interface RecipeIngredientsSection extends Struct.ComponentSchema {
   };
 }
 
+export interface RecipePreparationStep extends Struct.ComponentSchema {
+  collectionName: 'components_recipe_preparation_steps';
+  info: {
+    displayName: 'preparationStep';
+  };
+  attributes: {
+    step: Schema.Attribute.Text;
+  };
+}
+
 export interface RecipePreparationTime extends Struct.ComponentSchema {
   collectionName: 'components_recipe_preparation_times';
   info: {
@@ -39,6 +49,7 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'recipe.ingredient': RecipeIngredient;
       'recipe.ingredients-section': RecipeIngredientsSection;
+      'recipe.preparation-step': RecipePreparationStep;
       'recipe.preparation-time': RecipePreparationTime;
     }
   }

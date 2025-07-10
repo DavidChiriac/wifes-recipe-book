@@ -5,8 +5,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ImageModule } from 'primeng/image';
 import { RecipesService } from '../shared/services/recipes.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { MarkdownPipe } from '../shared/pipes/safe-html.pipe';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -14,7 +13,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 @UntilDestroy()
 @Component({
   selector: 'app-view-recipe',
-  imports: [TextareaModule, ImageModule, MarkdownPipe, AsyncPipe, CommonModule, DialogModule, ButtonModule],
+  imports: [TextareaModule, ImageModule, CommonModule, DialogModule, ButtonModule],
   templateUrl: './view-recipe.component.html',
   styleUrl: './view-recipe.component.scss',
 })
@@ -44,6 +43,7 @@ export class ViewRecipeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipe) => {
+          console.log(recipe);
           this.recipe = { ...recipe };
         },
         error: (error) => {

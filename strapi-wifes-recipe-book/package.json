@@ -1,6 +1,6 @@
 {
   "name": "strapi-wifes-recipe-book",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "description": "This is the backend server for the Wifes Recipe Book application",
   "scripts": {

@@ -20,8 +20,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
-import { EditorModule } from 'primeng/editor';
-import { concatMap, of, tap, map } from 'rxjs';
+import { concatMap, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -39,11 +38,10 @@ import { AccordionModule } from 'primeng/accordion';
     TextareaModule,
     FormsModule,
     FileUploadModule,
-    EditorModule,
     CommonModule,
     DialogModule,
     FloatLabelModule,
-    AccordionModule
+    AccordionModule,
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
@@ -61,14 +59,19 @@ export class NewRecipeComponent implements OnInit {
               id: new FormControl(uuidv4()),
               name: new FormControl('', Validators.required),
               quantity: new FormControl(''),
-              calories: new FormControl()
+              calories: new FormControl(),
             }),
           ]),
         }),
       ],
       Validators.required
     ),
-    preparation: new FormControl(''),
+    preparation: new FormArray([
+      new FormGroup({
+        id: new FormControl(uuidv4()),
+        step: new FormControl(),
+      }),
+    ]),
     hours: new FormControl(0),
     minutes: new FormControl(30),
     coverImage: new FormControl(undefined),
@@ -106,7 +109,7 @@ export class NewRecipeComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
-        if (params?.['id']) {
+        if (params?.['id'] && isPlatformBrowser(this.platformId)) {
           this.documentId = params['id'];
           this.documentId;
           this.populateForm();
@@ -137,7 +140,7 @@ export class NewRecipeComponent implements OnInit {
                           Validators.required
                         ),
                         quantity: new FormControl(ingredient.quantity),
-                        calories: new FormControl(ingredient.calories)
+                        calories: new FormControl(ingredient.calories),
                       })
                   )
                 ),
@@ -145,7 +148,14 @@ export class NewRecipeComponent implements OnInit {
             }) || [],
             Validators.required
           ),
-          preparation: new FormControl(recipe.preparation),
+          preparation: new FormArray(
+            recipe.preparation?.map((step) => {
+              return new FormGroup({
+                id: new FormControl(uuidv4()),
+                step: new FormControl(step.step),
+              });
+            }) || []
+          ),
           hours: new FormControl(parseInt(recipe.preparationTime?.hours || '')),
           minutes: new FormControl(
             parseInt(recipe.preparationTime?.minutes || '')
@@ -212,6 +222,7 @@ export class NewRecipeComponent implements OnInit {
         concatMap(() => uploadCoverImage$),
         concatMap(() => {
           const recipeData = this.transformFormIntoRecipe(this.recipeForm);
+          console.log(recipeData);
           return this.documentId
             ? this.recipesService.editRecipe(recipeData, this.existingImages)
             : this.recipesService.createRecipe(recipeData, this.existingImages);
@@ -237,7 +248,16 @@ export class NewRecipeComponent implements OnInit {
       coverImage: this.newUploadedCoverImage,
       title: form.controls['name'].getRawValue(),
       preparation: form.controls['preparation'].getRawValue(),
-      ingredients: form.controls['ingredients'].getRawValue(),
+      ingredients: form.controls['ingredients']
+        .getRawValue()
+        ?.map((ingredients: any) => {
+          return {
+            ...ingredients,
+            ingredients: ingredients.ingredients.map((ingredient: any) => {
+              return { ...ingredient, calories: parseInt(ingredient.calories) };
+            }),
+          };
+        }),
       images: [...this.newUploadedImages],
       preparationTime: {
         hours: form.controls['hours'].getRawValue(),
@@ -258,7 +278,16 @@ export class NewRecipeComponent implements OnInit {
         id: new FormControl(uuidv4()),
         name: new FormControl('', Validators.required),
         quantity: new FormControl(''),
-        calories: new FormControl()
+        calories: new FormControl(),
+      })
+    );
+  }
+
+  addNewPreparationStep(): void {
+    this.preparation.push(
+      new FormGroup({
+        id: new FormControl(uuidv4()),
+        step: new FormControl(),
       })
     );
   }
@@ -273,7 +302,7 @@ export class NewRecipeComponent implements OnInit {
             id: new FormControl(uuidv4()),
             name: new FormControl(undefined, Validators.required),
             quantity: new FormControl(),
-            calories: new FormControl()
+            calories: new FormControl(),
           }),
         ]),
       })
@@ -291,8 +320,16 @@ export class NewRecipeComponent implements OnInit {
     }
   }
 
+  removePreparationStep(index: number): void {
+    this.preparation.removeAt(index);
+  }
+
   get ingredients(): FormArray<FormGroup> {
     return this.recipeForm.get('ingredients') as FormArray;
+  }
+
+  get preparation(): FormArray<FormGroup> {
+    return this.recipeForm.get('preparation') as FormArray;
   }
 
   getNestedIngredients(index: number): FormArray {
@@ -377,7 +414,7 @@ export class NewRecipeComponent implements OnInit {
           id: new FormControl(uuidv4()),
           name: new FormControl('', Validators.required),
           quantity: new FormControl(''),
-          calories: new FormControl()
+          calories: new FormControl(),
         })
       );
     }

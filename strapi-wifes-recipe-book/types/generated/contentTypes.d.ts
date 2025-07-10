@@ -405,7 +405,7 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       'api::recipe.recipe'
     > &
       Schema.Attribute.Private;
-    preparation: Schema.Attribute.RichText;
+    preparation: Schema.Attribute.Component<'recipe.preparation-step', true>;
     preparationTime: Schema.Attribute.Component<
       'recipe.preparation-time',
       false
@@ -413,6 +413,7 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
     publishedAt: Schema.Attribute.DateTime;
     recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     title: Schema.Attribute.String;
+    totalCalories: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

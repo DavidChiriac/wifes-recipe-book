@@ -1,0 +1,13 @@
+{
+  "collectionName": "components_recipe_preparation_steps",
+  "info": {
+    "displayName": "preparationStep"
+  },
+  "options": {},
+  "attributes": {
+    "step": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

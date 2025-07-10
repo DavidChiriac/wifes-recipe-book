@@ -24,8 +24,15 @@
         "audios"
       ]
     },
+    "ingredients": {
+      "type": "component",
+      "component": "recipe.ingredients-section",
+      "repeatable": true
+    },
     "preparation": {
-      "type": "richtext"
+      "type": "component",
+      "component": "recipe.preparation-step",
+      "repeatable": true
     },
     "images": {
       "type": "media",
@@ -52,10 +59,8 @@
       "required": false,
       "default": false
     },
-    "ingredients": {
-      "type": "component",
-      "component": "recipe.ingredients-section",
-      "repeatable": true
+    "totalCalories": {
+      "type": "integer"
     }
   }
 }

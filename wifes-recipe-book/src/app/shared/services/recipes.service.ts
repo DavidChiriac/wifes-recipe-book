@@ -17,6 +17,7 @@ export class RecipesService {
         'images',
         'ingredients',
         'ingredients.ingredients',
+        'preparation',
         'preparationTime',
         'author'
       ],
@@ -144,6 +145,7 @@ export class RecipesService {
     recipe: IRecipe,
     existingImages: { id: string; name: string; url: string }[] = []
   ): Observable<IRecipe> {
+    console.log(recipe);
     return this.http
       .put<{ data: IRecipe }>(
         environment.apiUrl + '/api/recipes/' + recipe.documentId,
@@ -179,6 +181,7 @@ export class RecipesService {
 
   mapRecipe(recipe: any): IRecipe {
     return {
+      ...recipe,
       documentId: recipe?.documentId,
       coverImage: recipe?.coverImage
         ? {
@@ -220,7 +223,7 @@ export class RecipesService {
           return {
             sectionName: section.sectionName,
             ingredients: section.ingredients.map((ingredient) => {
-              return { name: ingredient.name, quantity: ingredient.quantity };
+              return { name: ingredient.name, quantity: ingredient.quantity, calories: ingredient.calories };
             }),
           };
         }),
@@ -229,6 +232,8 @@ export class RecipesService {
         (image) => image.id
       ),
       coverImage: recipe.coverImage?.id,
+      preparation: recipe.preparation?.map(step => {return{step: step.step};}),
+      totalCalories: this.calculateTotalCalories(recipe)
     };
 
     delete body['documentId'];
@@ -237,4 +242,18 @@ export class RecipesService {
       ...body,
     };
   }
-}
+
+  calculateTotalCalories(recipe: IRecipe): number {
+    if (!Array.isArray(recipe.ingredients)) return 0;
+
+    return recipe.ingredients.reduce((total, section) => {
+      if (!Array.isArray(section.ingredients)) return total;
+
+      const sectionCalories = section.ingredients.reduce((sum, ingredient) => {
+        return sum + (typeof ingredient.calories === 'number' ? ingredient.calories : 0);
+      }, 0);
+
+      return total + sectionCalories;
+    }, 0);
+  }
+};
