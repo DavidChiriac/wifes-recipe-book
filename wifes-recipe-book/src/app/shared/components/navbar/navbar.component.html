@@ -1,34 +1,32 @@
-<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': isMobile === false }">
-  <div class="left" [routerLink]="''">
-    <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
-    @if (isMobile === false) {
-      <h1 class="title">Home</h1>
-    }
-  </div>
-  <div class="navigation">
-    @if (signedIn) {
-      <p-button
-        class="add-recipe"
-        [ngClass]="{ mobile: isMobile }"
-        label="+Add"
-        [routerLink]="'/new-recipe'"
-      />
-    }
-    <p-button
-      class="recipe-collection"
-      [ngClass]="{ mobile: isMobile }"
-      label="Recipe Collection"
-      [routerLink]="'/recipe-collection'"
-    />
-
-    @if(signedIn){
-      @if(isMobile === false){ 
+<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar': isMobile === false }">
+    <div class="left" [routerLink]="''">
+      <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
+    </div>
+    <div class="navigation">
+      @if (signedIn) {
         <p-button
-          class="my-recipes"
+          class="add-recipe"
           [ngClass]="{ mobile: isMobile }"
-          label="My Recipes"
-          [routerLink]="'/my-recipes'"
+          label="+Add"
+          [routerLink]="'/new-recipe'"
         />
+      }
+
+      @if(signedIn){
+        @if(isMobile === false){ 
+          <p-button
+            class="my-recipes"
+            [ngClass]="{ mobile: isMobile }"
+            label="My Recipes"
+            [routerLink]="'/my-recipes'"
+          />
+        } @else {
+          <p-menubar [model]="items" />
+        } 
+      }
+    </div>
+    <div>
+      @if (signedIn && isMobile === false) {
         <p-button
           class="sign-in"
           GoogleSigninButtonDirective 
@@ -36,19 +34,16 @@
           label="Sign Out"
           (onClick)="signOut()"
         />
-      } @else {
-        <p-menubar [model]="items" />
-      } 
-    }
+      }
 
-    @if (!signedIn) {
-      <p-button
-          class="sign-in"
-          GoogleSigninButtonDirective 
-          [ngClass]="{ mobile: isMobile }"
-          label="Sign In"
-          (onClick)="sign()"
-        />
-    }
-  </div>
+      @if (!signedIn) {
+        <p-button
+            class="sign-in"
+            GoogleSigninButtonDirective 
+            [ngClass]="{ mobile: isMobile }"
+            label="Sign In"
+            (onClick)="sign()"
+          />
+      }
+    </div>
 </div>

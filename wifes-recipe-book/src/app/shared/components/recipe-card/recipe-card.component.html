@@ -5,6 +5,13 @@
         } @else {
             <img src="assets/images/recipe-placeholder.png" [alt]="card.title"/>
         }
+        <div class="w-full px-2 py-2 pointer-events-auto" (click)="markAsFavourite($event)">
+            @if (isFavourite) {
+                <i class="pi pi-heart-fill favourite relative"></i>
+            } @else {
+                <i class="pi pi-heart favourite relative"></i>
+            }
+        </div>
     </div>
     <div class="title">
         {{card.title}}

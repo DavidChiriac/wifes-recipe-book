@@ -7,9 +7,24 @@ import { ViewRecipeComponent } from './view-recipe/view-recipe.component';
 import { socialAuthGuard } from './shared/guards/auth/social-auth.guard';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { RecipeEditGuard } from './shared/guards/auth/recipe-edit.guard';
+import { HomepagePresentationComponent } from './home-page/homepage-presentation/homepage-presentation.component';
 
 export const routes: Routes = [
-  { path: '', component: HomePageComponent, pathMatch: 'full' },
+  {
+    path: '',
+    component: HomePageComponent,
+    children: [
+      {
+        path: '',
+        component: HomepagePresentationComponent,
+        pathMatch: 'full',
+      },
+      {
+        path: 'collection',
+        component: RecipeCollectionComponent,
+      },
+    ],
+  },
   { path: 'recipe/:id', component: ViewRecipeComponent },
   {
     path: 'recipe/:id/edit',
@@ -21,7 +36,6 @@ export const routes: Routes = [
     component: NewRecipeComponent,
     canActivate: [socialAuthGuard],
   },
-  { path: 'recipe-collection', component: RecipeCollectionComponent },
   {
     path: 'my-recipes',
     component: MyRecipesComponent,
