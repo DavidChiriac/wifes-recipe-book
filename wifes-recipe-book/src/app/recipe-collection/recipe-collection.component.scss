@@ -19,49 +19,19 @@
 }
 
 .recipe-collection-mobile {
-  padding: 10px 20px;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 132px);
   overflow: auto;
 
-  .header {
-    text-align: center;
-    .title {
-      font-size: 2rem;
-      margin-top: 0;
-    }
-  }
-
-  .content {
+  .recipes-container {
     width: 100%;
-    border: 1px solid vars.$farro;
-    background: vars.$whiteFlour;
-    margin: auto;
-    padding: 10px 20px;
-    border-radius: 20px;
-    height: calc(100vh - 220px);
+    padding: 0 10px;
+    height: calc(100% - 80px);
+    margin-top: 1rem;
     overflow: auto;
-
-    .search-bar {
-      width: 100%;
-      padding: 5px 10px 5px 0;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .recipes-container {
-      width: 100%;
-      height: calc(100% - 50px - 1rem);
-      margin-top: 1rem;
-      overflow: auto;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      row-gap: 1rem;
-      display: flex;
-
-      .recipe {
-        width: 48%;
-      }
-    }
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    row-gap: 1rem;
+    display: flex;
   }
 }

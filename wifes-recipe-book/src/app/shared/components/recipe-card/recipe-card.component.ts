@@ -1,7 +1,15 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Inject,
+  Input,
+  Output,
+  PLATFORM_ID,
+} from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-recipe-card',
@@ -11,11 +19,22 @@ import { CommonModule } from '@angular/common';
 })
 export class RecipeCardComponent {
   @Input() card!: IRecipe;
+  @Input() tallMobileCard: boolean = false;
   @Output() navigate = new EventEmitter();
 
   isFavourite = false;
 
-  constructor(private readonly router: Router) {}
+  isMobile!: boolean;
+
+  constructor(
+    private readonly router: Router,
+    private readonly deviceService: DeviceDetectorService,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
+    if (isPlatformBrowser(platformId)) {
+      this.isMobile = deviceService.isMobile();
+    }
+  }
 
   viewRecipe(): void {
     this.navigate.emit();

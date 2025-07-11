@@ -31,13 +31,15 @@
         </div>
     </div>
     <div class="content">
-        <div class="general">
-            @if(recipe?.coverImage){
-                <div class="cover-image">
-                    <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
-                </div>
-            }
-        </div>
+        @if(isMobile === false){
+            <div class="general">
+                @if(recipe?.coverImage){
+                    <div class="cover-image">
+                        <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
+                    </div>
+                }
+            </div>
+        }
         <div class="ingredients">
             <h2 class="font-normal">Ingredients</h2>
             @for (section of recipe?.ingredients; track $index) {

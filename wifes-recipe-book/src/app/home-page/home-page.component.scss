@@ -20,27 +20,50 @@
     }
   }
 
-  .router-outlet{
+  .router-outlet {
     width: 100%;
     padding: 10px 250px;
+    height: calc(100% - 60px);
+    overflow: hidden;
   }
 }
 
 .homepage-mobile {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 55px);
   padding: 20px;
   overflow: auto;
 
-  .recommended-recipes {
-    margin: auto;
+  .search-bar {
+    width: 100%;
+    padding: 0 0 10px 0;
     display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-    row-gap: 20px;
+    border-bottom: 1px solid vars.$crackedPepper;
 
-    .recipe {
-      width: 48%;
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
+  }
+  .router-outlet {
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: hidden;
+  }
+}
+
+.input-icon-left{
+  display: flex;
+  align-items: center;
+  position: relative;
+  i {
+    left: .75rem;
+    position: absolute;
+    opacity: 0.5;
+  }
+  .p-inputtext{
+    padding-left: 2.2rem;
   }
 }
