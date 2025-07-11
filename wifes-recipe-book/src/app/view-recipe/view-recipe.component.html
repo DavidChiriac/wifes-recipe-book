@@ -1,4 +1,73 @@
 <div [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
+    <div class="header">
+        <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
+        <div class="presentation">
+            <p-breadcrumb [model]="items" [home]="home">
+                <ng-template #separator> / </ng-template>
+            </p-breadcrumb>
+            <div class="bottom">
+                <h1>{{recipe?.title}}</h1>
+                <div class="cooking-time">
+                    <div>
+                        {{totalRecipeTime}}
+                    </div>
+                    <div>
+                        min@if(totalRecipeTime > 1){s}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="general">
+            @if (isFavourite) {
+                <i class="pi pi-heart-fill favourite relative"></i>
+            } @else {
+                <i class="pi pi-heart favourite relative"></i>
+            }
+            <div class="cover-image">
+                <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
+            </div>
+        </div>
+        <div class="ingredients">
+            <h2 class="font-normal">Ingredients</h2>
+            @for (section of recipe?.ingredients; track $index) {
+                <div class="font-bold">{{section.sectionName}}</div>
+                @for (ingredient of section.ingredients; track $index) {
+                    <div class="ingredient my-2">
+                        <p-checkbox [value]="false"></p-checkbox>
+                        @if (ingredient.quantity) { {{ingredient.quantity + ' '}}}{{ingredient.name}} @if (ingredient.calories) {
+                                        {{` - ${ingredient.calories}`}} kcal
+                                    }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="preparation">
+        @for (step of recipe?.preparation; track $index) {
+            <h1 class="preparation-step">{{$index+1}}</h1>
+            <br/>
+            <div class="font-italic">{{step.step}}</div>
+            <br/>
+        }
+    </div>
+    <div class="small-images">
+        @for (image of recipe?.images; track $index) {
+        <div class="image">
+            <p-image
+                [src]="image.url"
+                class="presentation-image"
+                [alt]="recipe?.title"
+                [preview]="true" />
+        </div>
+        }
+    </div>
+    <div class="recommended">
+        <app-homepage-presentation></app-homepage-presentation>
+    </div>
+
+<!-- 
     @if(isMobile){
         <div>
             <h1 class="font-italic mt-0 mb-0">{{recipe?.title}}</h1>
@@ -129,7 +198,7 @@
         </div>
         }
     </div>
-    <br />
+    <br /> -->
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">

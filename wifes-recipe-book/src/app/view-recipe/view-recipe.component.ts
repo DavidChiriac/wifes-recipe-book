@@ -9,11 +9,24 @@ import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { MenuItem } from 'primeng/api';
+import { CheckboxModule } from 'primeng/checkbox';
+import { HomepagePresentationComponent } from '../home-page/homepage-presentation/homepage-presentation.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-view-recipe',
-  imports: [TextareaModule, ImageModule, CommonModule, DialogModule, ButtonModule],
+  imports: [
+    TextareaModule,
+    ImageModule,
+    CommonModule,
+    DialogModule,
+    ButtonModule,
+    BreadcrumbModule,
+    CheckboxModule,
+    HomepagePresentationComponent
+  ],
   templateUrl: './view-recipe.component.html',
   styleUrl: './view-recipe.component.scss',
 })
@@ -25,6 +38,12 @@ export class ViewRecipeComponent implements OnInit {
   errorModalVisible = false;
   errorMessage = '';
 
+  items: MenuItem[] | undefined;
+
+  home: MenuItem | undefined;
+
+  totalRecipeTime!: number;
+  isFavourite = false;
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
@@ -35,6 +54,8 @@ export class ViewRecipeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getRecipe(this.route.snapshot.params['id']);
+
+    this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
 
   getRecipe(documentId: string): void {
@@ -44,11 +65,18 @@ export class ViewRecipeComponent implements OnInit {
       .subscribe({
         next: (recipe) => {
           this.recipe = { ...recipe };
+          this.totalRecipeTime = (parseInt(recipe.preparationTime?.hours ?? '')) * 60;
+          this.totalRecipeTime += parseInt(recipe.preparationTime?.minutes ?? '');
+
+          this.items = [
+            // { label: recipe.category },
+            { label: recipe.title }
+        ];
         },
         error: (error) => {
           this.errorMessage = error.message;
           this.errorModalVisible = true;
-        }
+        },
       });
   }
 
