@@ -26,5 +26,10 @@ export default {
 			path: "/recipes",
 			handler: "recipe.find",
 		},
+		{
+			method: "POST",
+			path: "/recipes",
+			handler: "recipe.create",
+		},
 	],
 };
