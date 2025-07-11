@@ -61,17 +61,19 @@
             <br/>
         }
     </div>
-    <div class="small-images">
-        @for (image of recipe?.images; track $index) {
-        <div class="image">
-            <p-image
-                [src]="image.url"
-                class="presentation-image"
-                [alt]="recipe?.title"
-                [preview]="true" />
+    @if (recipe?.images) {
+        <div class="small-images">
+            @for (image of recipe?.images; track $index) {
+            <div class="image">
+                <p-image
+                    [src]="image.url"
+                    class="presentation-image"
+                    [alt]="recipe?.title"
+                    [preview]="true" />
+            </div>
+            }
         </div>
-        }
-    </div>
+    }
     <div class="recommended">
         <app-homepage-presentation></app-homepage-presentation>
     </div>
