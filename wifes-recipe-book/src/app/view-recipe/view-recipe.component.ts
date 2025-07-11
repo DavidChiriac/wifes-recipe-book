@@ -43,7 +43,6 @@ export class ViewRecipeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipe) => {
-          console.log(recipe);
           this.recipe = { ...recipe };
         },
         error: (error) => {

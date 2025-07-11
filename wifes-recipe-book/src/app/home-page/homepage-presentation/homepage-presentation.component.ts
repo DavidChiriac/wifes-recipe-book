@@ -6,11 +6,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isPlatformBrowser } from '@angular/common';
 import { RecipeCardComponent } from '../../shared/components/recipe-card/recipe-card.component';
 import { ButtonModule } from 'primeng/button';
+import { RouterModule } from '@angular/router';
 
 @UntilDestroy()
 @Component({
   selector: 'app-homepage-presentation',
-  imports: [RecipeCardComponent, ButtonModule],
+  imports: [RecipeCardComponent, ButtonModule, RouterModule],
   templateUrl: './homepage-presentation.component.html',
   styleUrl: './homepage-presentation.component.scss'
 })

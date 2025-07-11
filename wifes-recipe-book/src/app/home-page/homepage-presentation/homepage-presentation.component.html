@@ -1,6 +1,6 @@
 <div class="w-full flex align-items-center justify-content-between">
     <h2 class="w-fit-content recommended">Recommended for today</h2>
-    <p-button class="outline" label="View all"/>
+    <p-button class="outline" label="View all" [routerLink]="'collection'"/>
 </div>
 <div class="recommended-recipes">
     @for (recipe of recommendedRecipes; track $index) {

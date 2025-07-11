@@ -39,7 +39,7 @@ export class RecipesService {
       sortField: string | undefined;
       sortDirection: string | undefined;
     },
-    searchTerm: string
+    searchTerm: string = ''
   ): Observable<{ data: IRecipe[]; meta: { total: number } }> {
     let queryParams = '';
     if (params.sortDirection && params.sortField) {
@@ -145,7 +145,6 @@ export class RecipesService {
     recipe: IRecipe,
     existingImages: { id: string; name: string; url: string }[] = []
   ): Observable<IRecipe> {
-    console.log(recipe);
     return this.http
       .put<{ data: IRecipe }>(
         environment.apiUrl + '/api/recipes/' + recipe.documentId,

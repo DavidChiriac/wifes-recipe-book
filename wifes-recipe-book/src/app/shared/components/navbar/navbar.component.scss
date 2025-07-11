@@ -1,7 +1,6 @@
 @use "../../overrides/variables.scss" as vars;
 
 .navbar {
-  padding: 0 250px;
   height: 55px;
   background: vars.$herbalWash;
 
@@ -23,7 +22,7 @@
       font-weight: 200;
       margin: 0;
       font-family: "MyCustomFont", sans-serif;
-      height: 40px;
+      height: 2rem;
     }
 
     &:hover {

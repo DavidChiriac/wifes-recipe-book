@@ -1,47 +1,20 @@
 @use "../shared/overrides/variables.scss" as vars;
 
 .recipe-collection {
-  padding: 20px 50px;
-  height: calc(100vh - 60px);
+  height: calc(100vh - 132px);
   overflow: auto;
 
-  .header {
-    text-align: center;
-    .title {
-      font-size: 3rem;
-      margin-top: 0;
-    }
-  }
-
-  .content {
-    width: 90%;
-    border: 1px solid vars.$farro;
-    background: vars.$whiteFlour;
-    margin: auto;
-    padding: 20px 50px;
-    border-radius: 50px;
-    height: calc(100vh - 270px);
-    overflow: hidden;
-
-    .search-bar {
-      width: 100%;
-      padding: 5px 10px 5px 0;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .recipes-container {
-      width: 100%;
-      height: calc(100% - 50px - 1rem);
-      margin-top: 1rem;
-      overflow: auto;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 2rem;
-      row-gap: 1rem;
-      display: flex;
-    }
+  .recipes-container {
+    width: 100%;
+    padding: 0 10px;
+    height: calc(100% - 100px);
+    margin-top: 1rem;
+    overflow: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    row-gap: 2rem;
+    display: flex;
   }
 }
 
@@ -86,7 +59,7 @@
       row-gap: 1rem;
       display: flex;
 
-      .recipe{
+      .recipe {
         width: 48%;
       }
     }

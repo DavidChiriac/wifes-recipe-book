@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, effect, ElementRef, signal, Signal, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
@@ -14,11 +14,12 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
+  @ViewChild('searchWord') searchWord!: ElementRef;
   isMobile!: boolean;
 
   recommendedRecipes: IRecipe[] = [];
 
-  searchTerm = '';
+  searchTerm = signal<string>('');
 
   constructor(
     private readonly deviceService: DeviceDetectorService,
@@ -33,7 +34,8 @@ export class HomePageComponent {
   showFilters(): void {}
 
   search(): void {
-    if(this.searchTerm){
+    this.searchTerm.set(this.searchWord.nativeElement.value);
+    if(this.searchTerm()){
       this.router.navigate(['/collection'], {relativeTo: this.route});
     } else {
       this.router.navigate(['']);
@@ -41,7 +43,7 @@ export class HomePageComponent {
   }
 
   clearSearch(): void {
-    this.searchTerm = '';
+    this.searchTerm.set('');
     this.search();
   }
 }
