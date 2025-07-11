@@ -84,4 +84,8 @@ export class ViewRecipeComponent implements OnInit {
     this.errorModalVisible = false;
     this.errorMessage = '';
   }
+
+  markAsFavourite(): void {
+    this.isFavourite = !this.isFavourite;
+  }
 }
