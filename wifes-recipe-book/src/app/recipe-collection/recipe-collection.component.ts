@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, effect, inject, Inject, OnInit, PLATFORM_ID, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -10,6 +10,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { RouterModule } from '@angular/router';
+import {ROUTER_OUTLET_DATA} from "@angular/router";
 
 @UntilDestroy()
 @Component({
@@ -22,12 +24,13 @@ import { DeviceDetectorService } from 'ngx-device-detector';
     PaginatorModule,
     CommonModule,
     DialogModule,
+    RouterModule
   ],
   templateUrl: './recipe-collection.component.html',
   styleUrl: './recipe-collection.component.scss',
 })
 export class RecipeCollectionComponent implements OnInit {
-  searchTerm!: string;
+  searchTerm = inject(ROUTER_OUTLET_DATA) as Signal<string>;
 
   recipes: IRecipe[] = [];
 
@@ -63,6 +66,10 @@ export class RecipeCollectionComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
+
+    effect(() => {
+      this.onLazyLoad(undefined, this.searchTerm());
+    });
   }
 
   ngOnInit(): void {
@@ -71,12 +78,7 @@ export class RecipeCollectionComponent implements OnInit {
     }
   }
 
-  clear(): void {
-    this.searchTerm = '';
-    this.onLazyLoad();
-  }
-
-  onLazyLoad(event?: PaginatorState): void {
+  onLazyLoad(event?: PaginatorState, searchTerm?: string): void {
     if (event) {
       this.requestParams = {
         pageNumber: event.page,
@@ -88,7 +90,7 @@ export class RecipeCollectionComponent implements OnInit {
     }
 
     this.recipesService
-      .getRecipes(this.requestParams, this.searchTerm)
+      .getRecipes(this.requestParams, searchTerm)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: (recipes) => {

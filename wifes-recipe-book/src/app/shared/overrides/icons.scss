@@ -1,0 +1,17 @@
+.pi-heart:before, .pi-heart-fill:before {
+  font-size: 1.5rem;
+}
+
+.pi-filter:before {
+  font-size: 1.3rem;
+}
+
+.favourite{
+  border-radius: 50%;
+  background-color: white;
+  padding: 5px 5px 3px 5px;
+
+  &.pi-heart-fill{
+    color: red;
+  }
+}

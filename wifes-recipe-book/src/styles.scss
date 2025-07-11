@@ -2,14 +2,4 @@
 
 body {
   margin: 0;
-
-  font-size: 20px;
-}
-
-@font-face {
-  font-family: "MyCustomFont";
-  src: url("assets/fonts/LucyTheCatRegular-Bg9x.ttf") format("truetype"),
-    url("assets/fonts/LucythecatRegular-R7mA.otf") format("opentype"); /* Add other formats if needed */
-  font-weight: normal;
-  font-style: normal;
 }

@@ -13,7 +13,7 @@
       <p-accordion [value]="0" formArrayName="ingredients">
         @for (section of ingredients.controls; track section.get('id'); let i = $index) {
             <p-accordion-panel [value]="i" [formGroupName]="i">
-                <p-accordion-header><div class="flex gap-2 align-items-center"><input pInputText id="name" type="text" formControlName="sectionName" [placeholder]="`Section ${i + 1}`"/><p-button class="delete-section" label="Delete section" [ngClass]="{mobile: isMobile}" (onClick)="deleteSection(i)"/></div></p-accordion-header>
+                <p-accordion-header><div class="flex gap-2 align-items-center"><input pInputText id="name" type="text" [ngClass]="{mobile: isMobile}" formControlName="sectionName" [placeholder]="`Section ${i + 1}`"/><p-button class="delete-section" label="Delete section" [ngClass]="{mobile: isMobile}" (onClick)="deleteSection(i)"/></div></p-accordion-header>
                 <p-accordion-content>
                   <div formArrayName="ingredients">
                     @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
@@ -93,8 +93,7 @@
                 <p-accordion-content>
                   <textarea
                     pTextarea 
-                    rows="10"
-                    [style]="{height: '400px'}"
+                    [style]="{height: '100px'}"
                     id="preparation"
                     type="text"
                     formControlName="step"

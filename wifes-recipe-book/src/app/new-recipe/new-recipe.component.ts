@@ -222,7 +222,6 @@ export class NewRecipeComponent implements OnInit {
         concatMap(() => uploadCoverImage$),
         concatMap(() => {
           const recipeData = this.transformFormIntoRecipe(this.recipeForm);
-          console.log(recipeData);
           return this.documentId
             ? this.recipesService.editRecipe(recipeData, this.existingImages)
             : this.recipesService.createRecipe(recipeData, this.existingImages);
