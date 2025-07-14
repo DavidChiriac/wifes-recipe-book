@@ -1,8 +1,9 @@
 <div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': isMobile === false }">
   <div class="left" [routerLink]="''">
-    <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
     @if (isMobile === false) {
-      <h1 class="title">Home</h1>
+      <h1 class="title">Wife's Recipe Book</h1>
+    } @else if(isMobile === true) {
+      <img src="assets/logo/logo.png" alt="wife's recipe book logo"/>
     }
   </div>
   <div class="navigation">
@@ -18,7 +19,7 @@
       class="recipe-collection"
       [ngClass]="{ mobile: isMobile }"
       label="Recipe Collection"
-      [routerLink]="'/recipe-collection'"
+      [routerLink]="'/collection'"
     />
 
     @if(signedIn){

@@ -1,0 +1,23 @@
+.recommended-recipes {
+  margin: auto;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.recommended-recipes-mobile {
+  margin: auto;
+  margin-top: 1rem;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  width: 100%;
+  overflow: auto;
+
+  .recipe{
+    display: flex;
+    justify-content: center;
+  }
+}

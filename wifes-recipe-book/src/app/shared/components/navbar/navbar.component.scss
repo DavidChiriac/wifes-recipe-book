@@ -1,10 +1,11 @@
 @use "../../overrides/variables.scss" as vars;
 
 .navbar {
-  height: 60px;
+  height: 55px;
   background: vars.$herbalWash;
 
   display: flex;
+  gap: 2rem;
   justify-content: space-between;
   align-items: center;
 
@@ -21,7 +22,7 @@
       font-weight: 200;
       margin: 0;
       font-family: "MyCustomFont", sans-serif;
-      height: 40px;
+      height: 2rem;
     }
 
     &:hover {
@@ -50,7 +51,7 @@
 }
 
 .navbar-mobile {
-  height: 60px;
+  height: 55px;
   background: vars.$herbalWash;
 
   display: flex;

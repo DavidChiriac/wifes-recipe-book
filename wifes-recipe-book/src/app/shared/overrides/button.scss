@@ -150,3 +150,18 @@
     background: vars.$whiteFlour;
   }
 }
+
+.outline .p-button {
+  border: 1px solid vars.$crackedPepper;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: vars.$crackedPepper;
+
+  &:hover{
+    background: vars.$herbalWash;
+  }
+}
+
+.mobile.outline .p-button{
+  padding: 5px 10px;
+}

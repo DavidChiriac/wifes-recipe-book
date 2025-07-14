@@ -1,135 +1,94 @@
-<div [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
-    @if(isMobile){
-        <div>
-            <h1 class="font-italic mt-0 mb-0">{{recipe?.title}}</h1>
-            <span class="font-italic">{{recipe?.totalCalories}}</span>
-            <br />
-            @if(recipe?.coverImage){
-                <div class="cover-image">
-                    <img [src]="recipe?.coverImage?.url" [alt]="recipe?.title" />
-                </div>
-            }
-            @if (recipe?.ingredients) {
-                <div class="card">
-                    <div class="font-bold">Ingredients: </div>
-                    <br/>
-                    @for (section of recipe?.ingredients; track $index) {
-                        <div class="font-bold">{{section?.sectionName}}</div>
-                        <ul>
-                            @for (ingredient of section?.ingredients; track $index;) {
-                            <li class="mb-3 font-italic ingredient">
-                                {{ingredient.name}} @if (ingredient.quantity) {- {{ingredient.quantity}}}@if (ingredient.calories) {
-                                        {{` = ${ingredient.calories}`}} kcal
-                                    }
-                            </li>
-                            }
-                        </ul>
+<div id="recipe-container" [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
+    <div class="header">
+        @if (recipe?.coverImage) {
+            <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
+        }
+        <div class="presentation" [ngClass]="{'black-text': !recipe?.coverImage}">
+            <div class="flex justify-content-between">
+                <p-breadcrumb [model]="items" [home]="home" [ngClass]="{'black-text': !recipe?.coverImage}">
+                    <ng-template #separator> / </ng-template>
+                </p-breadcrumb>
+                <div class="cursor-pointer" (click)="markAsFavourite()">
+                    @if (isFavourite) {
+                        <i class="pi pi-heart-fill favourite relative"></i>
+                    } @else {
+                        <i class="pi pi-heart favourite relative"></i>
                     }
                 </div>
-            }
-            @if(recipe?.preparation){
-                <div class="card">
-                    <div class="font-bold">Preparation: </div>
-                    <br />
-                    @for (step of recipe?.preparation; track $index) {
-                        <h1 class="preparation-step">{{$index+1}}</h1>
-                        <br/>
-                        <div class="font-italic preparation">{{step.step}}</div>
-                        <br/>
-                    }
+            </div>
+
+            <div class="bottom">
+                <h1>{{recipe?.title}}</h1>
+                <div class="flex gap-2">
+                    <div class="tag">
+                        <div>
+                            {{totalRecipeTime}}
+                        </div>
+                        <div>
+                            min@if(totalRecipeTime > 1){s}
+                        </div>
+                    </div>
+                    <div class="tag">
+                        <div>
+                            {{recipe?.totalCalories ?? 0}}
+                        </div>
+                        <div>
+                            kcal
+                        </div>
+                    </div>
                 </div>
-                <br />
-            }
-            @if (recipe?.preparationTime) {
-                <div class="card">
-                    <span class="font-bold">Preparation Time: </span>
-                        <span class="font-italic">
-                            @if (recipe?.preparationTime?.hours && recipe?.preparationTime?.hours !== '0') {
-                            {{recipe?.preparationTime?.hours}} hour@if (recipe?.preparationTime?.hours !== '1') {s}
-                            }
-                            @if (recipe?.preparationTime?.minutes && recipe?.preparationTime?.minutes !== '0') {
-                            {{recipe?.preparationTime?.minutes}} minute@if (recipe?.preparationTime?.minutes !== '1') {s}
-                            }
-                        </span>
-                </div>
-            }
+            </div>
         </div>
-        <br />
-    }
-    @else {
-        <div class="flex justify-content-between gap-5">
-            <div class="w-fit-content ingredients">
-                <br />
-                    <h1 class="font-italic mt-0 mb-2">{{recipe?.title}}</h1>
-                    <span class="font-italic">{{recipe?.totalCalories}} kcal</span>
-                <br />
-                @if (recipe?.ingredients) {
-                    <div class="card">
-                        <div class="font-bold">Ingredients: </div>
-                        <br/>
-                        @for (section of recipe?.ingredients; track $index) {
-                            <div class="font-bold">{{section?.sectionName}}</div>
-                            <ul>
-                                @for (ingredient of section?.ingredients; track $index;) {
-                                <li class="mb-3 font-italic">
-                                    {{ingredient.name}} @if(ingredient.quantity){- {{ingredient.quantity}}}@if (ingredient.calories) {
-                                        {{` = ${ingredient.calories}`}} kcal
-                                    }
-                                </li>
-                                }
-                            </ul>
-                        }
+    </div>
+    <div class="content">
+        @if(isMobile === false){
+            <div class="general">
+                @if(recipe?.coverImage){
+                    <div class="cover-image">
+                        <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
                     </div>
                 }
             </div>
-            <div [ngClass]="{'w-5': (recipe?.preparation || recipe?.preparationTime) && recipe?.coverImage}">
-                @if(recipe?.preparation){
-                    <div class="card">
-                        <div class="font-bold">Preparation: </div>
-                        <br />
-                        @for (step of recipe?.preparation; track $index) {
-                            <h1 class="preparation-step">{{$index+1}}</h1>
-                            <br/>
-                            <div class="font-italic preparation">{{step.step}}</div>
-                            <br/>
-                        }
-                    </div>
-                    <br />
-                }
-                @if (recipe?.preparationTime) {
-                    <div class="card">
-                        <span class="font-bold">Preparation Time: </span>
-                            <span class="font-italic">
-                                @if (recipe?.preparationTime?.hours && recipe?.preparationTime?.hours !== '0') {
-                                {{recipe?.preparationTime?.hours}} hour@if (recipe?.preparationTime?.hours !== '1') {s}
-                                }
-                                @if (recipe?.preparationTime?.minutes && recipe?.preparationTime?.minutes !== '0') {
-                                {{recipe?.preparationTime?.minutes}} minute@if (recipe?.preparationTime?.minutes !== '1') {s}
-                                }
-                            </span>
+        }
+        <div class="ingredients">
+            <h2 class="font-normal">Ingredients</h2>
+            @for (section of recipe?.ingredients; track $index) {
+                <div class="font-bold">{{section.sectionName}}</div>
+                @for (ingredient of section.ingredients; track $index) {
+                    <div class="ingredient my-2">
+                        <p-checkbox [value]="false"></p-checkbox>
+                        {{' '}}@if (ingredient.quantity) { {{ingredient.quantity + ' '}}}{{ingredient.name}} @if (ingredient.calories) {
+                                        {{` - ${ingredient.calories}`}} kcal
+                                    }
                     </div>
                 }
-            </div>
-            @if (recipe?.coverImage) {
-                <div class="cover-image" [ngClass]="{'w-4': (recipe?.preparation || recipe?.preparationTime) && recipe?.coverImage}">
-                    <img [src]="recipe?.coverImage?.url" [alt]="recipe?.title" />
-                </div>
             }
         </div>
-        <br />
-    }
-    <div class="small-images">
-        @for (image of recipe?.images; track $index) {
-        <div class="image">
-            <p-image
-                [src]="image.url"
-                class="presentation-image"
-                [alt]="recipe?.title"
-                [preview]="true" />
-        </div>
+    </div>
+    <div class="preparation">
+        @for (step of recipe?.preparation; track $index) {
+            <h1 class="preparation-step">{{$index+1}}</h1>
+            <br/>
+            <div class="font-italic">{{step.step}}</div>
+            <br/>
         }
     </div>
-    <br />
+    @if (recipe?.images) {
+        <div class="small-images">
+            @for (image of recipe?.images; track $index) {
+            <div class="image">
+                <p-image
+                    [src]="image.url"
+                    class="presentation-image"
+                    [alt]="recipe?.title"
+                    [preview]="true" />
+            </div>
+            }
+        </div>
+    }
+    <div class="recommended">
+        <app-homepage-presentation></app-homepage-presentation>
+    </div>
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">

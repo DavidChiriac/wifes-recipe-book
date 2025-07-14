@@ -2,69 +2,68 @@
 
 .homepage {
   width: 100%;
-  height: calc(100vh - 60px);
-  padding: 20px;
+  height: calc(100vh - 55px);
+  margin: auto;
   overflow: auto;
-  font-family: "MyCustomFont", sans-serif;
 
-  .header {
-    position: relative;
-    text-align: center;
+  .search-bar {
+    width: 100%;
+    padding: 10px 250px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid vars.$crackedPepper;
 
-    .title {
-      font-size: 5rem;
-    }
-
-    .description {
-      font-size: 1.7rem;
-      width: 70%;
-      text-align: center;
-      margin: auto;
-      margin-bottom: 2rem;
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
   }
 
-  .recommended-recipes {
-    margin: auto;
-    width: 50%;
-    margin-top: 2rem;
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
+  .router-outlet {
+    width: 100%;
+    padding: 10px 250px;
+    height: calc(100% - 60px);
+    overflow: hidden;
   }
 }
 
 .homepage-mobile {
   width: 100%;
-  height: calc(100vh - 60px);
-  padding: 20px;
+  height: calc(100vh - 55px);
+  padding: 10px;
   overflow: auto;
-  font-family: "MyCustomFont", sans-serif;
 
-  .header {
-    text-align: center;
+  .search-bar {
+    width: 100%;
+    padding: 0 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid vars.$crackedPepper;
 
-    .title {
-      font-size: 2rem;
-    }
-
-    .description {
-      font-size: 1rem;
-      width: 100%;
-      text-align: center;
-      margin-bottom: 1rem;
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
   }
+  .router-outlet {
+    width: 100%;
+    height: calc(100% - 50px);
+    overflow: hidden;
+  }
+}
 
-  .recommended-recipes {
-    margin: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    row-gap: 20px;
-
-    .recipe{
-      width: 48%;
-    }
+.input-icon-left{
+  display: flex;
+  align-items: center;
+  position: relative;
+  i {
+    left: .75rem;
+    position: absolute;
+    opacity: 0.5;
+  }
+  .p-inputtext{
+    padding-left: 2.2rem;
   }
 }

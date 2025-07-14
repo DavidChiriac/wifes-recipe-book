@@ -1,22 +1,11 @@
 <div [ngClass]="{'recipe-collection': isMobile === false, 'recipe-collection-mobile': isMobile}">
-  <div class="header">
-    <h1 class="title">Recipe Collection</h1>
+  <div class="recipes-container">
+      @for (recipe of recipes; track recipe.documentId) {
+        <div class="recipe">
+          <app-recipe-card [card]="recipe" (navigate)="navigate()"></app-recipe-card>
+        </div>
+      }
   </div>
-  <div class="content">
-    <div class="search-bar">
-        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile}" (keydown.enter)="onLazyLoad()"/>
-        <p-button class="search" icon="pi pi-search" (onClick)="onLazyLoad()"/>
-        <p-button class="clear" icon="pi pi-times" (onClick)="clear()"/>
-    </div>
-    <div class="recipes-container">
-        @for (recipe of recipes; track recipe.documentId) {
-          <div class="recipe">
-            <app-recipe-card [card]="recipe" (navigate)="navigate()"></app-recipe-card>
-          </div>
-        }
-    </div>
-  </div>
-  <br/>
   <p-paginator (onPageChange)="onLazyLoad($event)" [alwaysShow]="true" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords"/>
 </div>
 

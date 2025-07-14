@@ -1,23 +1,23 @@
 <div [ngClass]="{ 'homepage-mobile': isMobile, homepage: isMobile === false }">
-  <div class="header">
-    <h1 class="title">Wife's Recipe Book</h1>
-    <div class="description">
-      Welcome to your recipe book! Add, View and Edit recipes as you like.<br />
-      Be independent in your kitchen and your life!
-    </div>
-    <p-button
-      class="add-recipe-homepage"
-      [ngClass]="{'mobile': isMobile}"
-      label="Add new Recipe"
-      [routerLink]="'/new-recipe'"
-    ></p-button>
-  </div>
-  <br/>
-  <div class="recommended-recipes">
-    @for (recipe of recommendedRecipes; track $index) {
-      <div class="recipe">
-        <app-recipe-card [card]="recipe"></app-recipe-card>
-      </div>
+  <div class="search-bar">
+    @if (isMobile === false) {
+      <div></div>
     }
+    <div class="right">
+      <span class="input-icon-left">
+        @if (searchTerm()) {
+            <i class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
+        } @else {
+            <i class="pi pi-search cursor-pointer"></i>
+        }
+        <input #searchWord type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
+                (keydown.enter)="search()" [value]="searchTerm()"/>
+      </span>
+      <div class="flex align-items-center cursor-pointer" (click)="goToFavourites()"><i class="pi pi-heart mr-1"></i>@if(isMobile === false){Saved Recipes}</div>
+      <div class="flex align-items-center cursor-pointer" (click)="showFilters()"><i class="pi pi-filter mr-1"></i>@if(isMobile === false) {Filters}</div>
+    </div>
+  </div>
+  <div class="router-outlet">
+    <router-outlet [routerOutletData]="searchTerm()"></router-outlet>
   </div>
 </div>
