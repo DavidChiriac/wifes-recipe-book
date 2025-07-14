@@ -19,12 +19,22 @@
 
             <div class="bottom">
                 <h1>{{recipe?.title}}</h1>
-                <div class="cooking-time">
-                    <div>
-                        {{totalRecipeTime}}
+                <div class="flex gap-2">
+                    <div class="tag">
+                        <div>
+                            {{totalRecipeTime}}
+                        </div>
+                        <div>
+                            min@if(totalRecipeTime > 1){s}
+                        </div>
                     </div>
-                    <div>
-                        min@if(totalRecipeTime > 1){s}
+                    <div class="tag">
+                        <div>
+                            {{recipe?.totalCalories ?? 0}}
+                        </div>
+                        <div>
+                            kcal
+                        </div>
                     </div>
                 </div>
             </div>

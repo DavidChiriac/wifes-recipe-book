@@ -19,7 +19,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 })
 export class RecipeCardComponent {
   @Input() card!: IRecipe;
-  @Input() tallMobileCard: boolean = false;
   @Output() navigate = new EventEmitter();
 
   isFavourite = false;

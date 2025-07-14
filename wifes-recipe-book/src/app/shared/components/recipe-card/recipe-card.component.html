@@ -1,4 +1,4 @@
-<div [ngClass]="{'card': isMobile === false || tallMobileCard, 'card-mobile': isMobile && tallMobileCard === false}" (click)="viewRecipe()" onkeydown="">
+<div [ngClass]="{'card': isMobile === false, 'card-mobile': isMobile}" (click)="viewRecipe()" onkeydown="">
     <div class="image">
         @if(card.coverImage){
             <img [src]="card.coverImage.url" [alt]="card.title" />
