@@ -1,4 +1,4 @@
-<div [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
+<div id="recipe-container" [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
     <div class="header">
         @if (recipe?.coverImage) {
             <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />

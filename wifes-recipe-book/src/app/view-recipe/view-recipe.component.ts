@@ -53,7 +53,9 @@ export class ViewRecipeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getRecipe(this.route.snapshot.params['id']);
+    this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+      this.getRecipe(this.route.snapshot.params['id']);
+    });
 
     this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
@@ -71,7 +73,10 @@ export class ViewRecipeComponent implements OnInit {
           this.items = [
             // { label: recipe.category },
             { label: recipe.title }
-        ];
+          ];
+
+          const container = document.getElementById('recipe-container');
+          container?.scrollTo(0, 0);
         },
         error: (error) => {
           this.errorMessage = error.message;
