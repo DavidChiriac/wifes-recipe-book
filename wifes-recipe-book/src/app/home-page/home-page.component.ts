@@ -1,11 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect, ElementRef, signal, Signal, ViewChild } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, effect, ElementRef, Inject, PLATFORM_ID, signal, Signal, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { LocalStorageService } from 'ngx-webstorage';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',
@@ -24,13 +26,21 @@ export class HomePageComponent {
   constructor(
     private readonly deviceService: DeviceDetectorService,
     private readonly router: Router,
-    private readonly route: ActivatedRoute
+    private readonly localStorageService: LocalStorageService,
+    private readonly route: ActivatedRoute,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.isMobile = deviceService.isMobile();
   }
 
   goToFavourites(): void {
-    this.router.navigate(['saved-recipes']);
+    if(this.localStorageService.retrieve('user')){
+      this.router.navigate(['saved-recipes']);
+    } else {
+      if (isPlatformBrowser(this.platformId)) {
+        window.location.href = environment.apiUrl + '/api/connect/google';
+      }
+    }
   }
 
   showFilters(): void {}

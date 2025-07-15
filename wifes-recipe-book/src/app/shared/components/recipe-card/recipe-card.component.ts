@@ -2,7 +2,6 @@ import {
   Component,
   Inject,
   Input,
-  OnInit,
   PLATFORM_ID,
 } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
@@ -20,12 +19,13 @@ import { LocalStorageService } from 'ngx-webstorage';
   templateUrl: './recipe-card.component.html',
   styleUrl: './recipe-card.component.scss',
 })
-export class RecipeCardComponent implements OnInit {
+export class RecipeCardComponent {
   @Input() card!: IRecipe;
-
-  isFavourite!: boolean;
+  @Input() isFavourite!: boolean;
 
   isMobile!: boolean;
+
+  userIsLoggedIn!: boolean;
 
   constructor(
     private readonly router: Router,
@@ -37,10 +37,8 @@ export class RecipeCardComponent implements OnInit {
     if (isPlatformBrowser(platformId)) {
       this.isMobile = deviceService.isMobile();
     }
-  }
 
-  ngOnInit(): void {
-    this.isFavourite = this.card?.isFavourite ?? false;
+    this.userIsLoggedIn = Boolean(localStorageService.retrieve('user'));
   }
 
   viewRecipe(): void {

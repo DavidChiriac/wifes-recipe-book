@@ -46,6 +46,8 @@ export class ViewRecipeComponent implements OnInit {
   totalRecipeTime!: number;
   isFavourite!: boolean;
 
+  userIsLoggedIn!: boolean;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
@@ -53,6 +55,8 @@ export class ViewRecipeComponent implements OnInit {
     private readonly deviceService: DeviceDetectorService
   ) {
     this.isMobile = deviceService.isMobile();
+
+    this.userIsLoggedIn = Boolean(localStorageService.retrieve('user'));
   }
 
   ngOnInit(): void {

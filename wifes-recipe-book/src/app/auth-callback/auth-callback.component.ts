@@ -31,6 +31,8 @@ export class AuthCallbackComponent implements OnInit {
               this.localAuthService.userConnected.emit(Boolean(user));
             },
             complete: () => {
+              this.localStorageService.clear('recommendedRecipes');
+              this.localStorageService.clear('recommendedRecipesTimestamp');
               this.router.navigate(['/']);
             },
           });

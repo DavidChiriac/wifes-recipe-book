@@ -8,13 +8,15 @@
                 <p-breadcrumb [model]="items" [home]="home" [ngClass]="{'black-text': !recipe?.coverImage}">
                     <ng-template #separator> / </ng-template>
                 </p-breadcrumb>
-                <div class="cursor-pointer" (click)="markAsFavourite()">
-                    @if (isFavourite) {
-                        <i class="pi pi-heart-fill favourite relative"></i>
-                    } @else {
-                        <i class="pi pi-heart favourite relative"></i>
-                    }
-                </div>
+                @if(userIsLoggedIn){
+                    <div class="cursor-pointer" (click)="markAsFavourite()">
+                        @if (isFavourite) {
+                            <i class="pi pi-heart-fill favourite relative"></i>
+                        } @else {
+                            <i class="pi pi-heart favourite relative"></i>
+                        }
+                    </div>
+                }
             </div>
 
             <div class="bottom">

@@ -146,20 +146,20 @@ export class RecipesService {
   getFavouriteRecipes(): Observable<IRecipe[]> {
       const query = qs.stringify(
         {
-          populate: ['favourites', 'favourites.coverImage'],
+          populate: ['coverImage'],
         },
         {
           encodeValuesOnly: true,
         }
       );
       return this.http
-        .get<{ favourites: IRecipe[] }>(
+        .get<{ data: IRecipe[] }>(
           environment.apiUrl +
-            `/api/users/${this.localStorageService.retrieve('user').id}?${query}`
+            `/api/recipes?filters[users][$in]=${this.localStorageService.retrieve('user').id}&${query}`
         )
         .pipe(
           map((response) => {
-              const data = response?.favourites?.map(recipe => this.mapRecipe(recipe));
+              const data = response?.data?.map(recipe => this.mapRecipe(recipe));
               return data;
             }
           )

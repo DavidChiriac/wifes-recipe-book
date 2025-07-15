@@ -27,6 +27,7 @@ export const routes: Routes = [
       {
         path: 'saved-recipes',
         component: FavouriteRecipesComponent,
+        canActivate: [socialAuthGuard]
       },
     ],
   },

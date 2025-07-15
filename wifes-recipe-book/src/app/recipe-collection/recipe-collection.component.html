@@ -2,7 +2,7 @@
   <div class="recipes-container">
       @for (recipe of recipes; track recipe.documentId) {
         <div class="recipe">
-          <app-recipe-card [card]="recipe"></app-recipe-card>
+          <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
         </div>
       }
   </div>

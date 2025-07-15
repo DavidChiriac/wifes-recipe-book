@@ -5,7 +5,7 @@
 <div [ngClass]="{'recommended-recipes': isMobile === false, 'recommended-recipes-mobile': isMobile}">
     @for (recipe of recommendedRecipes; track $index) {
         <div class="recipe">
-            <app-recipe-card [card]="recipe"></app-recipe-card>
+            <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
         </div>
     }
 </div>
