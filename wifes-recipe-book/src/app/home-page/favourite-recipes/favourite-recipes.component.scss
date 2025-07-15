@@ -1,0 +1,37 @@
+@use "../../shared/overrides/variables.scss" as vars;
+
+.recipe-collection {
+  height: calc(100vh - 132px);
+  overflow: auto;
+
+  .recipes-container {
+    width: 100%;
+    padding: 0 10px;
+    height: calc(100% - 20px);
+    margin-top: 1rem;
+    overflow: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 2rem;
+    row-gap: 2rem;
+    display: flex;
+  }
+}
+
+.recipe-collection-mobile {
+  height: calc(100vh - 132px);
+  overflow: auto;
+
+  .recipes-container {
+    width: 100%;
+    padding: 0 10px;
+    height: calc(100% - 20px);
+    margin-top: 1rem;
+    overflow: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
+    row-gap: 0.5rem;
+    display: flex;
+  }
+}

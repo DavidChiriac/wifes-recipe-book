@@ -29,7 +29,9 @@ export class HomePageComponent {
     this.isMobile = deviceService.isMobile();
   }
 
-  goToFavourites(): void {}
+  goToFavourites(): void {
+    this.router.navigate(['saved-recipes']);
+  }
 
   showFilters(): void {}
 

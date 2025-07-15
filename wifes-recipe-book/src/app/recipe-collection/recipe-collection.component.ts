@@ -58,8 +58,6 @@ export class RecipeCollectionComponent implements OnInit {
   errorModalVisible = false;
   errorMessage = '';
 
-  navigatingWithinModule = false;
-
   constructor(
     private readonly recipesService: RecipesService,
     private readonly deviceService: DeviceDetectorService,
@@ -102,10 +100,6 @@ export class RecipeCollectionComponent implements OnInit {
           this.errorModalVisible = true;
         },
       });
-  }
-
-  navigate(): void {
-    this.navigatingWithinModule = true;
   }
 
   cancel(): void {

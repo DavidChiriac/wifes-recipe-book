@@ -8,6 +8,7 @@ import { socialAuthGuard } from './shared/guards/auth/social-auth.guard';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { RecipeEditGuard } from './shared/guards/auth/recipe-edit.guard';
 import { HomepagePresentationComponent } from './home-page/homepage-presentation/homepage-presentation.component';
+import { FavouriteRecipesComponent } from './home-page/favourite-recipes/favourite-recipes.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,10 @@ export const routes: Routes = [
       {
         path: 'collection',
         component: RecipeCollectionComponent,
+      },
+      {
+        path: 'saved-recipes',
+        component: FavouriteRecipesComponent,
       },
     ],
   },

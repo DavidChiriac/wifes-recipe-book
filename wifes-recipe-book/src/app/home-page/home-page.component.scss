@@ -4,7 +4,7 @@
   width: 100%;
   height: calc(100vh - 55px);
   margin: auto;
-  overflow: auto;
+  overflow: hidden;
 
   .search-bar {
     width: 100%;
@@ -23,8 +23,8 @@
   .router-outlet {
     width: 100%;
     padding: 10px 250px;
-    height: calc(100% - 60px);
-    overflow: hidden;
+    height: calc(100% - 57px);
+    overflow: auto;
   }
 }
 

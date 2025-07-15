@@ -1,12 +1,11 @@
 <div [ngClass]="{'recipe-collection': isMobile === false, 'recipe-collection-mobile': isMobile}">
   <div class="recipes-container">
-      @for (recipe of recipes; track recipe.documentId) {
+      @for (recipe of savedRecipes; track recipe.documentId) {
         <div class="recipe">
           <app-recipe-card [card]="recipe"></app-recipe-card>
         </div>
       }
   </div>
-  <p-paginator (onPageChange)="onLazyLoad($event)" [alwaysShow]="true" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords"/>
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">

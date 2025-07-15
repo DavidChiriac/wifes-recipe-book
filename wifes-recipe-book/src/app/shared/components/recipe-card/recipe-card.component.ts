@@ -1,10 +1,8 @@
 import {
   Component,
-  EventEmitter,
   Inject,
   Input,
   OnInit,
-  Output,
   PLATFORM_ID,
 } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
@@ -24,7 +22,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 })
 export class RecipeCardComponent implements OnInit {
   @Input() card!: IRecipe;
-  @Output() navigate = new EventEmitter();
 
   isFavourite!: boolean;
 
@@ -47,7 +44,6 @@ export class RecipeCardComponent implements OnInit {
   }
 
   viewRecipe(): void {
-    this.navigate.emit();
     this.router.navigate(['/recipe/' + this.card.documentId]);
   }
 
