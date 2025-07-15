@@ -13,6 +13,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { MenuItem } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { HomepagePresentationComponent } from '../home-page/homepage-presentation/homepage-presentation.component';
+import { LocalStorageService } from 'ngx-webstorage';
 
 @UntilDestroy()
 @Component({
@@ -43,10 +44,12 @@ export class ViewRecipeComponent implements OnInit {
   home: MenuItem | undefined;
 
   totalRecipeTime!: number;
-  isFavourite = false;
+  isFavourite!: boolean;
+
   constructor(
     private readonly route: ActivatedRoute,
     private readonly recipesService: RecipesService,
+    private readonly localStorageService: LocalStorageService,
     private readonly deviceService: DeviceDetectorService
   ) {
     this.isMobile = deviceService.isMobile();
@@ -75,6 +78,8 @@ export class ViewRecipeComponent implements OnInit {
             { label: recipe.title }
           ];
 
+          this.isFavourite = recipe.isFavourite ?? false;
+
           const container = document.getElementById('recipe-container');
           container?.scrollTo(0, 0);
         },
@@ -92,5 +97,25 @@ export class ViewRecipeComponent implements OnInit {
 
   markAsFavourite(): void {
     this.isFavourite = !this.isFavourite;
+
+    this.recipesService.toggleFavourite(this.recipe?.id ?? '', this.isFavourite).pipe(untilDestroyed(this)).subscribe();
+
+    let cachedRecommendedRecipes = this.localStorageService.retrieve('recommendedRecipes');
+
+    let isCached = false;
+    cachedRecommendedRecipes = cachedRecommendedRecipes.map((recipe: IRecipe) => {
+      if(recipe.documentId === this.recipe?.documentId){
+        isCached = true;
+        return {
+          ...recipe,
+          isFavourite: this.isFavourite
+        }
+      }
+      return recipe;
+    });
+
+    if(isCached){
+      this.localStorageService.store('recommendedRecipes', cachedRecommendedRecipes);
+    }
   }
 }

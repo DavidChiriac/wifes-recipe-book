@@ -272,4 +272,8 @@ export class RecipesService {
       return total + sectionCalories;
     }, 0);
   }
+
+  toggleFavourite(id: string, isFavourite: boolean): Observable<void>{
+    return this.http.put<void>(environment.apiUrl + '/api/recipes/favourite/' + id , { data: {isFavourite: isFavourite}});
+  }
 };

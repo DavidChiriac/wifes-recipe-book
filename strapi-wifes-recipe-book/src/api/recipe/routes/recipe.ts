@@ -9,6 +9,13 @@ export default {
 			},
 		},
 		{
+			method: "PUT",
+			path: "/recipes/favourite/:id",
+			handler: "recipe.setFavourite",
+			config: {
+			}
+		},
+		{
 			method: "DELETE",
 			path: "/recipes/:id",
 			handler: "recipe.delete",
@@ -29,7 +36,7 @@ export default {
 		{
 			method: "POST",
 			path: "/recipes",
-			handler: "recipe.create",
+			handler: "recipe.create"
 		},
 	],
 };

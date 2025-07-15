@@ -1,4 +1,5 @@
 export interface IRecipe {
+  id?: string;
   coverImage?: { url: string; id: string; name: string };
   title: string;
   preparation: {step: string}[];
@@ -8,4 +9,5 @@ export interface IRecipe {
   documentId?: string;
   author?: {documentId: string};
   totalCalories?: number;
+  isFavourite?: boolean;
 }
