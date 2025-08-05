@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, computed, inject, Inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -25,23 +25,16 @@ import { DeviceDetectorService } from 'ngx-device-detector';
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit {
-  isMobile!: boolean;
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly localAuthService = inject(LocalAuthService);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  signedIn!: boolean;
+  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
-  items: MenuItem[] | undefined;
+  signedIn = signal<boolean>(false);
 
-  constructor(
-    private readonly deviceService: DeviceDetectorService,
-    private readonly localStorageService: LocalStorageService,
-    private readonly localAuthService: LocalAuthService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    if (isPlatformBrowser(this.platformId)) {
-      this.isMobile = deviceService.isMobile();
-    }
-
-    this.items = [
+  items: MenuItem[] | undefined = [
       {
         label: 'My Recipes',
         routerLink: 'my-recipes',
@@ -57,20 +50,19 @@ export class NavbarComponent implements OnInit {
         },
       },
     ];
-  }
 
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const user = this.localStorageService.retrieve('user');
 
       if (user) {
-        this.signedIn = true;
+        this.signedIn.set(true);
         this.localAuthService.userConnected.emit(true);
       }
 
       this.localAuthService.userConnected
         .pipe(untilDestroyed(this))
-        .subscribe((connected) => (this.signedIn = connected));
+        .subscribe((connected) => (this.signedIn.set(connected)));
     }
   }
 
@@ -84,7 +76,7 @@ export class NavbarComponent implements OnInit {
     this.localStorageService.clear('token');
     this.localStorageService.clear('user');
     this.localAuthService.userConnected.emit(false);
-    this.signedIn = false;
+    this.signedIn.set(false);
     location.reload();
   }
 }

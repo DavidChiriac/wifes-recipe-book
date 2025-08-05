@@ -1,7 +1,10 @@
 import {
   Component,
-  Inject,
-  Input,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  model,
   PLATFORM_ID,
 } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
@@ -9,10 +12,9 @@ import { Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { RecipesService } from '../../services/recipes.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-recipe-card',
   imports: [CommonModule],
@@ -20,46 +22,43 @@ import { LocalStorageService } from 'ngx-webstorage';
   styleUrl: './recipe-card.component.scss',
 })
 export class RecipeCardComponent {
-  @Input() card!: IRecipe;
-  @Input() isFavourite!: boolean;
+  card = input.required<IRecipe>();
+  isFavourite = model(false);
 
-  isMobile!: boolean;
+  private readonly router = inject(Router);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly recipesService = inject(RecipesService);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
 
-  userIsLoggedIn!: boolean;
+  isMobile= computed(
+    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
+  );
 
-  constructor(
-    private readonly router: Router,
-    private readonly deviceService: DeviceDetectorService,
-    private readonly recipesService: RecipesService,
-    private readonly localStorageService: LocalStorageService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    if (isPlatformBrowser(platformId)) {
-      this.isMobile = deviceService.isMobile();
-    }
-
-    this.userIsLoggedIn = Boolean(localStorageService.retrieve('user'));
-  }
+  userIsLoggedIn = computed(() =>
+    Boolean(this.localStorageService.retrieve('user'))
+  );
 
   viewRecipe(): void {
-    this.router.navigate(['/recipe/' + this.card.documentId]);
+    this.router.navigate(['/recipe/' + this.card().documentId]);
   }
 
   markAsFavourite(event: Event): void {
     event.stopPropagation();
-    this.isFavourite = !this.isFavourite;
+    this.isFavourite.update((favourite) => !favourite);
 
-    this.recipesService.toggleFavourite(this.card.id ?? '', this.isFavourite).pipe(untilDestroyed(this)).subscribe();
+    this.recipesService.toggleFavourite(this.card().id ?? '', this.isFavourite()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 
     let cachedRecommendedRecipes = this.localStorageService.retrieve('recommendedRecipes');
 
     let isCached = false;
     cachedRecommendedRecipes = cachedRecommendedRecipes.map((recipe: IRecipe) => {
-      if(recipe.documentId === this.card.documentId){
+      if(recipe.documentId === this.card().documentId){
         isCached = true;
         return {
           ...recipe,
-          isFavourite: this.isFavourite
+          isFavourite: this.isFavourite()
         }
       }
       return recipe;

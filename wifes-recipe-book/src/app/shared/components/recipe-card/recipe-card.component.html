@@ -1,13 +1,13 @@
-<div [ngClass]="{'card': isMobile === false, 'card-mobile': isMobile}" (click)="viewRecipe()" onkeydown="">
+<div [ngClass]="{'card': isMobile() === false, 'card-mobile': isMobile()}" (click)="viewRecipe()" onkeydown="">
     <div class="image">
-        @if(card.coverImage){
-            <img [src]="card.coverImage.url" [alt]="card.title" />
+        @if(card().coverImage){
+            <img [src]="card().coverImage?.url" [alt]="card().title" />
         } @else {
-            <img src="assets/images/recipe-placeholder.png" [alt]="card.title"/>
+            <img src="assets/images/recipe-placeholder.png" [alt]="card().title"/>
         }
-        @if(userIsLoggedIn){
+        @if(userIsLoggedIn()){
             <div class="w-full px-2 py-2 pointer-events-auto" (click)="markAsFavourite($event)">
-                @if (isFavourite) {
+                @if (isFavourite()) {
                     <i class="pi pi-heart-fill favourite relative"></i>
                 } @else {
                     <i class="pi pi-heart favourite relative"></i>
@@ -16,6 +16,6 @@
         }
     </div>
     <div class="title">
-        {{card.title}}
+        {{card().title}}
     </div>
 </div>
