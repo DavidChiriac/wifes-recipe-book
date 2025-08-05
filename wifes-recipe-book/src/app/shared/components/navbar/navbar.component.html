@@ -31,6 +31,12 @@
           [routerLink]="'/my-recipes'"
         />
         <p-button
+          class="my-recipes"
+          [ngClass]="{ mobile: isMobile }"
+          label="Favourite Recipes"
+          [routerLink]="'/favourite-recipes'"
+        />
+        <p-button
           class="sign-in"
           GoogleSigninButtonDirective 
           [ngClass]="{ mobile: isMobile }"

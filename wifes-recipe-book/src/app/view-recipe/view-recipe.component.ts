@@ -1,11 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  effect,
+  inject,
+  input,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
-import { ActivatedRoute } from '@angular/router';
 import { TextareaModule } from 'primeng/textarea';
 import { ImageModule } from 'primeng/image';
 import { RecipesService } from '../shared/services/recipes.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -14,8 +21,8 @@ import { MenuItem } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { HomepagePresentationComponent } from '../home-page/homepage-presentation/homepage-presentation.component';
 import { LocalStorageService } from 'ngx-webstorage';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-view-recipe',
   imports: [
@@ -26,60 +33,62 @@ import { LocalStorageService } from 'ngx-webstorage';
     ButtonModule,
     BreadcrumbModule,
     CheckboxModule,
-    HomepagePresentationComponent
+    HomepagePresentationComponent,
   ],
   templateUrl: './view-recipe.component.html',
   styleUrl: './view-recipe.component.scss',
 })
-export class ViewRecipeComponent implements OnInit {
+export class ViewRecipeComponent {
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly recipesService = inject(RecipesService);
+  private readonly platformId = inject(PLATFORM_ID);
+
+  readonly id = input.required<string>();
+
   recipe: IRecipe | undefined;
 
-  isMobile!: boolean;
+  isMobile = computed(
+    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
+  );
+  userIsLoggedIn = computed(() =>
+    Boolean(this.localStorageService.retrieve('user'))
+  );
 
-  errorModalVisible = false;
-  errorMessage = '';
+  errorModalVisible = signal(false);
+  errorMessage = signal('');
 
   items: MenuItem[] | undefined;
-
-  home: MenuItem | undefined;
+  home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
 
   totalRecipeTime!: number;
   isFavourite!: boolean;
 
-  userIsLoggedIn!: boolean;
-
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly recipesService: RecipesService,
-    private readonly localStorageService: LocalStorageService,
-    private readonly deviceService: DeviceDetectorService
-  ) {
-    this.isMobile = deviceService.isMobile();
-
-    this.userIsLoggedIn = Boolean(localStorageService.retrieve('user'));
-  }
-
-  ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
-      this.getRecipe(this.route.snapshot.params['id']);
+  constructor() {
+    effect(() => {
+      if (this.id()) {
+        this.getRecipe(this.id());
+      }
     });
-
-    this.home = { icon: 'pi pi-home', routerLink: '/' };
   }
 
   getRecipe(documentId: string): void {
     this.recipesService
       .getSingleRecipe(documentId)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (recipe) => {
           this.recipe = { ...recipe };
-          this.totalRecipeTime = (parseInt(recipe.preparationTime?.hours ?? '')) * 60;
-          this.totalRecipeTime += parseInt(recipe.preparationTime?.minutes ?? '');
+          this.totalRecipeTime =
+            parseInt(recipe.preparationTime?.hours ?? '') * 60;
+          this.totalRecipeTime += parseInt(
+            recipe.preparationTime?.minutes ?? ''
+          );
 
           this.items = [
             // { label: recipe.category },
-            { label: recipe.title }
+            { label: recipe.title },
           ];
 
           this.isFavourite = recipe.isFavourite ?? false;
@@ -88,38 +97,47 @@ export class ViewRecipeComponent implements OnInit {
           container?.scrollTo(0, 0);
         },
         error: (error) => {
-          this.errorMessage = error.message;
-          this.errorModalVisible = true;
+          this.errorMessage.set(error.message);
+          this.errorModalVisible.set(true);
         },
       });
   }
 
   cancel(): void {
-    this.errorModalVisible = false;
-    this.errorMessage = '';
+    this.errorModalVisible.set(false);
+    this.errorMessage.set('');
   }
 
   markAsFavourite(): void {
     this.isFavourite = !this.isFavourite;
 
-    this.recipesService.toggleFavourite(this.recipe?.id ?? '', this.isFavourite).pipe(untilDestroyed(this)).subscribe();
+    this.recipesService
+      .toggleFavourite(this.recipe?.id ?? '', this.isFavourite)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
 
-    let cachedRecommendedRecipes = this.localStorageService.retrieve('recommendedRecipes');
+    let cachedRecommendedRecipes =
+      this.localStorageService.retrieve('recommendedRecipes');
 
     let isCached = false;
-    cachedRecommendedRecipes = cachedRecommendedRecipes.map((recipe: IRecipe) => {
-      if(recipe.documentId === this.recipe?.documentId){
-        isCached = true;
-        return {
-          ...recipe,
-          isFavourite: this.isFavourite
+    cachedRecommendedRecipes = cachedRecommendedRecipes.map(
+      (recipe: IRecipe) => {
+        if (recipe.documentId === this.recipe?.documentId) {
+          isCached = true;
+          return {
+            ...recipe,
+            isFavourite: this.isFavourite,
+          };
         }
+        return recipe;
       }
-      return recipe;
-    });
+    );
 
-    if(isCached){
-      this.localStorageService.store('recommendedRecipes', cachedRecommendedRecipes);
+    if (isCached) {
+      this.localStorageService.store(
+        'recommendedRecipes',
+        cachedRecommendedRecipes
+      );
     }
   }
 }

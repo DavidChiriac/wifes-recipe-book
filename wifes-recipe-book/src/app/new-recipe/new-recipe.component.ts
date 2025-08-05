@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -17,7 +17,6 @@ import {
 } from 'primeng/fileupload';
 import { v4 as uuidv4 } from 'uuid';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { concatMap, of, tap } from 'rxjs';
@@ -27,8 +26,8 @@ import { DialogModule } from 'primeng/dialog';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { AccordionModule } from 'primeng/accordion';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-new-recipe',
   imports: [
@@ -46,7 +45,13 @@ import { AccordionModule } from 'primeng/accordion';
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
 })
-export class NewRecipeComponent implements OnInit {
+export class NewRecipeComponent {
+  private readonly recipesService = inject(RecipesService);
+  private readonly router = inject(Router);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
+
   recipeForm = new FormGroup({
     name: new FormControl('', Validators.required),
     ingredients: new FormArray(
@@ -84,9 +89,9 @@ export class NewRecipeComponent implements OnInit {
   newUploadedCoverImage: { id: string; name: string; url: string } | undefined;
   newUploadedImages: { id: string; name: string; url: string }[] = [];
 
-  documentId = '';
+  id = input.required<string>();
 
-  isMobile!: boolean;
+  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
   imageDeleteDialogVisible = false;
   imageToBeDeleted: { id: string; name: string; url: string } | undefined;
@@ -96,32 +101,18 @@ export class NewRecipeComponent implements OnInit {
   errorModalVisible = false;
   errorMessage = 'banana';
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly recipesService: RecipesService,
-    private readonly router: Router,
-    private readonly deviceService: DeviceDetectorService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isMobile = deviceService.isMobile();
-  }
-
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
-        if (params?.['id'] && isPlatformBrowser(this.platformId)) {
-          this.documentId = params['id'];
-          this.documentId;
-          this.populateForm();
-        }
-      });
-    }
+  constructor() {
+    effect(() => {
+      if(this.id()){
+        this.populateForm();
+      }
+    });
   }
 
   populateForm(): void {
     this.recipesService
-      .getSingleRecipe(this.documentId)
-      .pipe(untilDestroyed(this))
+      .getSingleRecipe(this.id())
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((recipe) => {
         this.recipeForm = new FormGroup({
           name: new FormControl(recipe.title, Validators.required),
@@ -222,11 +213,11 @@ export class NewRecipeComponent implements OnInit {
         concatMap(() => uploadCoverImage$),
         concatMap(() => {
           const recipeData = this.transformFormIntoRecipe(this.recipeForm);
-          return this.documentId
+          return this.id()
             ? this.recipesService.editRecipe(recipeData, this.existingImages)
             : this.recipesService.createRecipe(recipeData, this.existingImages);
         }),
-        untilDestroyed(this)
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
         next: (response) => {
@@ -243,7 +234,7 @@ export class NewRecipeComponent implements OnInit {
 
   transformFormIntoRecipe(form: FormGroup): IRecipe {
     const recipe: IRecipe = {
-      documentId: this.documentId,
+      documentId: this.id(),
       coverImage: this.newUploadedCoverImage,
       title: form.controls['name'].getRawValue(),
       preparation: form.controls['preparation'].getRawValue(),
@@ -378,7 +369,7 @@ export class NewRecipeComponent implements OnInit {
     );
     this.recipesService
       .deleteImage(this.imageToBeDeleted?.id ?? '')
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         error: (error) => {
           this.errorModalVisible = true;

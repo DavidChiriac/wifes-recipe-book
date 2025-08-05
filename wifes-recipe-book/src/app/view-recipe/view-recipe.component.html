@@ -1,4 +1,4 @@
-<div id="recipe-container" [ngClass]="{'recipe': isMobile === false, 'recipe-mobile': isMobile}">
+<div id="recipe-container" [ngClass]="{'recipe': isMobile() === false, 'recipe-mobile': isMobile()}">
     <div class="header">
         @if (recipe?.coverImage) {
             <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
@@ -8,7 +8,7 @@
                 <p-breadcrumb [model]="items" [home]="home" [ngClass]="{'black-text': !recipe?.coverImage}">
                     <ng-template #separator> / </ng-template>
                 </p-breadcrumb>
-                @if(userIsLoggedIn){
+                @if(userIsLoggedIn()){
                     <div class="cursor-pointer" (click)="markAsFavourite()">
                         @if (isFavourite) {
                             <i class="pi pi-heart-fill favourite relative"></i>
@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="content">
-        @if(isMobile === false){
+        @if(isMobile() === false){
             <div class="general">
                 @if(recipe?.coverImage){
                     <div class="cover-image">
@@ -94,7 +94,7 @@
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">
-    <h3 class="mb-3 text-center">{{errorMessage}}</h3>
+    <h3 class="mb-3 text-center">{{errorMessage()}}</h3>
     <div class="flex justify-content-center gap-2">
         <p-button label="Close" class="delete-button" severity="secondary" (click)="cancel()" />
     </div>

@@ -47,6 +47,10 @@ export class NavbarComponent implements OnInit {
         routerLink: 'my-recipes',
       },
       {
+        label: 'Favourite Recipes',
+        routerLink: 'favourite-recipes',
+      },
+      {
         label: 'Sign Out',
         command: () => {
           this.signOut();

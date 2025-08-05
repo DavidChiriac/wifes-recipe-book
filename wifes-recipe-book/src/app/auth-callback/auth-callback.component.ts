@@ -1,21 +1,19 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { LocalAuthService } from '../shared/services/local-auth.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalStorageService } from 'ngx-webstorage';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-auth-callback',
   template: `<span>Logging you in...</span>`,
 })
 export class AuthCallbackComponent implements OnInit {
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private readonly localAuthService: LocalAuthService,
-    private readonly localStorageService: LocalStorageService
-  ) {}
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly localAuthService = inject(LocalAuthService);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly destroyRef = inject(DestroyRef);
 
   ngOnInit() {
     this.route.queryParams.subscribe((params) => {
@@ -23,7 +21,7 @@ export class AuthCallbackComponent implements OnInit {
       if (jwt) {
         this.localAuthService
           .connect(jwt)
-          .pipe(untilDestroyed(this))
+          .pipe(takeUntilDestroyed(this.destroyRef))
           .subscribe({
             next: (user) => {
               this.localStorageService.store('token', user.jwt);

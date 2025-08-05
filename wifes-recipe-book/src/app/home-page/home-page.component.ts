@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, effect, ElementRef, Inject, PLATFORM_ID, signal, Signal, ViewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, Inject, PLATFORM_ID, signal, Signal, viewChild, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
@@ -16,26 +16,29 @@ import { environment } from '../../environments/environment';
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
-  @ViewChild('searchWord') searchWord!: ElementRef;
-  isMobile!: boolean;
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly localStorageService = inject(LocalStorageService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  recommendedRecipes: IRecipe[] = [];
+  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
   searchTerm = signal<string>('');
-
-  constructor(
-    private readonly deviceService: DeviceDetectorService,
-    private readonly router: Router,
-    private readonly localStorageService: LocalStorageService,
-    private readonly route: ActivatedRoute,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isMobile = deviceService.isMobile();
+  
+  constructor() {
+    effect(() => {
+      if(this.searchTerm().length > 0 || window.location.pathname === '/collection') {
+        this.router.navigate(['/collection'], {relativeTo: this.route});
+      } else {
+        this.router.navigate(['']);
+      }
+    });
   }
 
   goToFavourites(): void {
     if(this.localStorageService.retrieve('user')){
-      this.router.navigate(['saved-recipes']);
+      this.router.navigate(['favourite-recipes']);
     } else {
       if (isPlatformBrowser(this.platformId)) {
         window.location.href = environment.apiUrl + '/api/connect/google';
@@ -45,17 +48,7 @@ export class HomePageComponent {
 
   showFilters(): void {}
 
-  search(): void {
-    this.searchTerm.set(this.searchWord.nativeElement.value);
-    if(this.searchTerm()){
-      this.router.navigate(['/collection'], {relativeTo: this.route});
-    } else {
-      this.router.navigate(['']);
-    }
-  }
-
   clearSearch(): void {
     this.searchTerm.set('');
-    this.search();
   }
 }

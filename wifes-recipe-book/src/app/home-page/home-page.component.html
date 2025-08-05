@@ -1,20 +1,20 @@
-<div [ngClass]="{ 'homepage-mobile': isMobile, homepage: isMobile === false }">
+<div [ngClass]="{ 'homepage-mobile': isMobile(), homepage: isMobile() === false }">
   <div class="search-bar">
-    @if (isMobile === false) {
+    @if (isMobile() === false) {
       <div></div>
     }
     <div class="right">
       <span class="input-icon-left">
-        @if (searchTerm()) {
+        @if (searchTerm().length > 0) {
             <i class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
         } @else {
             <i class="pi pi-search cursor-pointer"></i>
         }
-        <input #searchWord type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
-                (keydown.enter)="search()" [value]="searchTerm()"/>
+        <input type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
+                [(ngModel)]="searchTerm"/>
       </span>
-      <div class="flex align-items-center cursor-pointer" (click)="goToFavourites()"><i class="pi pi-heart mr-1"></i>@if(isMobile === false){Saved Recipes}</div>
-      <div class="flex align-items-center cursor-pointer" (click)="showFilters()"><i class="pi pi-filter mr-1"></i>@if(isMobile === false) {Filters}</div>
+      <div class="flex align-items-center cursor-pointer" (click)="goToFavourites()"><i class="pi pi-heart mr-1"></i>@if(isMobile() === false){Saved Recipes}</div>
+      <div class="flex align-items-center cursor-pointer" (click)="showFilters()"><i class="pi pi-filter mr-1"></i>@if(isMobile() === false) {Filters}</div>
     </div>
   </div>
   <div class="router-outlet">

@@ -12,9 +12,15 @@
     overflow: auto;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1.33%;
     row-gap: 2rem;
     display: flex;
+  }
+  
+  .recipe{
+    display: flex;
+    flex-basis: 24%;
+    width: 100%;
   }
 }
 
@@ -30,8 +36,14 @@
     overflow: auto;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: 2%;
     row-gap: 0.5rem;
     display: flex;
+  }
+
+  .recipe{
+    display: flex;
+    flex-basis: 49%;
+    width: 100%;
   }
 }

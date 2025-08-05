@@ -1,11 +1,14 @@
 <div class="w-full flex align-items-center justify-content-between">
-    <h2 class="w-fit-content">Recommended @if(isMobile === false){for today}</h2>
+    <h2 class="w-fit-content">Recommended @if(isMobile() === false){for today}</h2>
     <p-button class="outline" label="View all" [routerLink]="'/collection'" [ngClass]="{mobile: isMobile}"/>
 </div>
-<div [ngClass]="{'recommended-recipes': isMobile === false, 'recommended-recipes-mobile': isMobile}">
-    @for (recipe of recommendedRecipes; track $index) {
-        <div class="recipe">
-            <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
-        </div>
-    }
+<div [ngClass]="{'recommended-recipes-container-mobile': isMobile()}">
+    <div [ngClass]="{'recommended-recipes': isMobile() === false, 'recommended-recipes-mobile': isMobile()}">
+
+        @for (recipe of recommendedRecipes$ | async; track $index) {
+            <div class="recipe">
+                <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
+            </div>
+        }
+    </div>
 </div>
