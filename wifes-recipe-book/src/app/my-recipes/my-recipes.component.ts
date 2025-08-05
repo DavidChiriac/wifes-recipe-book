@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
@@ -8,7 +8,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ExtendedCardComponent } from '../shared/components/extended-card/extended-card.component';
 import { RecipesService } from '../shared/services/recipes.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { catchError, concatMap, from, of, toArray } from 'rxjs';
+import { catchError, concatMap, debounceTime, from, map, Observable, of, toArray } from 'rxjs';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -26,7 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './my-recipes.component.html',
   styleUrl: './my-recipes.component.scss',
 })
-export class MyRecipesComponent implements OnInit {
+export class MyRecipesComponent {
   private readonly recipesService = inject(RecipesService);
   private readonly deviceService = inject(DeviceDetectorService);
   private readonly destroyRef = inject(DestroyRef);
@@ -36,27 +36,27 @@ export class MyRecipesComponent implements OnInit {
     () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
   );
 
-  searchTerm = '';
+  searchTerm = signal('');
 
   recipes: IRecipe[] = [];
 
-  requestParams: {
-    pageNumber: number | undefined;
-    pageSize: number | undefined;
-    first: number | undefined;
+  requestParams = signal<{
+    pageNumber: number;
+    pageSize: number;
+    first: number;
     sortField: string | undefined;
     sortDirection: 'asc' | 'desc' | undefined;
-  } = {
+  }>({
     pageNumber: 0,
     pageSize: 20,
     first: 0,
     sortField: undefined,
     sortDirection: undefined,
-  };
+  });
 
-  sortField: string | undefined;
-  sortDirection: 'asc' | 'desc' | undefined;
-  totalRecords = 0;
+  sortField = signal<string | undefined>(undefined);
+  sortDirection = signal<'asc' | 'desc' | undefined>(undefined);
+  totalRecords = signal(0);
 
   deleteDialogVisible = signal(false);
   recipeToBeDeleted = signal<IRecipe | undefined>(undefined);
@@ -66,41 +66,44 @@ export class MyRecipesComponent implements OnInit {
 
   deleting = signal(false);
 
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.onLazyLoad();
-    }
+
+  constructor() {
+    effect(() => {
+      this.recipesService.getMyRecipes(this.requestParams(), this.searchTerm()).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(1000),
+        map(response => {
+          this.totalRecords.set(response.total);
+          return response.data;
+        }),
+        catchError(error => {
+          this.errorMessage.set(error.message);
+          this.errorModalVisible.set(true);
+          return [];
+        })
+      ).subscribe({
+        next: (recipes) => {
+          this.recipes = recipes;
+        },
+      });
+    });
   }
 
   clear(): void {
-    this.searchTerm = '';
+    this.searchTerm.set('');
     this.onLazyLoad();
   }
 
   onLazyLoad(event?: PaginatorState): void {
     if (event) {
-      this.requestParams = {
-        pageNumber: event.page,
-        pageSize: event.rows,
-        first: event.first,
-        sortField: this.sortField,
-        sortDirection: this.sortDirection,
-      };
-    }
-
-    this.recipesService
-      .getMyRecipes(this.requestParams, this.searchTerm)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (recipes) => {
-          this.recipes = [...recipes.data];
-          this.totalRecords = recipes.meta.total;
-        },
-        error: (error) => {
-          this.errorMessage.set(error.message);
-          this.errorModalVisible.set(true);
-        },
+      this.requestParams.set({
+        pageNumber: event.page || 0,
+        pageSize: event.rows || 20,
+        first: event.first || 0,
+        sortField: this.sortField(),
+        sortDirection: this.sortDirection(),
       });
+    }
   }
 
   deleteRecipe(id: string): void {
@@ -153,5 +156,10 @@ export class MyRecipesComponent implements OnInit {
           this.errorMessage.set(error.message);
         },
       });
+  }
+
+  updateSearchTerm(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
   }
 }

@@ -3,7 +3,7 @@
         <h1 class="title">My Recipes</h1>
     </div>
     <div class="search-bar">
-        <input pInputText [(ngModel)]="searchTerm" [ngClass]="{mobile: isMobile()}" (keydown.enter)="onLazyLoad()"/>
+        <input pInputText [ngClass]="{mobile: isMobile()}" [value]="searchTerm()" (keydown.enter)="updateSearchTerm($event)"/>
         <p-button class="search" icon="pi pi-search" (onClick)="onLazyLoad()"/>
         <p-button class="clear" icon="pi pi-times" (onClick)="clear()"/>
     </div>
@@ -13,7 +13,7 @@
             <br/>
         }
     </div>
-    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="false" />
+    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams().first" [rows]="requestParams().pageSize" [totalRecords]="totalRecords" [alwaysShow]="false" />
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="deleteDialogVisible" [style]="{ width: '25rem' }">

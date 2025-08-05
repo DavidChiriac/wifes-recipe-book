@@ -1,54 +1,38 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, computed, effect, ElementRef, inject, Inject, PLATFORM_ID, signal, Signal, viewChild, ViewChild } from '@angular/core';
+import { Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { LocalStorageService } from 'ngx-webstorage';
-import { environment } from '../../environments/environment';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RecipesService } from '../shared/services/recipes.service';
+import { catchError, map, of } from 'rxjs';
+import { HomepagePresentationComponent } from "./homepage-presentation/homepage-presentation.component";
+import { SessionStorageService } from 'ngx-webstorage';
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, ButtonModule, RouterModule, InputTextModule, FormsModule],
+  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, HomepagePresentationComponent],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
   private readonly deviceService = inject(DeviceDetectorService);
-  private readonly localStorageService = inject(LocalStorageService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly recipesService = inject(RecipesService);
+  private readonly sessionStorage = inject(SessionStorageService);
 
   isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
   searchTerm = signal<string>('');
   
-  constructor() {
-    effect(() => {
-      if(this.searchTerm().length > 0 || window.location.pathname === '/collection') {
-        this.router.navigate(['/collection'], {relativeTo: this.route});
-      } else {
-        this.router.navigate(['']);
-      }
-    });
-  }
-
-  goToFavourites(): void {
-    if(this.localStorageService.retrieve('user')){
-      this.router.navigate(['favourite-recipes']);
-    } else {
-      if (isPlatformBrowser(this.platformId)) {
-        window.location.href = environment.apiUrl + '/api/connect/google';
-      }
-    }
-  }
-
-  showFilters(): void {}
-
-  clearSearch(): void {
-    this.searchTerm.set('');
-  }
+  categories$ = this.recipesService.getCategories().pipe(
+    catchError(() => of([])),
+    takeUntilDestroyed(this.destroyRef),
+    map(categories => {
+      this.sessionStorage.store('categories', categories);
+      return categories;
+    })
+  );
 }

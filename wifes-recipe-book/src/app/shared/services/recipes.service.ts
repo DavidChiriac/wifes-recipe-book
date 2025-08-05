@@ -42,18 +42,22 @@ export class RecipesService {
       pageSize: number | undefined;
       sortField: string | undefined;
       sortDirection: string | undefined;
+      category: string[];
     },
     searchTerm: string = ''
-  ): Observable<{ data: IRecipe[]; meta: { total: number } }> {
+  ): Observable<{ data: IRecipe[]; total: number }> {
     let queryParams = '';
     if (params.sortDirection && params.sortField) {
       queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
     }
     if (searchTerm) {
-      queryParams += `&filters[$or][0][title][$containsi]=${searchTerm}&filters[$or][1][preparation][$containsi]=${searchTerm}&filters[$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
+      queryParams += `&filters[$and][0][$or][0][title][$containsi]=${searchTerm}&filters[$and][0][$or][1][preparation][$containsi]=${searchTerm}&filters[$and][0][$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
+    params.category.forEach((category, index) => {
+      queryParams += `&filters[$and][1][$or][${index}][categories][name][$eq]=${category}`;
+    });
     return this.http
-      .get<{ data: IRecipe[]; meta: { total: number } }>(
+      .get<{ data: IRecipe[]; meta: { pagination: { total: number } } }>(
         environment.apiUrl +
           `/api/recipes?${this.recipesQuery}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${params.pageSize}${queryParams}`
       )
@@ -61,7 +65,7 @@ export class RecipesService {
         map((response) => {
           return {
             data: response.data.map((recipe) => this.mapRecipe(recipe)),
-            meta: response.meta,
+            total: response.meta.pagination.total,
           };
         })
       );
@@ -83,7 +87,7 @@ export class RecipesService {
       sortDirection: string | undefined;
     },
     searchTerm: string
-  ): Observable<{ data: IRecipe[]; meta: { total: number } }> {
+  ): Observable<{ data: IRecipe[]; total: number }> {
     let queryParams = '';
     if (params.sortDirection && params.sortField) {
       queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
@@ -93,7 +97,7 @@ export class RecipesService {
       queryParams += `&filters[$and][1][$or][0][title][$containsi]=${searchTerm}&filters[$and][1][$or][1][preparation][$containsi]=${searchTerm}&filters[$and][1][$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
     return this.http
-      .get<{ data: IRecipe[]; meta: { total: number } }>(
+      .get<{ data: IRecipe[]; meta: { pagination: { total: number } } }>(
         environment.apiUrl +
           `/api/recipes?${this.recipesQuery}&filters[$and][0][author][email][$eq]=${this.localStorageService.retrieve('user').email}&pagination[page]=${params.pageNumber}&pagination[pageSize]=${
             params.pageSize
@@ -103,7 +107,7 @@ export class RecipesService {
         map((response) => {
           return {
             data: response.data.map((recipe) => this.mapRecipe(recipe)),
-            meta: response.meta,
+            total: response.meta.pagination.total,
           };
         })
       );
@@ -299,4 +303,15 @@ export class RecipesService {
   toggleFavourite(id: string, isFavourite: boolean): Observable<void>{
     return this.http.put<void>(environment.apiUrl + '/api/recipes/favourite/' + id , { data: {isFavourite: isFavourite}});
   }
-};
+
+  getCategories(): Observable<{name: string, icon: string}[]> { 
+    return this.http.get<{data: { name: string, icon: {url: string}}[]}>(environment.apiUrl + '/api/categories?populate=*').pipe(
+      map(response => {
+        return response.data.map(category => ({
+          name: category.name,
+          icon: environment.prod ? category.icon?.url : (environment.apiUrl + category.icon?.url)
+        }));
+      })
+    );
+  }
+}

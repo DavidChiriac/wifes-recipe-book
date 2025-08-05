@@ -1,23 +1,16 @@
 <div [ngClass]="{ 'homepage-mobile': isMobile(), homepage: isMobile() === false }">
-  <div class="search-bar">
-    @if (isMobile() === false) {
-      <div></div>
+  <app-homepage-presentation></app-homepage-presentation>
+
+  <div class="categories">
+    @for (category of categories$ | async; track $index) {
+      <div class="category">
+        <div class="icon">
+          <img [src]="category.icon"/>
+        </div>
+        <div class="name">
+          {{category.name}}
+        </div>
+      </div>
     }
-    <div class="right">
-      <span class="input-icon-left">
-        @if (searchTerm().length > 0) {
-            <i class="pi pi-times cursor-pointer" (click)="clearSearch()"></i>
-        } @else {
-            <i class="pi pi-search cursor-pointer"></i>
-        }
-        <input type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
-                [(ngModel)]="searchTerm"/>
-      </span>
-      <div class="flex align-items-center cursor-pointer" (click)="goToFavourites()"><i class="pi pi-heart mr-1"></i>@if(isMobile() === false){Saved Recipes}</div>
-      <div class="flex align-items-center cursor-pointer" (click)="showFilters()"><i class="pi pi-filter mr-1"></i>@if(isMobile() === false) {Filters}</div>
-    </div>
-  </div>
-  <div class="router-outlet">
-    <router-outlet [routerOutletData]="searchTerm()"></router-outlet>
   </div>
 </div>

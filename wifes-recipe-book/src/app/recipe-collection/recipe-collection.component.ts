@@ -1,19 +1,22 @@
-import { Component, effect, inject, Inject, OnInit, PLATFORM_ID, Signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Form, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { RecipesService } from '../shared/services/recipes.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { RouterModule } from '@angular/router';
-import {ROUTER_OUTLET_DATA} from "@angular/router";
+import { catchError, debounceTime, map, Observable } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { IRecipe } from '../shared/interfaces/recipe.interface';
+import { DrawerModule } from 'primeng/drawer';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SessionStorageService } from 'ngx-webstorage';
+import { MultiSelectModule } from 'primeng/multiselect';
 
-@UntilDestroy()
 @Component({
   selector: 'app-recipe-collection',
   imports: [
@@ -24,86 +27,115 @@ import {ROUTER_OUTLET_DATA} from "@angular/router";
     PaginatorModule,
     CommonModule,
     DialogModule,
-    RouterModule
+    RouterModule,
+    DrawerModule,
+    FloatLabelModule,
+    MultiSelectModule,
+    ReactiveFormsModule
   ],
   templateUrl: './recipe-collection.component.html',
   styleUrl: './recipe-collection.component.scss',
 })
-export class RecipeCollectionComponent implements OnInit {
-  searchTerm = inject(ROUTER_OUTLET_DATA) as Signal<string>;
+export class RecipeCollectionComponent {
+  private readonly recipesService = inject(RecipesService);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly platformId = inject(PLATFORM_ID);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly sessionStorage = inject(SessionStorageService);
 
-  recipes: IRecipe[] = [];
+  filtersForm = new FormGroup({
+    category: new FormControl<string[]>([]),
+    preparationTime: new FormControl(null),
+  });
 
-  requestParams: {
-    pageNumber: number | undefined;
-    pageSize: number | undefined;
-    first: number | undefined;
+  isMobile = computed(
+    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
+  );
+
+  searchTerm = signal('');
+
+  requestParams = signal<{
+    pageNumber: number;
+    pageSize: number;
+    first: number;
     sortField: string | undefined;
     sortDirection: 'asc' | 'desc' | undefined;
-  } = {
+    category: string[];
+  }>({
     pageNumber: 0,
-    pageSize: 20,
+    pageSize: 10,
     first: 0,
     sortField: undefined,
     sortDirection: undefined,
-  };
+    category: []
+  });
 
-  sortField: string | undefined;
-  sortDirection: 'asc' | 'desc' | undefined;
+  sortField = signal<string | undefined>(undefined);
+  sortDirection = signal<'asc' | 'desc' | undefined>(undefined);
 
-  totalRecords = 0;
-
-  isMobile!: boolean;
+  totalRecords = signal(0);
 
   errorModalVisible = false;
   errorMessage = '';
 
-  constructor(
-    private readonly recipesService: RecipesService,
-    private readonly deviceService: DeviceDetectorService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    this.isMobile = deviceService.isMobile();
+  recipes$!: Observable<IRecipe[]>;
 
+  filtersVisible = signal(false);
+
+  categoryOptions = this.sessionStorage.retrieve('categories') || [];
+
+  constructor() {
     effect(() => {
-      this.onLazyLoad(undefined, this.searchTerm());
+      this.recipes$ = this.recipesService.getRecipes(this.requestParams(), this.searchTerm()).pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(1000),
+        map(response => {
+          this.totalRecords.set(response.total);
+          return response.data;
+        }),
+        catchError(error => {
+          this.errorMessage = error.message;
+          this.errorModalVisible = true;
+          return [];
+        })
+      );
     });
   }
 
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.onLazyLoad();
-    }
-  }
-
-  onLazyLoad(event?: PaginatorState, searchTerm?: string): void {
+  onLazyLoad(event?: PaginatorState): void {
     if (event) {
-      this.requestParams = {
-        pageNumber: event.page,
-        pageSize: event.rows,
-        first: event.first,
-        sortField: this.sortField,
-        sortDirection: this.sortDirection,
-      };
-    }
-
-    this.recipesService
-      .getRecipes(this.requestParams, searchTerm)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: (recipes) => {
-          this.recipes = [...recipes.data];
-          this.totalRecords = recipes.meta.total;
-        },
-        error: (error) => {
-          this.errorMessage = error.message;
-          this.errorModalVisible = true;
-        },
+      this.requestParams.set({
+        pageNumber: event.page || 0,
+        pageSize: event.rows || 20,
+        first: event.first || 0,
+        sortField: this.sortField(),
+        sortDirection: this.sortDirection(),
+        category: this.filtersForm.value.category || []
       });
+    }
   }
 
   cancel(): void {
     this.errorModalVisible = false;
     this.errorMessage = '';
+  }
+
+  updateSearchTerm(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+  }
+
+  applyFilters(): void {
+    const filters = this.filtersForm.value;
+
+    if (filters.category) {
+      console.log(filters.category);
+      this.requestParams.update(params => ({ ...params, category: filters.category || [] }));
+    }
+    if (filters.preparationTime) {
+      this.requestParams.update(params => ({ ...params, preparationTime: filters.preparationTime }));
+    }
+
+    this.filtersVisible.set(false);
   }
 }
