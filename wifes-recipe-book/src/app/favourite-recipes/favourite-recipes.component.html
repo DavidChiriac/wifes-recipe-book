@@ -1,4 +1,7 @@
 <div [ngClass]="{'recipe-collection': isMobile() === false, 'recipe-collection-mobile': isMobile()}">
+  <div class="header">
+      <h1 class="title">Favourites</h1>
+  </div>
   <div class="recipes-container">
       @for (recipe of savedRecipes$ | async; track recipe.documentId) {
         <div class="recipe">

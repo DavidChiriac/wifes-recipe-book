@@ -13,7 +13,7 @@
             <br/>
         }
     </div>
-    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="true" />
+    <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams.first ?? 0" [rows]="requestParams.pageSize ?? 20" [totalRecords]="totalRecords" [alwaysShow]="false" />
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="deleteDialogVisible" [style]="{ width: '25rem' }">

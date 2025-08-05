@@ -1,41 +1,46 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  PLATFORM_ID,
+} from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { ButtonModule } from 'primeng/button';
-import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 
 @Component({
   selector: 'app-extended-card',
-  imports: [ButtonModule, CommonModule],
+  imports: [ButtonModule, CommonModule, RouterModule],
   templateUrl: './extended-card.component.html',
   styleUrl: './extended-card.component.scss',
 })
 export class ExtendedCardComponent {
-  @Input() recipe!: IRecipe;
+  readonly recipe = input.required<IRecipe>();
+  readonly deleted = output<string>();
 
-  @Output() deleted = new EventEmitter<string>();
+  private readonly router = inject(Router);
+  private readonly deviceService = inject(DeviceDetectorService);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  isMobile!: boolean;
+  isMobile = computed(
+    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
+  );
 
   deleteModalVisible = false;
 
-  constructor(
-    private readonly router: Router,
-    private readonly deviceService: DeviceDetectorService,
-  ) {
-    this.isMobile = deviceService.isMobile();
-  }
-
   view(): void {
-    this.router.navigate(['recipe/' + this.recipe.documentId]);
+    this.router.navigate(['recipe/' + this.recipe().documentId]);
   }
 
   edit(): void {
-    this.router.navigate(['recipe/' + this.recipe.documentId + '/edit']);
+    this.router.navigate(['recipe/' + this.recipe().documentId + '/edit']);
   }
 
   delete(): void {
-    this.deleted.emit(this.recipe.documentId ?? '');
+    this.deleted.emit(this.recipe().documentId ?? '');
   }
 }
