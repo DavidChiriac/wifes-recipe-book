@@ -16,7 +16,7 @@ import {
   FileUploadModule,
 } from 'primeng/fileupload';
 import { v4 as uuidv4 } from 'uuid';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { concatMap, of, tap } from 'rxjs';
