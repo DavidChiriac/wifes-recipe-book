@@ -22,7 +22,6 @@ export class RecipesService {
         'ingredients',
         'ingredients.ingredients',
         'preparation',
-        'preparationTime',
         'author',
         'categories',
         'categories.icon',
@@ -249,10 +248,7 @@ export class RecipesService {
           };
         }
       ),
-      preparationTime: {
-        hours: recipe?.preparationTime?.hours.toString(),
-        minutes: recipe?.preparationTime?.minutes.toString(),
-      },
+      minutes: recipe?.minutes,
       author: recipe?.author
     };
   }

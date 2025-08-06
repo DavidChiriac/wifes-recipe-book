@@ -31,10 +31,10 @@
                 <div class="flex gap-2 mt-5">
                     <div class="tag">
                         <div>
-                            {{totalRecipeTime}}
+                            {{recipe?.minutes ?? 0}}
                         </div>
                         <div>
-                            min@if(totalRecipeTime > 1){s}
+                            min@if(recipe?.minutes ?? 0 > 1){s}
                         </div>
                     </div>
                     <div class="tag">

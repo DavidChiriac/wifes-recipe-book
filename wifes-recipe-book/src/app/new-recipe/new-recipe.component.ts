@@ -82,7 +82,6 @@ export class NewRecipeComponent {
         step: new FormControl(),
       }),
     ]),
-    hours: new FormControl(0),
     minutes: new FormControl(30),
     coverImage: new FormControl(undefined),
     images: new FormArray([] as FormControl[]),
@@ -159,10 +158,7 @@ export class NewRecipeComponent {
               });
             }) || []
           ),
-          hours: new FormControl(parseInt(recipe.preparationTime?.hours || '')),
-          minutes: new FormControl(
-            parseInt(recipe.preparationTime?.minutes || '')
-          ),
+          minutes: new FormControl(recipe?.minutes || 0),
           coverImage: new FormControl(undefined),
           images: new FormArray([] as FormControl[]),
         });
@@ -262,10 +258,7 @@ export class NewRecipeComponent {
           };
         }),
       images: [...this.newUploadedImages],
-      preparationTime: {
-        hours: form.controls['hours'].getRawValue(),
-        minutes: form.controls['minutes'].getRawValue(),
-      },
+      minutes: form.controls['minutes'].getRawValue(),
     };
 
     return recipe;

@@ -439,11 +439,8 @@ export interface ApiRecipeRecipe extends Struct.CollectionTypeSchema {
       'api::recipe.recipe'
     > &
       Schema.Attribute.Private;
+    minutes: Schema.Attribute.Integer;
     preparation: Schema.Attribute.Component<'recipe.preparation-step', true>;
-    preparationTime: Schema.Attribute.Component<
-      'recipe.preparation-time',
-      false
-    >;
     publishedAt: Schema.Attribute.DateTime;
     recommended: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     title: Schema.Attribute.String;

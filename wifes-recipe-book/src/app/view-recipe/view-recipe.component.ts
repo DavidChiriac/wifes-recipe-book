@@ -62,7 +62,6 @@ export class ViewRecipeComponent {
   items: MenuItem[] | undefined;
   home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
 
-  totalRecipeTime!: number;
   isFavourite!: boolean;
 
   constructor() {
@@ -80,11 +79,6 @@ export class ViewRecipeComponent {
       .subscribe({
         next: (recipe) => {
           this.recipe = { ...recipe };
-          this.totalRecipeTime =
-            parseInt(recipe.preparationTime?.hours ?? '') * 60;
-          this.totalRecipeTime += parseInt(
-            recipe.preparationTime?.minutes ?? ''
-          );
 
           this.items = [
             // { label: recipe.category },

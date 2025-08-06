@@ -6,7 +6,7 @@ export interface IRecipe {
   preparation: {step: string}[];
   ingredients: { sectionName: string; ingredients: {name: string; quantity: string; calories: number}[] }[];
   images?: { url: string; id: string; name: string }[];
-  preparationTime?: { hours: string; minutes: string };
+  minutes?: number;
   documentId?: string;
   author?: {documentId: string};
   totalCalories?: number;

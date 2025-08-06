@@ -1,4 +1,4 @@
-<div [ngClass]="{ 'navbar-mobile px-2': isMobile, 'navbar px-3': isMobile() === false }">
+<div [ngClass]="{ 'navbar-mobile px-2': isMobile(), 'navbar px-3': isMobile() === false }">
   <div class="left" [routerLink]="''">
     @if (isMobile() === false) {
       <h1 class="title">Wife's Recipe Book</h1>
