@@ -1,4 +1,4 @@
-import { Component, computed, inject, Inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, inject, PLATFORM_ID, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -23,7 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements AfterViewInit {
   private readonly localStorageService = inject(LocalStorageService);
   private readonly localAuthService = inject(LocalAuthService);
   private readonly deviceService = inject(DeviceDetectorService);
@@ -50,7 +50,7 @@ export class NavbarComponent implements OnInit {
       },
     ];
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const user = this.localStorageService.retrieve('user');
 
