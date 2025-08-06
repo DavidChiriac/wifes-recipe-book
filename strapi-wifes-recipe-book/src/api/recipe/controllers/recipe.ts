@@ -77,13 +77,11 @@ export default factories.createCoreController('api::recipe.recipe', ({ strapi })
     },
     async randomByCategories(ctx) {
         const { categoryIds } = ctx.query;
-        console.log(categoryIds);
         if (!categoryIds) {
         return ctx.badRequest('categoryIds query param is required (comma-separated)');
         }
 
         const ids = (categoryIds as string).split(',').map(id => parseInt(id));
-        console.log(ids);
         const results = {};
 
         for (const id of ids) {
@@ -93,7 +91,6 @@ export default factories.createCoreController('api::recipe.recipe', ({ strapi })
             },
             populate: ['categories'],
         });
-        console.log(recipes);
         // Pick 4 random recipes
         results[id] = _.sampleSize(recipes, 4);
         }
