@@ -29,7 +29,7 @@ export class HomePageComponent {
 
   searchTerm = signal<string>('');
   
-  categories$ = this.recipesService.getCategories().pipe(
+  categories$ = this.sessionStorage.retrieve('categories') ? of(this.sessionStorage.retrieve('categories')) : this.recipesService.getCategories().pipe(
     catchError(() => of([])),
     takeUntilDestroyed(this.destroyRef),
     map(categories => {
