@@ -25,11 +25,6 @@ export default {
 		},
 		{
 			method: "GET",
-			path: "/recipes/:id",
-			handler: "recipe.findOne",
-		},
-		{
-			method: "GET",
 			path: "/recipes",
 			handler: "recipe.find",
 		},
@@ -37,6 +32,20 @@ export default {
 			method: "POST",
 			path: "/recipes",
 			handler: "recipe.create"
+		},
+		{
+			method: 'GET',
+			path: '/recipes/random-by-categories',
+			handler: 'recipe.randomByCategories',
+			config: {
+				policies: [],
+				auth: false,
+			},
+		},
+		{
+			method: "GET",
+			path: "/recipes/:id",
+			handler: "recipe.findOne",
 		},
 	],
 };

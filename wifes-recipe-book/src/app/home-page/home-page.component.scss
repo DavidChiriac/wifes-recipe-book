@@ -92,3 +92,39 @@
     }
   }
 }
+
+.recommended-recipes {
+  margin: auto;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  display: flex;
+  gap: 1.33%;
+  justify-content: space-between;
+
+  .recipe{
+    display: flex;
+    flex-basis: 24%;
+    width: 100%;
+  }
+}
+
+.recommended-recipes-mobile {
+  margin: auto;
+  margin-top: 1rem;
+  display: flex;
+  gap: 1.33%;
+  justify-content: space-between;
+  width: 150%;
+  overflow: auto;
+
+  .recipe{
+    display: flex;
+    flex-basis: 35%;
+  }
+}
+
+.recommended-recipes-container-mobile{
+  width: 100%;
+  overflow: auto;
+}
+

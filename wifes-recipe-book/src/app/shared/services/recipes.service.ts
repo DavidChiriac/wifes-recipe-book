@@ -349,4 +349,10 @@ export class RecipesService {
       })
     );
   }
+
+  getRandomRecipesByCategory(category: string[]): Observable<{[key: string]: IRecipe[]}> {
+    return this.http.get<{[key: string]: IRecipe[]}>(
+      environment.apiUrl + '/api/recipes/random-by-categories?categoryIds=' + category.join(',')
+    );
+  }
 }

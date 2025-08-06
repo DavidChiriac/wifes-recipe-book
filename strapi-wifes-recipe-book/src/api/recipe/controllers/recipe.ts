@@ -1,6 +1,7 @@
 // path: src/api/recipe/controllers/recipe.ts
 
 import { factories } from '@strapi/strapi'
+import _ from 'lodash';
 
 export default factories.createCoreController('api::recipe.recipe', ({ strapi }) => ({
     async find(ctx) {
@@ -40,9 +41,7 @@ export default factories.createCoreController('api::recipe.recipe', ({ strapi })
 
             favouriteIds = userData[0]?.favourites?.map((fav: any) => fav.id) ?? [];
         }
-
         const { data, meta } = await super.findOne(ctx);
-
         const updatedData = favouriteIds.includes(data.id) ? {
             ...data,
             isFavourite: true
@@ -75,5 +74,30 @@ export default factories.createCoreController('api::recipe.recipe', ({ strapi })
         });
 
         ctx.send({ message: `Recipe ${isFavourite ? 'added to' : 'removed from'} favourites.` });
+    },
+    async randomByCategories(ctx) {
+        const { categoryIds } = ctx.query;
+        console.log(categoryIds);
+        if (!categoryIds) {
+        return ctx.badRequest('categoryIds query param is required (comma-separated)');
+        }
+
+        const ids = (categoryIds as string).split(',').map(id => parseInt(id));
+        console.log(ids);
+        const results = {};
+
+        for (const id of ids) {
+        const recipes = await strapi.entityService.findMany('api::recipe.recipe', {
+            filters: {
+            categories: { id: id },
+            },
+            populate: ['categories'],
+        });
+        console.log(recipes);
+        // Pick 4 random recipes
+        results[id] = _.sampleSize(recipes, 4);
+        }
+
+        ctx.body = results;
     },
 }));

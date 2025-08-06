@@ -9,11 +9,13 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { catchError, map, of } from 'rxjs';
 import { HomepagePresentationComponent } from "./homepage-presentation/homepage-presentation.component";
 import { SessionStorageService } from 'ngx-webstorage';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { IRecipe } from '../shared/interfaces/recipe.interface';
+import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, HomepagePresentationComponent],
+  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, HomepagePresentationComponent, RecipeCardComponent, RouterModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
 })
@@ -28,15 +30,62 @@ export class HomePageComponent {
   isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
   searchTerm = signal<string>('');
+
+  categories = signal<{name: string; icon: string; id: string}[]>([]);
   
-  categories$ = this.sessionStorage.retrieve('categories') ? of(this.sessionStorage.retrieve('categories')) : this.recipesService.getCategories().pipe(
-    catchError(() => of([])),
-    takeUntilDestroyed(this.destroyRef),
-    map(categories => {
-      this.sessionStorage.store('categories', categories);
-      return categories;
-    })
-  );
+  randomRecipes = signal<IRecipe[]>([]);
+
+  recipesArranged = computed(() => {
+    let recipes: {recipes: IRecipe[], category: string}[] = [];
+    this.categories().forEach(category => {
+      recipes = [
+        ...recipes,
+        {
+          recipes: [...this.randomRecipes()?.filter(recipe => recipe.categories?.some(cat => cat.id === category.id))],
+          category: category.name
+        }
+      ]
+    });
+
+    return recipes;
+  });
+
+  constructor() {
+    const categories = this.sessionStorage.retrieve('categories');
+    if (categories) {
+      this.categories.set(categories);
+    } else {
+      this.recipesService.getCategories().pipe(
+        catchError(() => of([])),
+        takeUntilDestroyed(this.destroyRef),
+        map(categories => {
+          this.sessionStorage.store('categories', categories);
+          this.categories.set(categories);
+          return categories;
+        })
+      );
+    }
+
+    this.recipesService.getRandomRecipesByCategory(this.categories().map(cat => cat.id)).pipe(
+      takeUntilDestroyed(this.destroyRef),
+      catchError(() => of([]))
+    ).subscribe(recipes => {
+      let normalizedRecipes: IRecipe[] = [];
+
+      Object.values(recipes).forEach(categoryRecipes => {
+        categoryRecipes.forEach(recipe => {
+          if(normalizedRecipes.some(r => r.id === recipe.id)) {
+            return;
+          }
+          normalizedRecipes.push({
+            ...recipe,
+          } as IRecipe);
+        });
+      });
+
+      this.randomRecipes.set(normalizedRecipes);
+    });
+  }
 
   navigateWithCategory(category: string): void {
     this.router.navigate(['/collection'], { queryParams: { category } });

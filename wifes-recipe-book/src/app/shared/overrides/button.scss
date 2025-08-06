@@ -54,7 +54,7 @@
 }
 
 .submit-recipe .p-button {
-  background: vars.$herbalWash;
+  background: vars.$crackedPepper;
 
   &:hover {
     background: vars.$farro;
@@ -64,7 +64,7 @@
 .new-ingredient .p-button {
   height: 34px;
   padding: 0.8rem 1rem;
-  background: vars.$herbalWash;
+  background: vars.$crackedPepper;
   height: 1.3rem;
 
   &:hover {
@@ -75,7 +75,7 @@
 .delete-ingredient .p-button {
   width: 34px;
   height: 34px;
-  background: vars.$crackedPepper;
+  background: vars.$herbalWash;
 
   &:hover {
     background: vars.$farro;
@@ -127,11 +127,11 @@
 }
 
 .delete-section .p-button{
-  background-color: vars.$crackedPepper;
+  background-color: vars.$herbalWash;
   color: vars.$whiteFlour;
 
   &:hover{
-    color: vars.$crackedPepper;
+    color: vars.$herbalWash;
     background: vars.$whiteFlour;
   }
 }
