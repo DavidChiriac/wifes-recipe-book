@@ -6,12 +6,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { LocalStorageService } from 'ngx-webstorage';
 import { TooltipModule } from 'primeng/tooltip';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LocalAuthService } from '../../services/local-auth.service';
 import { environment } from '../../../../environments/environment';
 import { DeviceDetectorService } from 'ngx-device-detector';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-@UntilDestroy()
 @Component({
   selector: 'app-navbar',
   imports: [
@@ -61,8 +60,8 @@ export class NavbarComponent implements OnInit {
       }
 
       this.localAuthService.userConnected
-        .pipe(untilDestroyed(this))
-        .subscribe((connected) => (this.signedIn.set(connected)));
+        .pipe(takeUntilDestroyed(this.localAuthService.destroyRef))
+        .subscribe((connected: boolean) => (this.signedIn.set(connected)));
     }
   }
 

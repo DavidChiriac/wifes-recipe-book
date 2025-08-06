@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { EventEmitter, Injectable } from '@angular/core';
+import { DestroyRef, EventEmitter, inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -9,6 +9,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 })
 export class LocalAuthService {
   userConnected = new EventEmitter<boolean>(false);
+
+  readonly destroyRef = inject(DestroyRef);
 
   constructor(
     private readonly http: HttpClient,

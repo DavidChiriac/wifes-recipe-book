@@ -1,5 +1,5 @@
+import { provideServerRendering } from '@angular/ssr';
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
-import { provideServerRendering } from '@angular/platform-server';
 import { appConfig } from './app.config';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { UniversalDisplayService } from './shared/services/universal-display-service.service';
