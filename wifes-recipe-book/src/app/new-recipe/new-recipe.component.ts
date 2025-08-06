@@ -19,7 +19,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Router } from '@angular/router';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
-import { concatMap, of, tap } from 'rxjs';
+import { catchError, concatMap, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment.prod';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -27,6 +27,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { AccordionModule } from 'primeng/accordion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { SessionStorageService } from 'ngx-webstorage';
 
 @Component({
   selector: 'app-new-recipe',
@@ -41,6 +43,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     DialogModule,
     FloatLabelModule,
     AccordionModule,
+    MultiSelectModule
   ],
   templateUrl: './new-recipe.component.html',
   styleUrl: './new-recipe.component.scss',
@@ -51,9 +54,11 @@ export class NewRecipeComponent {
   private readonly deviceService = inject(DeviceDetectorService);
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly sessionStorage = inject(SessionStorageService);
 
   recipeForm = new FormGroup({
     name: new FormControl('', Validators.required),
+    categories: new FormControl<{name: string; id: string}[]>([]),
     ingredients: new FormArray(
       [
         new FormGroup({
@@ -101,6 +106,12 @@ export class NewRecipeComponent {
   errorModalVisible = false;
   errorMessage = 'banana';
 
+  categoryOptions$ = this.sessionStorage.retrieve('categories') ? of(this.sessionStorage.retrieve('categories')) : this.recipesService.getCategories().pipe(
+    catchError(() => of([])),
+  ).pipe(
+    takeUntilDestroyed(this.destroyRef),
+  );;
+
   constructor() {
     effect(() => {
       if(this.id()){
@@ -116,6 +127,7 @@ export class NewRecipeComponent {
       .subscribe((recipe) => {
         this.recipeForm = new FormGroup({
           name: new FormControl(recipe.title, Validators.required),
+          categories: new FormControl<{name: string; id: string}[]>(recipe.categories || []),
           ingredients: new FormArray(
             recipe.ingredients?.map((section) => {
               return new FormGroup({
@@ -237,6 +249,7 @@ export class NewRecipeComponent {
       documentId: this.id(),
       coverImage: this.newUploadedCoverImage,
       title: form.controls['name'].getRawValue(),
+      categories: form.controls['categories'].getRawValue() || [],
       preparation: form.controls['preparation'].getRawValue(),
       ingredients: form.controls['ingredients']
         .getRawValue()

@@ -113,6 +113,8 @@ export class RecipeCollectionComponent {
           ...params,
           category: this.category() ? [this.category()] : []
         }));
+
+        window.history.replaceState({}, '', window.location.href.split('?')[0]);
       }
     });
   }

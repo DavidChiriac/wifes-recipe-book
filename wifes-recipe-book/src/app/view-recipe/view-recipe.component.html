@@ -20,8 +20,15 @@
             </div>
 
             <div class="bottom">
-                <h1>{{recipe?.title}}</h1>
+                <h1 class="mb-3">{{recipe?.title}}</h1>
                 <div class="flex gap-2">
+                    @for (category of recipe?.categories; track $index) {
+                        <div class="category flex align-items-center">
+                            {{category.name}}
+                        </div>
+                    }
+                </div>
+                <div class="flex gap-2 mt-5">
                     <div class="tag">
                         <div>
                             {{totalRecipeTime}}

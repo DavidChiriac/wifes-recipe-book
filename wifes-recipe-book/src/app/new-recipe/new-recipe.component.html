@@ -6,7 +6,27 @@
       </div>
       <p-floatLabel [ngClass]="{mobile: isMobile}">
         <label for="name">Recipe Name: </label>
-        <input pInputText id="name" type="text" formControlName="name" />
+        <input pInputText id="name" class="w-3" type="text" formControlName="name" />
+      </p-floatLabel>
+      <br />
+      <p-floatLabel [ngClass]="{mobile: isMobile}">
+        <label>Categories: </label>
+        <p-multiselect
+          formControlName="categories"
+          class="w-3"
+          optionLabel="name"
+          [ngClass]="{ mobile: isMobile }"
+          [options]="categoryOptions$ | async"
+          [placeholder]="'Select categories'"
+          [showToggleAll]="false"
+        >
+          <ng-template let-option pTemplate="option">
+            <div class="flex align-items-center gap-2">
+              <img [src]="option.icon" class="category-icon" alt="{{ option.name }} icon" />
+              <span>{{ option.name }}</span>
+            </div>
+          </ng-template>
+        </p-multiselect>
       </p-floatLabel>
       <br />
       <label>Ingredients:</label>

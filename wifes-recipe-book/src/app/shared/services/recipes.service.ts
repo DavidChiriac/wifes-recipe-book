@@ -23,7 +23,9 @@ export class RecipesService {
         'ingredients.ingredients',
         'preparation',
         'preparationTime',
-        'author'
+        'author',
+        'categories',
+        'categories.icon',
       ],
     },
     {
@@ -304,12 +306,13 @@ export class RecipesService {
     return this.http.put<void>(environment.apiUrl + '/api/recipes/favourite/' + id , { data: {isFavourite: isFavourite}});
   }
 
-  getCategories(): Observable<{name: string, icon: string}[]> { 
-    return this.http.get<{data: { name: string, icon: {url: string}}[]}>(environment.apiUrl + '/api/categories?populate=*').pipe(
+  getCategories(): Observable<{name: string, icon: string, id: string}[]> { 
+    return this.http.get<{data: { name: string, icon: {url: string}, id: string}[]}>(environment.apiUrl + '/api/categories?populate=*').pipe(
       map(response => {
         return response.data.map(category => ({
           name: category.name,
-          icon: environment.prod ? category.icon?.url : (environment.apiUrl + category.icon?.url)
+          icon: environment.prod ? category.icon?.url : (environment.apiUrl + category.icon?.url),
+          id: category.id
         }));
       })
     );
