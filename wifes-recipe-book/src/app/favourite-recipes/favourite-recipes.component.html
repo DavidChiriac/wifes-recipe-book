@@ -3,7 +3,7 @@
       <h1 class="title">Favourites</h1>
   </div>
   <div class="recipes-container">
-      @for (recipe of savedRecipes$ | async; track recipe.documentId) {
+      @for (recipe of savedRecipes(); track recipe.documentId) {
         <div class="recipe">
           <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
         </div>

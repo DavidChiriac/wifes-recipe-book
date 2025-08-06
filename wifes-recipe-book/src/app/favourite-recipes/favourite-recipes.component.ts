@@ -2,6 +2,7 @@ import {
   Component,
   computed,
   DestroyRef,
+  effect,
   inject,
   PLATFORM_ID,
   signal,
@@ -35,22 +36,30 @@ export class FavouriteRecipesComponent {
   errorModalVisible = signal(false);
   errorMessage = signal('');
 
-  savedRecipes$ = this.recipesService.getFavouriteRecipes().pipe(
-    takeUntilDestroyed(this.destroyRef),
-    map((recipes) => {
-      return recipes.map((recipe) => {
-        return {
-          ...recipe,
-          isFavourite: true,
-        } as IRecipe;
+  savedRecipes = signal<IRecipe[]>([]);
+
+  constructor() {
+    this.recipesService
+      .getFavouriteRecipes()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        catchError((error) => {
+          this.errorModalVisible.set(true);
+          this.errorMessage.set(error.message);
+          return [];
+        })
+      )
+      .subscribe((recipes) => {
+        this.savedRecipes.set(
+          recipes.map((recipe) => {
+            return {
+              ...recipe,
+              isFavourite: true,
+            } as IRecipe;
+          })
+        );
       });
-    }),
-    catchError((error) => {
-      this.errorModalVisible.set(true);
-      this.errorMessage.set(error.message);
-      return [];
-    })
-  );
+  }
 
   cancel(): void {
     this.errorModalVisible.set(false);

@@ -38,7 +38,7 @@ export class MyRecipesComponent {
 
   searchTerm = signal('');
 
-  recipes: IRecipe[] = [];
+  recipes = signal<IRecipe[]>([]);
 
   requestParams = signal<{
     pageNumber: number;
@@ -83,7 +83,7 @@ export class MyRecipesComponent {
         })
       ).subscribe({
         next: (recipes) => {
-          this.recipes = recipes;
+          this.recipes.set(recipes);
         },
       });
     });
@@ -108,7 +108,7 @@ export class MyRecipesComponent {
 
   deleteRecipe(id: string): void {
     this.deleteDialogVisible.set(true);
-    this.recipeToBeDeleted.set(this.recipes.find(
+    this.recipeToBeDeleted.set(this.recipes().find(
       (recipe) => recipe.documentId === id
     ));
   }

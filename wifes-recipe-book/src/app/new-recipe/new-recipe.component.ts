@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -56,7 +56,7 @@ export class NewRecipeComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly sessionStorage = inject(SessionStorageService);
 
-  recipeForm = new FormGroup({
+  recipeForm = signal(new FormGroup({
     name: new FormControl('', Validators.required),
     categories: new FormControl<{name: string; id: string}[]>([]),
     ingredients: new FormArray(
@@ -85,7 +85,7 @@ export class NewRecipeComponent {
     minutes: new FormControl(30),
     coverImage: new FormControl(undefined),
     images: new FormArray([] as FormControl[]),
-  });
+  }));
 
   existingCoverImage: { id: string; name: string; url: string } | undefined;
   existingImages: { id: string; name: string; url: string }[] = [];
@@ -105,13 +105,23 @@ export class NewRecipeComponent {
   errorModalVisible = false;
   errorMessage = 'banana';
 
-  categoryOptions$ = this.sessionStorage.retrieve('categories') ? of(this.sessionStorage.retrieve('categories')) : this.recipesService.getCategories().pipe(
-    catchError(() => of([])),
-  ).pipe(
-    takeUntilDestroyed(this.destroyRef),
-  );;
+  categoryOptions = signal<{name: string; id: string}[]>([]);
 
   constructor() {
+    const cachedCategories = this.sessionStorage.retrieve('categories');
+
+    if(cachedCategories && cachedCategories.length > 0) {
+      this.categoryOptions.set(cachedCategories);
+    } else {
+      this.recipesService.getCategories().pipe(
+        catchError(() => of([])),
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe((categories) => {
+        this.categoryOptions.set(categories);
+        this.sessionStorage.store('categories', categories);
+      });
+    }
+
     effect(() => {
       if(this.id()){
         this.populateForm();
@@ -124,7 +134,7 @@ export class NewRecipeComponent {
       .getSingleRecipe(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((recipe) => {
-        this.recipeForm = new FormGroup({
+        this.recipeForm.set(new FormGroup({
           name: new FormControl(recipe.title, Validators.required),
           categories: new FormControl<{name: string; id: string}[]>(recipe.categories || []),
           ingredients: new FormArray(
@@ -161,7 +171,7 @@ export class NewRecipeComponent {
           minutes: new FormControl(recipe?.minutes || 0),
           coverImage: new FormControl(undefined),
           images: new FormArray([] as FormControl[]),
-        });
+        }));
 
         (recipe.images ?? []).forEach((image) => {
           this.existingImages.push({
@@ -178,7 +188,7 @@ export class NewRecipeComponent {
                 recipe.coverImage?.url,
             }
           : undefined;
-      });
+      })
   }
 
   onSubmit(): void {
@@ -220,7 +230,7 @@ export class NewRecipeComponent {
       .pipe(
         concatMap(() => uploadCoverImage$),
         concatMap(() => {
-          const recipeData = this.transformFormIntoRecipe(this.recipeForm);
+          const recipeData = this.transformFormIntoRecipe(this.recipeForm());
           return this.id()
             ? this.recipesService.editRecipe(recipeData, this.existingImages)
             : this.recipesService.createRecipe(recipeData, this.existingImages);
@@ -321,11 +331,11 @@ export class NewRecipeComponent {
   }
 
   get ingredients(): FormArray<FormGroup> {
-    return this.recipeForm.get('ingredients') as FormArray;
+    return this.recipeForm().get('ingredients') as FormArray;
   }
 
   get preparation(): FormArray<FormGroup> {
-    return this.recipeForm.get('preparation') as FormArray;
+    return this.recipeForm().get('preparation') as FormArray;
   }
 
   getNestedIngredients(index: number): FormArray {
@@ -333,11 +343,11 @@ export class NewRecipeComponent {
   }
 
   get images(): FormArray<FormControl> {
-    return this.recipeForm.get('images') as FormArray;
+    return this.recipeForm().get('images') as FormArray;
   }
 
   get coverImage(): FormControl {
-    return this.recipeForm.get('coverImage') as FormControl;
+    return this.recipeForm().get('coverImage') as FormControl;
   }
 
   onUpload(event: FileSelectEvent): void {

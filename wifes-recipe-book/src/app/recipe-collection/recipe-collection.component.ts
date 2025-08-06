@@ -70,7 +70,7 @@ export class RecipeCollectionComponent {
     minMinutes?: number;
     maxMinutes?: number;
   }>({
-    pageNumber: 0,
+    pageNumber: 1,
     pageSize: 10,
     first: 0,
     sortField: undefined,
@@ -88,7 +88,7 @@ export class RecipeCollectionComponent {
   errorModalVisible = false;
   errorMessage = '';
 
-  recipes$!: Observable<IRecipe[]>;
+  recipes = signal<IRecipe[]>([]);
 
   filtersVisible = signal(false);
 
@@ -122,21 +122,23 @@ export class RecipeCollectionComponent {
     }
 
     effect(() => {
-      this.recipes$ = this.recipesService.getRecipes(this.requestParams(), this.searchTerm()).pipe(
-        takeUntilDestroyed(this.destroyRef),
+      const searchTerm = this.searchTerm();
+      this.sessionStorage.store('searchTerm', searchTerm);
+      this.recipesService.getRecipes(this.requestParams(), searchTerm).pipe(
         debounceTime(1000),
-        map(response => {
-          this.totalRecords.set(response.total);
-          return response.data;
-        }),
+        takeUntilDestroyed(this.destroyRef),
         catchError(error => {
           this.errorMessage = error.message;
           this.errorModalVisible = true;
           return [];
         })
-      );
-
-      this.sessionStorage.store('searchTerm', this.searchTerm());
+      ).subscribe(fetchedRecipes => {
+        this.totalRecords.set(fetchedRecipes.total);
+        this.recipes.set(fetchedRecipes.data.map(recipe => ({
+          ...recipe,
+          isFavourite: recipe.isFavourite ?? false
+        })));
+      });
     });
 
     effect(() => {
@@ -158,7 +160,7 @@ export class RecipeCollectionComponent {
   onLazyLoad(event?: PaginatorState): void {
     if (event) {
       this.requestParams.set({
-        pageNumber: event.page || 0,
+        pageNumber: (event.page || 0) + 1,
         pageSize: event.rows || 20,
         first: event.first || 0,
         sortField: this.sortField(),

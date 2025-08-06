@@ -8,7 +8,7 @@
         <p-button class="clear" icon="pi pi-times" (onClick)="clear()"/>
     </div>
     <div class="recipes-container">
-        @for (recipe of recipes; track recipe.documentId) {
+        @for (recipe of recipes(); track recipe.documentId) {
             <app-extended-card [recipe]="recipe" (deleted)="deleteRecipe($event)"></app-extended-card>
             <br/>
         }

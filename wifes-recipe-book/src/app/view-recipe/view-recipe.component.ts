@@ -20,6 +20,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { HomepagePresentationComponent } from '../home-page/homepage-presentation/homepage-presentation.component';
 import { LocalStorageService } from 'ngx-webstorage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-view-recipe',
@@ -31,6 +32,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     ButtonModule,
     CheckboxModule,
     HomepagePresentationComponent,
+    RouterModule
   ],
   templateUrl: './view-recipe.component.html',
   styleUrl: './view-recipe.component.scss',
@@ -44,7 +46,7 @@ export class ViewRecipeComponent {
 
   readonly id = input.required<string>();
 
-  recipe: IRecipe | undefined;
+  recipe = signal<IRecipe | undefined>(undefined);
 
   isMobile = computed(
     () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
@@ -57,6 +59,11 @@ export class ViewRecipeComponent {
   errorMessage = signal('');
 
   isFavourite!: boolean;
+
+  userIsOwner = computed(() => {
+    const user = this.localStorageService.retrieve('user');
+    return user && this.recipe()?.author?.documentId === user.documentId;
+  });
 
   constructor() {
     effect(() => {
@@ -72,7 +79,7 @@ export class ViewRecipeComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (recipe) => {
-          this.recipe = { ...recipe };
+          this.recipe.set({ ...recipe });
 
           this.isFavourite = recipe.isFavourite ?? false;
 
@@ -95,7 +102,7 @@ export class ViewRecipeComponent {
     this.isFavourite = !this.isFavourite;
 
     this.recipesService
-      .toggleFavourite(this.recipe?.id ?? '', this.isFavourite)
+      .toggleFavourite(this.recipe()?.id ?? '', this.isFavourite)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
 
@@ -105,7 +112,7 @@ export class ViewRecipeComponent {
     let isCached = false;
     cachedRecommendedRecipes = cachedRecommendedRecipes.map(
       (recipe: IRecipe) => {
-        if (recipe.documentId === this.recipe?.documentId) {
+        if (recipe.documentId === this.recipe()?.documentId) {
           isCached = true;
           return {
             ...recipe,

@@ -241,6 +241,11 @@ export class RecipesService {
     return {
       ...recipe,
       documentId: recipe?.documentId,
+      categories: recipe?.categories?.map((category: any) => ({
+        name: category.name,
+        icon: environment.prod ? category.icon.url : (environment.apiUrl + category.icon.url),
+        id: category.id,
+      })),
       coverImage: recipe?.coverImage
         ? {
             url:
@@ -273,6 +278,9 @@ export class RecipesService {
   ): any {
     const body = {
       ...recipe,
+      categories: recipe.categories.map((category) => ({
+        id: category.id,
+      })),
       ingredients: [
         ...recipe?.ingredients.map((section) => {
           return {

@@ -1,5 +1,5 @@
 <div [ngClass]="{'new-recipe-mobile': isMobile(), 'new-recipe': isMobile() === false}">
-  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="recipeForm()" (ngSubmit)="onSubmit()">
     <div>
       <div class="header">
         <h1 class="title">Add New Recipe</h1>
@@ -15,9 +15,8 @@
           formControlName="categories"
           optionLabel="name"
           [ngClass]="{ mobile: isMobile, 'w-12': isMobile(), 'w-3': isMobile() === false }"
-          [options]="categoryOptions$ | async"
+          [options]="categoryOptions()"
           [placeholder]="'Select categories'"
-          [showToggleAll]="false"
         >
           <ng-template let-option pTemplate="option">
             <div class="flex align-items-center gap-2">
@@ -149,7 +148,7 @@
           [showCancelButton]="false"
           [multiple]="false"
           accept="image/*"
-          [ngClass]="{'invalid': recipeForm.controls['coverImage'].invalid && !existingCoverImage}"
+          [ngClass]="{'invalid': recipeForm().controls['coverImage'].invalid && !existingCoverImage}"
           maxFileSize="10000000"
           mode="advanced"
         >
@@ -198,7 +197,7 @@
         [ngClass]="{mobile: isMobile}"
         class="submit-recipe"
         label="Save Recipe"
-        [disabled]="recipeForm.invalid"
+        [disabled]="recipeForm().invalid"
       />
     </div>
   </form>
