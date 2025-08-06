@@ -3,7 +3,7 @@
 
   <div class="categories">
     @for (category of categories$ | async; track $index) {
-      <div class="category">
+      <div class="category" (click)="navigateWithCategory(category.name)">
         <div class="icon">
           <img [src]="category.icon"/>
         </div>

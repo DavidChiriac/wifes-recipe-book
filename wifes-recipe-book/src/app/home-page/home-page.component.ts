@@ -9,6 +9,7 @@ import { RecipesService } from '../shared/services/recipes.service';
 import { catchError, map, of } from 'rxjs';
 import { HomepagePresentationComponent } from "./homepage-presentation/homepage-presentation.component";
 import { SessionStorageService } from 'ngx-webstorage';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
@@ -22,6 +23,7 @@ export class HomePageComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly recipesService = inject(RecipesService);
   private readonly sessionStorage = inject(SessionStorageService);
+  private readonly router = inject(Router);
 
   isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
 
@@ -35,4 +37,8 @@ export class HomePageComponent {
       return categories;
     })
   );
+
+  navigateWithCategory(category: string): void {
+    this.router.navigate(['/collection'], { queryParams: { category } });
+  }
 }

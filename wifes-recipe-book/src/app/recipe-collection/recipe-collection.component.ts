@@ -1,5 +1,5 @@
-import { Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
-import { Form, FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
@@ -42,6 +42,8 @@ export class RecipeCollectionComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly sessionStorage = inject(SessionStorageService);
+
+  category = input<string>('');
 
   filtersForm = new FormGroup({
     category: new FormControl<string[]>([]),
@@ -99,6 +101,19 @@ export class RecipeCollectionComponent {
           return [];
         })
       );
+    });
+
+    effect(() => {
+      if (this.category()) {
+        this.filtersForm.patchValue({
+          category: this.category() ? [this.category()] : []
+        });
+
+        this.requestParams.update(params => ({
+          ...params,
+          category: this.category() ? [this.category()] : []
+        }));
+      }
     });
   }
 
