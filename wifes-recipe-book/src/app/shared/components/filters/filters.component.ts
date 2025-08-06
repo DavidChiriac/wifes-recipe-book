@@ -8,9 +8,15 @@ import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
   selector: 'app-filters',
-  imports: [DrawerModule, ButtonModule, ReactiveFormsModule, MultiSelectModule, InputTextModule, CommonModule],
+  imports: [
+    DrawerModule,
+    ButtonModule,
+    ReactiveFormsModule,
+    MultiSelectModule,
+    InputTextModule,
+    CommonModule,
+  ],
   templateUrl: './filters.component.html',
-  styleUrl: './filters.component.scss',
 })
 export class FiltersComponent {
   isMobile = input<boolean>(false);

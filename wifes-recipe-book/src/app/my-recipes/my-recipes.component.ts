@@ -54,14 +54,38 @@ import { SearchBarComponent } from '../shared/components/search-bar/search-bar.c
 export class MyRecipesComponent extends RecipesClass {
   private readonly destroyRef = inject(DestroyRef);
 
-  override cachedFilters = this.sessionStorage.retrieve('my-recipes-filters');
-  override cachedSearchTerm =
+  cachedFilters = this.sessionStorage.retrieve('my-recipes-filters');
+  cachedSearchTerm =
     this.sessionStorage.retrieve('my-recipes-searchTerm') || '';
 
   deleteDialogVisible = signal(false);
   recipeToBeDeleted = signal<IRecipe | undefined>(undefined);
 
   deleting = signal(false);
+
+  constructor() {
+    super();
+
+    if(this.cachedSearchTerm) {
+      this.searchTerm.set(this.cachedSearchTerm);
+    }
+
+    if(this.cachedFilters) {
+      this.filtersForm.patchValue(this.cachedFilters);
+      this.requestParams.update(params => ({
+        ...params,
+        category: this.cachedFilters?.category || [],
+        minMinutes: this.cachedFilters?.minMinutes || undefined,
+        maxMinutes: this.cachedFilters?.maxMinutes || undefined
+      }));
+    }
+    
+    effect(() => {
+      if (this.searchTerm()) {
+        this.sessionStorage.store('my-recipes-searchTerm', this.searchTerm());
+      }
+    });
+  }
 
   protected override getRecipes(): void {
     this.recipesService
@@ -87,11 +111,6 @@ export class MyRecipesComponent extends RecipesClass {
           this.recipes.set(recipes);
         },
       });
-  }
-
-  clear(): void {
-    this.searchTerm.set('');
-    this.onLazyLoad();
   }
 
   deleteRecipe(id: string): void {
@@ -136,5 +155,15 @@ export class MyRecipesComponent extends RecipesClass {
           this.errorMessage.set(error.message);
         },
       });
+  }
+
+  protected override cacheFilters(): void {
+    this.sessionStorage.store('my-recipes-filters', this.filtersForm.value);
+    this.sessionStorage.store('my-recipes-searchTerm', this.searchTerm());
+  }
+
+  protected override clearCache(): void {
+    this.sessionStorage.clear('my-recipes-filters');
+    this.sessionStorage.clear('my-recipes-searchTerm');
   }
 }

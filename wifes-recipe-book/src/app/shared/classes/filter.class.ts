@@ -14,12 +14,6 @@ export abstract class RecipesClass {
   readonly sessionStorage = inject(SessionStorageService);
   readonly recipesService = inject(RecipesService);
 
-  cachedFilters = {
-    category: [],
-    minMinutes: null,
-    maxMinutes: null,
-  };
-  cachedSearchTerm =  '';
   cachedCategories = this.sessionStorage.retrieve('categories') || [];
 
   filtersForm = new FormGroup({
@@ -78,22 +72,7 @@ export abstract class RecipesClass {
       });
     }
 
-    if(this.cachedSearchTerm) {
-      this.searchTerm.set(this.cachedSearchTerm);
-    }
-
-    if(this.cachedFilters) {
-      this.filtersForm.patchValue(this.cachedFilters);
-      this.requestParams.update(params => ({
-        ...params,
-        category: this.cachedFilters?.category || [],
-        minMinutes: this.cachedFilters?.minMinutes || undefined,
-        maxMinutes: this.cachedFilters?.maxMinutes || undefined
-      }));
-    }
-
     effect(() => {
-      this.sessionStorage.store('searchTerm', this.searchTerm());
       if(this.requestParams() || this.sortField()) {
         this.getRecipes();
       }
@@ -142,7 +121,7 @@ export abstract class RecipesClass {
       this.requestParams.update(params => ({ ...params, maxMinutes: filters.maxMinutes }));
     }
 
-    this.sessionStorage.store('filters', this.filtersForm.value);
+    this.cacheFilters();
 
     this.filtersVisible.set(false);
   }
@@ -157,9 +136,13 @@ export abstract class RecipesClass {
       minMinutes: undefined,
       maxMinutes: undefined
     });
-    this.sessionStorage.clear('filters');
     this.sortField.set(undefined);
     this.searchTerm.set('');
     this.filtersVisible.set(false);
+
+    this.clearCache();
   }
+
+  protected abstract cacheFilters(): void;
+  protected abstract clearCache(): void;
 }

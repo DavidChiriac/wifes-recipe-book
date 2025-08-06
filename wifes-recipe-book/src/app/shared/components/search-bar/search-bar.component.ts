@@ -8,7 +8,13 @@ import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [CommonModule, SelectModule, InputTextModule, FormsModule, ButtonModule],
+  imports: [
+    CommonModule,
+    SelectModule,
+    InputTextModule,
+    FormsModule,
+    ButtonModule,
+  ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.scss',
 })

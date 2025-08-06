@@ -37,8 +37,8 @@ export class RecipeCollectionComponent extends RecipesClass {
 
   category = input<string>('');
 
-  override cachedFilters = this.sessionStorage.retrieve('collection-filters');
-  override cachedSearchTerm = this.sessionStorage.retrieve('collection-searchTerm') || '';
+  cachedFilters = this.sessionStorage.retrieve('collection-filters');
+  cachedSearchTerm = this.sessionStorage.retrieve('collection-searchTerm') || '';
 
   constructor() {
     super();
@@ -56,6 +56,12 @@ export class RecipeCollectionComponent extends RecipesClass {
         maxMinutes: this.cachedFilters?.maxMinutes || undefined
       }));
     }
+
+    effect(() => {
+      if (this.searchTerm()) {
+        this.sessionStorage.store('collection-searchTerm', this.searchTerm());
+      }
+    });
 
     effect(() => {
       if (this.category()) {
@@ -89,5 +95,15 @@ export class RecipeCollectionComponent extends RecipesClass {
           isFavourite: recipe.isFavourite ?? false
         })));
       });
+  }
+
+  protected override cacheFilters(): void {
+    this.sessionStorage.store('collection-filters', this.filtersForm.value);
+    this.sessionStorage.store('collection-searchTerm', this.searchTerm());
+  }
+
+  protected override clearCache(): void {
+    this.sessionStorage.clear('collection-filters');
+    this.sessionStorage.clear('collection-searchTerm');
   }
 }
