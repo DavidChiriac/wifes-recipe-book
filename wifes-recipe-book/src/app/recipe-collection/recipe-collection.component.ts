@@ -9,7 +9,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { RouterModule } from '@angular/router';
-import { catchError, debounceTime, map, Observable } from 'rxjs';
+import { catchError, debounceTime, map, Observable, of, take } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { DrawerModule } from 'primeng/drawer';
@@ -45,6 +45,7 @@ export class RecipeCollectionComponent {
 
   cachedFilters = this.sessionStorage.retrieve('filters');
   cachedSearchTerm = this.sessionStorage.retrieve('searchTerm') || '';
+  cachedCategories = this.sessionStorage.retrieve('categories') || [];
 
   filtersForm = new FormGroup({
     category: new FormControl<string[]>([]),
@@ -91,9 +92,21 @@ export class RecipeCollectionComponent {
 
   filtersVisible = signal(false);
 
-  categoryOptions = this.sessionStorage.retrieve('categories') || [];
+  categoryOptions: {name: string; id: string; icon: string}[] = [];
 
   constructor() {
+    if (this.cachedCategories.length > 0) {
+      this.categoryOptions = this.cachedCategories;
+    } else {
+      this.recipesService.getCategories().pipe(
+        take(1),
+        catchError(() => of([]))
+      ).subscribe(categories => {
+        this.categoryOptions = categories;
+        this.sessionStorage.store('categories', categories);
+      });
+    }
+
     if(this.cachedSearchTerm) {
       this.searchTerm.set(this.cachedSearchTerm);
     }
