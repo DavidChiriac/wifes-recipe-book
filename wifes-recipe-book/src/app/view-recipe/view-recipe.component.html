@@ -4,10 +4,7 @@
             <img [src]="recipe?.coverImage?.url" class="header-image" [alt]="recipe?.title" />
         }
         <div class="presentation" [ngClass]="{'black-text': !recipe?.coverImage}">
-            <div class="flex justify-content-between">
-                <p-breadcrumb [model]="items" [home]="home" [ngClass]="{'black-text': !recipe?.coverImage}">
-                    <ng-template #separator> / </ng-template>
-                </p-breadcrumb>
+            <div class="flex justify-content-end">
                 @if(userIsLoggedIn()){
                     <div class="cursor-pointer" (click)="markAsFavourite()">
                         @if (isFavourite) {

@@ -16,8 +16,6 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BreadcrumbModule } from 'primeng/breadcrumb';
-import { MenuItem } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { HomepagePresentationComponent } from '../home-page/homepage-presentation/homepage-presentation.component';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -31,7 +29,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     CommonModule,
     DialogModule,
     ButtonModule,
-    BreadcrumbModule,
     CheckboxModule,
     HomepagePresentationComponent,
   ],
@@ -59,9 +56,6 @@ export class ViewRecipeComponent {
   errorModalVisible = signal(false);
   errorMessage = signal('');
 
-  items: MenuItem[] | undefined;
-  home: MenuItem = { icon: 'pi pi-home', routerLink: '/' };
-
   isFavourite!: boolean;
 
   constructor() {
@@ -79,11 +73,6 @@ export class ViewRecipeComponent {
       .subscribe({
         next: (recipe) => {
           this.recipe = { ...recipe };
-
-          this.items = [
-            // { label: recipe.category },
-            { label: recipe.title },
-          ];
 
           this.isFavourite = recipe.isFavourite ?? false;
 
