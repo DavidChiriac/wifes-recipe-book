@@ -7,7 +7,7 @@
 
   .search-bar {
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 0;
     display: flex;
     justify-content: end;
     border-bottom: 1px solid vars.$crackedPepper;
@@ -15,6 +15,7 @@
     .right {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
     }
   }
@@ -26,7 +27,7 @@
     margin-top: 1rem;
     overflow: auto;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start;
     gap: 1.33%;
     row-gap: 2rem;
     display: flex;
@@ -61,11 +62,11 @@
   .recipes-container {
     width: 100%;
     padding: 0 10px;
-    height: calc(100% - 119px);
+    height: calc(100% - 160px);
     margin-top: 1rem;
     overflow: auto;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: start;
     gap: 2%;
     row-gap: 0.5rem;
     display: flex;

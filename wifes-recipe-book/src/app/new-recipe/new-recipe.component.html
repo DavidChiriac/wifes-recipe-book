@@ -6,16 +6,15 @@
       </div>
       <p-floatLabel [ngClass]="{mobile: isMobile}">
         <label for="name">Recipe Name: </label>
-        <input pInputText id="name" class="w-3" type="text" formControlName="name" />
+        <input pInputText id="name" [ngClass]="{'w-12': isMobile(), 'w-3': isMobile() === false}" type="text" formControlName="name" />
       </p-floatLabel>
       <br />
       <p-floatLabel [ngClass]="{mobile: isMobile}">
         <label>Categories: </label>
         <p-multiselect
           formControlName="categories"
-          class="w-3"
           optionLabel="name"
-          [ngClass]="{ mobile: isMobile }"
+          [ngClass]="{ mobile: isMobile, 'w-12': isMobile(), 'w-3': isMobile() === false }"
           [options]="categoryOptions$ | async"
           [placeholder]="'Select categories'"
           [showToggleAll]="false"

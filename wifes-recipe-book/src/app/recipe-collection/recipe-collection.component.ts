@@ -13,7 +13,6 @@ import { catchError, debounceTime, map, Observable } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { DrawerModule } from 'primeng/drawer';
-import { FloatLabelModule } from 'primeng/floatlabel';
 import { SessionStorageService } from 'ngx-webstorage';
 import { MultiSelectModule } from 'primeng/multiselect';
 
@@ -29,7 +28,6 @@ import { MultiSelectModule } from 'primeng/multiselect';
     DialogModule,
     RouterModule,
     DrawerModule,
-    FloatLabelModule,
     MultiSelectModule,
     ReactiveFormsModule
   ],
@@ -45,10 +43,15 @@ export class RecipeCollectionComponent {
 
   category = input<string>('');
 
+  cachedFilters = this.sessionStorage.retrieve('filters');
+  cachedSearchTerm = this.sessionStorage.retrieve('searchTerm') || '';
+
   filtersForm = new FormGroup({
     category: new FormControl<string[]>([]),
-    preparationTime: new FormControl(null),
+    minMinutes: new FormControl(),
+    maxMinutes: new FormControl(),
   });
+  formIsEmpty = computed(() => this.requestParams().category.length === 0 && !this.requestParams().minMinutes && !this.requestParams().maxMinutes);
 
   isMobile = computed(
     () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
@@ -63,13 +66,17 @@ export class RecipeCollectionComponent {
     sortField: string | undefined;
     sortDirection: 'asc' | 'desc' | undefined;
     category: string[];
+    minMinutes?: number;
+    maxMinutes?: number;
   }>({
     pageNumber: 0,
     pageSize: 10,
     first: 0,
     sortField: undefined,
     sortDirection: undefined,
-    category: []
+    category: [],
+    minMinutes: undefined,
+    maxMinutes: undefined
   });
 
   sortField = signal<string | undefined>(undefined);
@@ -87,6 +94,20 @@ export class RecipeCollectionComponent {
   categoryOptions = this.sessionStorage.retrieve('categories') || [];
 
   constructor() {
+    if(this.cachedSearchTerm) {
+      this.searchTerm.set(this.cachedSearchTerm);
+    }
+
+    if(this.cachedFilters) {
+      this.filtersForm.patchValue(this.cachedFilters);
+      this.requestParams.update(params => ({
+        ...params,
+        category: this.cachedFilters?.category || [],
+        minMinutes: this.cachedFilters?.minMinutes || undefined,
+        maxMinutes: this.cachedFilters?.maxMinutes || undefined
+      }));
+    }
+
     effect(() => {
       this.recipes$ = this.recipesService.getRecipes(this.requestParams(), this.searchTerm()).pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -101,6 +122,8 @@ export class RecipeCollectionComponent {
           return [];
         })
       );
+
+      this.sessionStorage.store('searchTerm', this.searchTerm());
     });
 
     effect(() => {
@@ -145,14 +168,34 @@ export class RecipeCollectionComponent {
   applyFilters(): void {
     const filters = this.filtersForm.value;
 
-    if (filters.category) {
-      console.log(filters.category);
+    if (filters.category && filters.category.length > 0) {
       this.requestParams.update(params => ({ ...params, category: filters.category || [] }));
     }
-    if (filters.preparationTime) {
-      this.requestParams.update(params => ({ ...params, preparationTime: filters.preparationTime }));
+    if (filters.minMinutes) {
+      this.requestParams.update(params => ({ ...params, minMinutes: filters.minMinutes }));
+    }
+    if (filters.maxMinutes) {
+      this.requestParams.update(params => ({ ...params, maxMinutes: filters.maxMinutes }));
     }
 
+    this.sessionStorage.store('filters', this.filtersForm.value);
+
+    this.filtersVisible.set(false);
+  }
+
+  clearFilters(): void {
+    this.filtersForm.reset();
+    this.requestParams.set({
+      pageNumber: 0,
+      pageSize: 10,
+      first: 0,
+      sortField: undefined,
+      sortDirection: undefined,
+      category: [],
+      minMinutes: undefined,
+      maxMinutes: undefined
+    });
+    this.sessionStorage.clear('filters');
     this.filtersVisible.set(false);
   }
 }

@@ -1,3 +1,29 @@
 .p-drawer{
     height: 50%;
+
+    .p-drawer-header {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+
+        .closeButton {
+            .p-button{
+                color: black
+            }
+        }
+    }
+
+    .p-drawer-content {
+        width: 50%;
+        margin: auto;
+        overflow: auto;
+
+        .apply-filters-button{
+            .p-button{
+                color: black;
+                border: 1px solid black;
+                margin: auto;
+            }
+        }
+    }
 }

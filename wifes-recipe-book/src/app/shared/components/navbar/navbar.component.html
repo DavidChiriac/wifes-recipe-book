@@ -20,6 +20,7 @@
       [ngClass]="{ mobile: isMobile }"
       label="Recipe Collection"
       [routerLink]="'/collection'"
+      routerLinkActive="active"
     />
 
     @if(signedIn()){
@@ -29,12 +30,14 @@
           [ngClass]="{ mobile: isMobile }"
           label="My Recipes"
           [routerLink]="'/my-recipes'"
+          routerLinkActive="active"
         />
         <p-button
           class="my-recipes"
           [ngClass]="{ mobile: isMobile }"
           label="Favourite Recipes"
           [routerLink]="'/favourite-recipes'"
+          routerLinkActive="active"
         />
         <p-button
           class="sign-in"

@@ -44,19 +44,33 @@ export class RecipesService {
       sortField: string | undefined;
       sortDirection: string | undefined;
       category: string[];
+      minMinutes?: number;
+      maxMinutes?: number;
     },
     searchTerm: string = ''
   ): Observable<{ data: IRecipe[]; total: number }> {
     let queryParams = '';
+
     if (params.sortDirection && params.sortField) {
       queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
     }
+
     if (searchTerm) {
       queryParams += `&filters[$and][0][$or][0][title][$containsi]=${searchTerm}&filters[$and][0][$or][1][preparation][$containsi]=${searchTerm}&filters[$and][0][$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
+
     params.category.forEach((category, index) => {
       queryParams += `&filters[$and][1][$or][${index}][categories][name][$eq]=${category}`;
     });
+
+    if(params.minMinutes){
+      queryParams += `&filters[$and][2][minutes][$gte]=${params.minMinutes}`;
+    }
+
+    if(params.maxMinutes){
+      queryParams += `&filters[$and][2][minutes][$lte]=${params.maxMinutes}`;
+    }
+    
     return this.http
       .get<{ data: IRecipe[]; meta: { pagination: { total: number } } }>(
         environment.apiUrl +

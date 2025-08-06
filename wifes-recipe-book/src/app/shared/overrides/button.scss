@@ -34,6 +34,10 @@
   }
 }
 
+.active {
+  @extend .add-recipe;
+}
+
 .sign-in .p-button {
   background: vars.$crackedPepper;
   color: vars.$whiteFlour;
@@ -46,25 +50,6 @@
   &:hover {
     background: vars.$whiteFlour;
     color: vars.$crackedPepper;
-  }
-}
-
-.add-recipe-homepage .p-button {
-  background: vars.$crackedPepper;
-  color: vars.$whiteFlour;
-  border: none;
-  font-size: 1.5rem;
-  border-radius: 50px;
-  padding: 10px 20px;
-  border: 1px solid transparent;
-
-  .p-button-label {
-    height: 1.5rem;
-  }
-
-  &:hover {
-    background: vars.$whiteFlour;
-    border: 1px solid vars.$crackedPepper;
   }
 }
 
@@ -164,4 +149,38 @@
 
 .mobile.outline .p-button{
   padding: 5px 10px;
+}
+
+.filters-button {
+  background: vars.$herbalWash;
+  color: vars.$whiteFlour;
+  border-radius: 6px;
+
+  .p-button{
+    &:hover {
+      background: vars.$farro;
+      color: black;
+
+      .p-button-label {
+        color: black;
+      }
+    }
+  }
+}
+
+.clear-filters {
+  background: vars.$crackedPepper;
+  color: vars.$whiteFlour;
+  border-radius: 6px;
+
+  .p-button{
+    &:hover {
+      background: vars.$farro;
+      color: black;
+
+      .p-button-label {
+        color: black;
+      }
+    }
+  }
 }
