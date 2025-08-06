@@ -38,6 +38,10 @@
           <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
         </div>
       }
+
+      @if(recipes().length === 0){
+        <p>No recipes found.</p>
+      }
   </div>
   <p-paginator (onPageChange)="onLazyLoad($event)" [alwaysShow]="false" [rowsPerPageOptions]="[10, 20, 50]" [first]="requestParams().first" [rows]="requestParams().pageSize" [totalRecords]="totalRecords()"/>
 </div>

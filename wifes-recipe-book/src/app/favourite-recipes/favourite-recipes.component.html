@@ -8,6 +8,10 @@
           <app-recipe-card [card]="recipe" [isFavourite]="recipe.isFavourite ?? false"></app-recipe-card>
         </div>
       }
+
+      @if(savedRecipes().length === 0){
+        <p>No recipes found.</p>
+      }
   </div>
 </div>
 

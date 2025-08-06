@@ -12,6 +12,10 @@
             <app-extended-card [recipe]="recipe" (deleted)="deleteRecipe($event)"></app-extended-card>
             <br/>
         }
+        
+        @if(recipes().length === 0){
+        <p>No recipes found.</p>
+      }
     </div>
     <p-paginator (onPageChange)="onLazyLoad($event)" [first]="requestParams().first" [rows]="requestParams().pageSize" [totalRecords]="totalRecords" [alwaysShow]="false" />
 </div>
