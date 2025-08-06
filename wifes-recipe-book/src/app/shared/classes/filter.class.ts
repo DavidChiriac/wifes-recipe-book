@@ -59,6 +59,8 @@ export abstract class RecipesClass {
 
   categoryOptions: {name: string; id: string; icon: string}[] = [];
 
+  loading = signal(false);
+
   constructor() {
     if (this.cachedCategories.length > 0) {
       this.categoryOptions = this.cachedCategories;

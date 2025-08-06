@@ -88,6 +88,7 @@ export class MyRecipesComponent extends RecipesClass {
   }
 
   protected override getRecipes(): void {
+    this.loading.set(true);
     this.recipesService
       .getMyRecipes(
         { ...this.requestParams(), sortField: this.sortField() },
@@ -109,6 +110,7 @@ export class MyRecipesComponent extends RecipesClass {
       .subscribe({
         next: (recipes) => {
           this.recipes.set(recipes);
+          this.loading.set(false);
         },
       });
   }

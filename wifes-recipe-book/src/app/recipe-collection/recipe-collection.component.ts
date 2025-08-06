@@ -80,6 +80,7 @@ export class RecipeCollectionComponent extends RecipesClass {
   }
 
   getRecipes(): void {
+    this.loading.set(true);
       this.recipesService.getRecipes({...this.requestParams(), sortField: this.sortField()}, this.searchTerm()).pipe(
         debounceTime(1000),
         takeUntilDestroyed(this.destroyRef),
@@ -94,6 +95,7 @@ export class RecipeCollectionComponent extends RecipesClass {
           ...recipe,
           isFavourite: recipe.isFavourite ?? false
         })));
+        this.loading.set(false);
       });
   }
 

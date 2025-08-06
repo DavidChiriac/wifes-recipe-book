@@ -33,7 +33,7 @@
   .recipes-container {
     width: 100%;
     padding: 0 10px;
-    height: calc(100% - 160px);
+    height: calc(100% - 205px);
     margin-top: 1rem;
     overflow: auto;
     flex-wrap: wrap;
@@ -45,7 +45,6 @@
 
   .recipe{
     display: flex;
-    flex-basis: 49%;
     width: 100%;
   }
 }

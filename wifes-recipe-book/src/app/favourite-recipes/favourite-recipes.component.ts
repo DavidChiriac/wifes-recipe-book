@@ -38,7 +38,10 @@ export class FavouriteRecipesComponent {
 
   savedRecipes = signal<IRecipe[]>([]);
 
+  loading = signal(false);
+
   constructor() {
+    this.loading.set(true);
     this.recipesService
       .getFavouriteRecipes()
       .pipe(
@@ -58,6 +61,7 @@ export class FavouriteRecipesComponent {
             } as IRecipe;
           })
         );
+        this.loading.set(false);
       });
   }
 
