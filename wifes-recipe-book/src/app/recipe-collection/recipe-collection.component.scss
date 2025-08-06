@@ -5,21 +5,6 @@
   height: calc(100vh - 55px);
   overflow: auto;
 
-  .search-bar {
-    width: 100%;
-    padding: 10px 0;
-    display: flex;
-    justify-content: end;
-    border-bottom: 1px solid vars.$crackedPepper;
-
-    .right {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-  }
-
   .recipes-container {
     width: 100%;
     padding: 0 10px;
@@ -45,20 +30,6 @@
   height: calc(100vh - 55px);
   overflow: auto;
 
-  .search-bar {
-    width: 100%;
-    padding: 0 0 10px 0;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: 1px solid vars.$crackedPepper;
-
-    .right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-  }
-
   .recipes-container {
     width: 100%;
     padding: 0 10px;
@@ -76,19 +47,5 @@
     display: flex;
     flex-basis: 49%;
     width: 100%;
-  }
-}
-
-.input-icon-left{
-  display: flex;
-  align-items: center;
-  position: relative;
-  i {
-    left: .75rem;
-    position: absolute;
-    opacity: 0.5;
-  }
-  .p-inputtext{
-    padding-left: 2.2rem;
   }
 }

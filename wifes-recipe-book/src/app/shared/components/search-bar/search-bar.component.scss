@@ -1,0 +1,44 @@
+@use '../../overrides/variables.scss' as vars;
+
+.search-bar {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: end;
+    border-bottom: 1px solid vars.$crackedPepper;
+
+    .right {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+}
+
+.search-bar-mobile {
+    width: 100%;
+    padding: 0 0 10px 0;
+    display: flex;
+    border-bottom: 1px solid vars.$crackedPepper;
+
+    .right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+
+.input-icon-left{
+  display: flex;
+  align-items: center;
+  position: relative;
+  i {
+    left: .75rem;
+    position: absolute;
+    opacity: 0.5;
+  }
+  .p-inputtext{
+    padding-left: 2.2rem;
+  }
+}

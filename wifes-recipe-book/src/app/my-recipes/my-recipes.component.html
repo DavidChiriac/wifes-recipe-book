@@ -2,17 +2,15 @@
     <div class="header">
         <h1 class="title">My Recipes</h1>
     </div>
-    <div class="search-bar">
-        <input pInputText [ngClass]="{mobile: isMobile()}" [value]="searchTerm()" (keydown.enter)="updateSearchTerm($event)"/>
-        <p-button class="search" icon="pi pi-search" (onClick)="onLazyLoad()"/>
-        <p-button class="clear" icon="pi pi-times" (onClick)="clear()"/>
-    </div>
+    <app-filters [filtersForm]="filtersForm" [isMobile]="isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
+    <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
+
     <div class="recipes-container">
         @for (recipe of recipes(); track recipe.documentId) {
             <app-extended-card [recipe]="recipe" (deleted)="deleteRecipe($event)"></app-extended-card>
             <br/>
         }
-        
+
         @if(recipes().length === 0){
         <p>No recipes found.</p>
       }

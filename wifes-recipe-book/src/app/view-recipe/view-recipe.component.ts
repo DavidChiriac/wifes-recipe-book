@@ -21,6 +21,7 @@ import { HomepagePresentationComponent } from '../home-page/homepage-presentatio
 import { LocalStorageService } from 'ngx-webstorage';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-view-recipe',
@@ -103,7 +104,7 @@ export class ViewRecipeComponent {
 
     this.recipesService
       .toggleFavourite(this.recipe()?.id ?? '', this.isFavourite)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(take(1))
       .subscribe();
 
     let cachedRecommendedRecipes =

@@ -42,7 +42,6 @@ export class RecipesService {
       pageNumber: number | undefined;
       pageSize: number | undefined;
       sortField: string | undefined;
-      sortDirection: string | undefined;
       category: string[];
       minMinutes?: number;
       maxMinutes?: number;
@@ -51,8 +50,8 @@ export class RecipesService {
   ): Observable<{ data: IRecipe[]; total: number }> {
     let queryParams = '';
 
-    if (params.sortDirection && params.sortField) {
-      queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
+    if (params.sortField) {
+      queryParams += `&sort=${params.sortField?.split('_')[0]}:${params.sortField?.split('_')[1]}`;
     }
 
     if (searchTerm) {
@@ -99,18 +98,33 @@ export class RecipesService {
       pageNumber: number | undefined;
       pageSize: number | undefined;
       sortField: string | undefined;
-      sortDirection: string | undefined;
+      category: string[];
+      minMinutes?: number;
+      maxMinutes?: number;
     },
     searchTerm: string
   ): Observable<{ data: IRecipe[]; total: number }> {
     let queryParams = '';
-    if (params.sortDirection && params.sortField) {
-      queryParams += `&sort=${params.sortField}:${params.sortDirection}`;
+    if (params.sortField) {
+      queryParams += `&sort=${params.sortField.split('_')[0]}:${params.sortField.split('_')[1]}`;
     }
     searchTerm = searchTerm.trim();
     if (searchTerm) {
       queryParams += `&filters[$and][1][$or][0][title][$containsi]=${searchTerm}&filters[$and][1][$or][1][preparation][$containsi]=${searchTerm}&filters[$and][1][$or][2][ingredients][ingredients][name][$containsi]=${searchTerm}`;
     }
+
+    params.category.forEach((category, index) => {
+      queryParams += `&filters[$and][2][$or][${index}][categories][name][$eq]=${category}`;
+    });
+
+    if(params.minMinutes){
+      queryParams += `&filters[$and][3][minutes][$gte]=${params.minMinutes}`;
+    }
+
+    if(params.maxMinutes){
+      queryParams += `&filters[$and][3][minutes][$lte]=${params.maxMinutes}`;
+    }
+    
     return this.http
       .get<{ data: IRecipe[]; meta: { pagination: { total: number } } }>(
         environment.apiUrl +

@@ -1,0 +1,21 @@
+<div [ngClass]="{'search-bar': isMobile() === false, 'search-bar-mobile': isMobile()}">
+    @if (isMobile() === false) {
+        <p-select [options]="sortingOptions" [(ngModel)]="sortField" placeholder="Sort By"></p-select>
+    }
+    <span class="input-icon-left">
+        @if (searchTerm().length > 0) {
+            <i class="pi pi-times cursor-pointer" (click)="searchTerm.set('')"></i>
+        } @else {
+            <i class="pi pi-search cursor-pointer"></i>
+        }
+        <input type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
+                [value]="searchTerm()" (keydown.enter)="updateSearchTerm($event)"/>
+    </span>
+    <p-button class="flex align-items-center cursor-pointer filters-button ml-auto mr-2" (click)="filtersVisible.set(true)" icon="pi pi-filter" [label]="isMobile() ? '' : 'Filters'"/>
+    @if(!formIsEmpty()){
+        <p-button class="flex align-items-center cursor-pointer clear-filters" (click)="clearFilters.emit()" icon="pi pi-times" label="Clear Filters" severity="secondary" [ngClass]="{mobile: isMobile()}"/>
+    }
+</div>
+@if(isMobile()){
+    <p-select [options]="sortingOptions" class="mt-2" [(ngModel)]="sortField" placeholder="Sort By"></p-select>
+}

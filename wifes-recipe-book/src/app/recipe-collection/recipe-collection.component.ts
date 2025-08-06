@@ -1,20 +1,18 @@
-import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID, signal } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, DestroyRef, effect, inject, input } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { RecipesService } from '../shared/services/recipes.service';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { PaginatorModule } from 'primeng/paginator';
+import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { RouterModule } from '@angular/router';
-import { catchError, debounceTime, map, Observable, of, take } from 'rxjs';
+import { catchError, debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { IRecipe } from '../shared/interfaces/recipe.interface';
-import { DrawerModule } from 'primeng/drawer';
-import { SessionStorageService } from 'ngx-webstorage';
-import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectModule } from 'primeng/select';
+import { FiltersComponent } from '../shared/components/filters/filters.component';
+import { RecipesClass } from '../shared/classes/filter.class';
+import { SearchBarComponent } from '../shared/components/search-bar/search-bar.component';
 
 @Component({
   selector: 'app-recipe-collection',
@@ -27,85 +25,23 @@ import { MultiSelectModule } from 'primeng/multiselect';
     CommonModule,
     DialogModule,
     RouterModule,
-    DrawerModule,
-    MultiSelectModule,
-    ReactiveFormsModule
+    SelectModule,
+    FiltersComponent,
+    SearchBarComponent
   ],
   templateUrl: './recipe-collection.component.html',
   styleUrl: './recipe-collection.component.scss',
 })
-export class RecipeCollectionComponent {
-  private readonly recipesService = inject(RecipesService);
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
+export class RecipeCollectionComponent extends RecipesClass {
   private readonly destroyRef = inject(DestroyRef);
-  private readonly sessionStorage = inject(SessionStorageService);
 
   category = input<string>('');
 
-  cachedFilters = this.sessionStorage.retrieve('filters');
-  cachedSearchTerm = this.sessionStorage.retrieve('searchTerm') || '';
-  cachedCategories = this.sessionStorage.retrieve('categories') || [];
-
-  filtersForm = new FormGroup({
-    category: new FormControl<string[]>([]),
-    minMinutes: new FormControl(),
-    maxMinutes: new FormControl(),
-  });
-  formIsEmpty = computed(() => this.requestParams().category.length === 0 && !this.requestParams().minMinutes && !this.requestParams().maxMinutes);
-
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
-
-  searchTerm = signal('');
-
-  requestParams = signal<{
-    pageNumber: number;
-    pageSize: number;
-    first: number;
-    sortField: string | undefined;
-    sortDirection: 'asc' | 'desc' | undefined;
-    category: string[];
-    minMinutes?: number;
-    maxMinutes?: number;
-  }>({
-    pageNumber: 1,
-    pageSize: 10,
-    first: 0,
-    sortField: undefined,
-    sortDirection: undefined,
-    category: [],
-    minMinutes: undefined,
-    maxMinutes: undefined
-  });
-
-  sortField = signal<string | undefined>(undefined);
-  sortDirection = signal<'asc' | 'desc' | undefined>(undefined);
-
-  totalRecords = signal(0);
-
-  errorModalVisible = false;
-  errorMessage = '';
-
-  recipes = signal<IRecipe[]>([]);
-
-  filtersVisible = signal(false);
-
-  categoryOptions: {name: string; id: string; icon: string}[] = [];
+  override cachedFilters = this.sessionStorage.retrieve('collection-filters');
+  override cachedSearchTerm = this.sessionStorage.retrieve('collection-searchTerm') || '';
 
   constructor() {
-    if (this.cachedCategories.length > 0) {
-      this.categoryOptions = this.cachedCategories;
-    } else {
-      this.recipesService.getCategories().pipe(
-        take(1),
-        catchError(() => of([]))
-      ).subscribe(categories => {
-        this.categoryOptions = categories;
-        this.sessionStorage.store('categories', categories);
-      });
-    }
+    super();
 
     if(this.cachedSearchTerm) {
       this.searchTerm.set(this.cachedSearchTerm);
@@ -120,26 +56,6 @@ export class RecipeCollectionComponent {
         maxMinutes: this.cachedFilters?.maxMinutes || undefined
       }));
     }
-
-    effect(() => {
-      const searchTerm = this.searchTerm();
-      this.sessionStorage.store('searchTerm', searchTerm);
-      this.recipesService.getRecipes(this.requestParams(), searchTerm).pipe(
-        debounceTime(1000),
-        takeUntilDestroyed(this.destroyRef),
-        catchError(error => {
-          this.errorMessage = error.message;
-          this.errorModalVisible = true;
-          return [];
-        })
-      ).subscribe(fetchedRecipes => {
-        this.totalRecords.set(fetchedRecipes.total);
-        this.recipes.set(fetchedRecipes.data.map(recipe => ({
-          ...recipe,
-          isFavourite: recipe.isFavourite ?? false
-        })));
-      });
-    });
 
     effect(() => {
       if (this.category()) {
@@ -157,60 +73,21 @@ export class RecipeCollectionComponent {
     });
   }
 
-  onLazyLoad(event?: PaginatorState): void {
-    if (event) {
-      this.requestParams.set({
-        pageNumber: (event.page || 0) + 1,
-        pageSize: event.rows || 20,
-        first: event.first || 0,
-        sortField: this.sortField(),
-        sortDirection: this.sortDirection(),
-        category: this.filtersForm.value.category || []
+  getRecipes(): void {
+      this.recipesService.getRecipes({...this.requestParams(), sortField: this.sortField()}, this.searchTerm()).pipe(
+        debounceTime(1000),
+        takeUntilDestroyed(this.destroyRef),
+        catchError(error => {
+          this.errorMessage.set(error.message);
+          this.errorModalVisible.set(true);
+          return [];
+        })
+      ).subscribe(fetchedRecipes => {
+        this.totalRecords.set(fetchedRecipes.total);
+        this.recipes.set(fetchedRecipes.data.map(recipe => ({
+          ...recipe,
+          isFavourite: recipe.isFavourite ?? false
+        })));
       });
-    }
-  }
-
-  cancel(): void {
-    this.errorModalVisible = false;
-    this.errorMessage = '';
-  }
-
-  updateSearchTerm(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
-  }
-
-  applyFilters(): void {
-    const filters = this.filtersForm.value;
-
-    if (filters.category && filters.category.length > 0) {
-      this.requestParams.update(params => ({ ...params, category: filters.category || [] }));
-    }
-    if (filters.minMinutes) {
-      this.requestParams.update(params => ({ ...params, minMinutes: filters.minMinutes }));
-    }
-    if (filters.maxMinutes) {
-      this.requestParams.update(params => ({ ...params, maxMinutes: filters.maxMinutes }));
-    }
-
-    this.sessionStorage.store('filters', this.filtersForm.value);
-
-    this.filtersVisible.set(false);
-  }
-
-  clearFilters(): void {
-    this.filtersForm.reset();
-    this.requestParams.set({
-      pageNumber: 0,
-      pageSize: 10,
-      first: 0,
-      sortField: undefined,
-      sortDirection: undefined,
-      category: [],
-      minMinutes: undefined,
-      maxMinutes: undefined
-    });
-    this.sessionStorage.clear('filters');
-    this.filtersVisible.set(false);
   }
 }

@@ -1,0 +1,16 @@
+<p-drawer [(visible)]="filtersVisible" header="Filters" position="bottom" [styleClass]="isMobile() ? 'mobile' : ''">
+    <form [formGroup]="filtersForm()" (ngSubmit)="applyFilters()">
+    <div class="flex flex-column gap-3">
+        <label for="category">Category</label>
+        <p-multiSelect id="category" optionLabel="name" optionValue="name" formControlName="category" [options]="categoryOptions()" />
+
+        <label for="minutes">Minutes</label>
+        <div class="flex justify-content-between gap-2">
+        <input id="minutes" pInputText type="number" formControlName="minMinutes" class="w-6" placeholder="Min" />
+        <input id="minutes" pInputText type="number" formControlName="maxMinutes" class="w-6" placeholder="Max" />
+        </div>
+
+        <p-button label="Apply Filters" type="submit" class="apply-filters-button"/>
+    </div>
+    </form>
+</p-drawer>

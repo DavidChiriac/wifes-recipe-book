@@ -1,7 +1,6 @@
 import {
   Component,
   computed,
-  DestroyRef,
   inject,
   input,
   model,
@@ -13,7 +12,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { RecipesService } from '../../services/recipes.service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-card',
@@ -30,7 +29,6 @@ export class RecipeCardComponent {
   private readonly recipesService = inject(RecipesService);
   private readonly localStorageService = inject(LocalStorageService);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly destroyRef = inject(DestroyRef);
 
   isMobile= computed(
     () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
@@ -48,7 +46,7 @@ export class RecipeCardComponent {
     event.stopPropagation();
     this.isFavourite.update((favourite) => !favourite);
 
-    this.recipesService.toggleFavourite(this.card().id ?? '', this.isFavourite()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    this.recipesService.toggleFavourite(this.card().id ?? '', this.isFavourite()).pipe(take(1)).subscribe();
 
     let cachedRecommendedRecipes = this.localStorageService.retrieve('recommendedRecipes');
 

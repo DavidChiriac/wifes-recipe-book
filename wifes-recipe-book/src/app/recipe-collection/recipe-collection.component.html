@@ -1,37 +1,7 @@
 <div [ngClass]="{'recipe-collection': isMobile() === false, 'recipe-collection-mobile': isMobile()}">
-  <p-drawer [(visible)]="filtersVisible" header="Filters" position="bottom">
-      <form [formGroup]="filtersForm" (ngSubmit)="applyFilters()">
-        <div class="flex flex-column gap-3">
-          <label for="category">Category</label>
-          <p-multiSelect id="category" optionLabel="name" optionValue="name" formControlName="category" [options]="categoryOptions" />
+  <app-filters [filtersForm]="filtersForm" [isMobile]="isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
+  <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
 
-          <label for="minutes">Minutes</label>
-          <div class="flex justify-content-between gap-2">
-            <input id="minutes" pInputText type="number" formControlName="minMinutes" class="w-6" placeholder="Min" />
-            <input id="minutes" pInputText type="number" formControlName="maxMinutes" class="w-6" placeholder="Max" />
-          </div>
-
-          <p-button label="Apply Filters" type="submit" class="apply-filters-button"/>
-        </div>
-      </form>
-  </p-drawer>
-  <div class="search-bar">
-    <div class="right">
-      <span class="input-icon-left">
-        @if (searchTerm().length > 0) {
-            <i class="pi pi-times cursor-pointer" (click)="searchTerm.set('')"></i>
-        } @else {
-            <i class="pi pi-search cursor-pointer"></i>
-        }
-        <input type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
-                [value]="searchTerm()" (keydown.enter)="updateSearchTerm($event)"/>
-      </span>
-      <p-button class="flex align-items-center cursor-pointer filters-button" (click)="filtersVisible.set(true)" icon="pi pi-filter" [label]="isMobile() ? '' : 'Filters'"/>
-      @if(!formIsEmpty()){
-        <p-button class="flex align-items-center cursor-pointer clear-filters" (click)="clearFilters()" icon="pi pi-times" label="Clear Filters" severity="secondary" [ngClass]="{mobile: isMobile()}"/>
-      }
-    </div>
-  </div>
   <div class="recipes-container">
       @for (recipe of recipes(); track recipe.documentId) {
         <div class="recipe">
@@ -47,7 +17,7 @@
 </div>
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="errorModalVisible" [style]="{ width: '25rem' }">
-    <h3 class="mb-3 text-center">{{errorMessage}}</h3>
+    <h3 class="mb-3 text-center">{{errorMessage()}}</h3>
     <div class="flex justify-content-center gap-2">
         <p-button label="Close" class="delete-button" severity="secondary" (click)="cancel()" />
     </div>

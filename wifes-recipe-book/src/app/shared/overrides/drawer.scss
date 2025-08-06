@@ -6,7 +6,7 @@
         justify-content: center;
         gap: 1rem;
 
-        .closeButton {
+        .p-drawer-close-button {
             .p-button{
                 color: black
             }
@@ -19,11 +19,25 @@
         overflow: auto;
 
         .apply-filters-button{
+            margin-top: 1rem;
             .p-button{
                 color: black;
                 border: 1px solid black;
-                margin: auto;
+                width: 100%;
+                font-size: 1.5rem;
+                
+                .p-button-label {
+                    height: 1.5rem;
+                }
             }
         }
+    }
+}
+
+.mobile.p-drawer{
+    height: 80%;
+
+    .p-drawer-content{
+        width: 80%;
     }
 }
