@@ -26,9 +26,6 @@ export default factories.createCoreService(
 				...existing.sort(() => 0.5 - Math.random()).slice(0, 4),
 			].slice(0, 4);
 
-			console.log("selected: ", selected);
-			console.log("existing: ", existing);
-
 			if (selected?.length > 0) {
 				existing
 					.filter(
@@ -57,7 +54,6 @@ export default factories.createCoreService(
 							},
 						});
 					});
-				console.log("✅ Updated daily selection with random recipes");
 			} else {
 				console.warn("⚠️ No daily-selection found");
 			}
