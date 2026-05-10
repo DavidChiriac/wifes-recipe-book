@@ -7,13 +7,6 @@
   gap: 1rem;
   justify-content: end;
   border-bottom: 1px solid vars.$crackedPepper;
-
-  .right {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
 }
 
 .search-bar-mobile {
@@ -21,12 +14,6 @@
   padding: 0 0 10px 0;
   display: flex;
   border-bottom: 1px solid vars.$crackedPepper;
-
-  .right {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
 }
 
 .input-icon-left {

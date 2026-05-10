@@ -50,12 +50,6 @@
   padding: 10px;
   overflow: auto;
 
-  .router-outlet {
-    width: 100%;
-    height: calc(100% - 50px);
-    overflow: hidden;
-  }
-
   .categories{
     margin-top: 3rem;
     width: 100%;

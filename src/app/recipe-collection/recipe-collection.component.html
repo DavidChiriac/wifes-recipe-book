@@ -5,8 +5,8 @@
 }
 @if(!loading()){
 <div [ngClass]="{'recipe-collection': isMobile() === false, 'recipe-collection-mobile': isMobile()}">
-  <app-filters [filtersForm]="filtersForm" [isMobile]="isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
-  <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
+  <app-filters [filtersForm]="filtersForm" [isMobile]="!!isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
+  <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="!!isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
 
   <div class="recipes-container">
       @for (recipe of recipes(); track recipe.documentId) {

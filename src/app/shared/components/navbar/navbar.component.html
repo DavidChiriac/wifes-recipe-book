@@ -50,7 +50,6 @@
         }
         <p-button
           class="sign-in"
-          GoogleSigninButtonDirective 
           [ngClass]="{ mobile: isMobile }"
           label="Sign Out"
           (onClick)="signOut()"
@@ -63,7 +62,6 @@
     @if (!signedIn()) {
       <p-button
           class="sign-in"
-          GoogleSigninButtonDirective 
           [ngClass]="{ mobile: isMobile }"
           label="Sign In"
           (onClick)="sign()"

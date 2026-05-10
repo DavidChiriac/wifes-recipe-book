@@ -1,9 +1,7 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, computed, DestroyRef, inject, PLATFORM_ID, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { DeviceDetectorService } from 'ngx-device-detector';
-import { InputTextModule } from 'primeng/inputtext';
-import { FormsModule } from '@angular/forms';
+import { DeviceService } from '../shared/services/device.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipesService } from '../shared/services/recipes.service';
 import { catchError, of, switchMap } from 'rxjs';
@@ -14,20 +12,16 @@ import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-car
 
 @Component({
   selector: 'app-home-page',
-  imports: [CommonModule, ButtonModule, InputTextModule, FormsModule, RecipeCardComponent, RouterModule],
+  imports: [CommonModule, ButtonModule, RecipeCardComponent, RouterModule],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
   private readonly recipesService = inject(RecipesService);
   private readonly router = inject(Router);
 
-  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
-
-  searchTerm = signal<string>('');
+  isMobile = inject(DeviceService).isMobile;
 
   loading = signal(true);
 
@@ -50,6 +44,22 @@ export class HomePageComponent {
     return recipes;
   });
 
+  private normalizeRecipes(recipesByCategory: Record<string, IRecipe[] | undefined>): IRecipe[] {
+    const seenRecipeIds = new Set<string>();
+
+    return Object.values(recipesByCategory)
+      .flatMap(categoryRecipes => categoryRecipes ?? [])
+      .filter(recipe => {
+        if (!recipe.id || seenRecipeIds.has(recipe.id)) {
+          return false;
+        }
+
+        seenRecipeIds.add(recipe.id);
+        return true;
+      })
+      .map(recipe => ({ ...recipe } as IRecipe));
+  }
+
   constructor() {
     this.recipesService.getCategories().pipe(
       catchError(() => of([])),
@@ -61,18 +71,7 @@ export class HomePageComponent {
         );
       })
     ).subscribe(recipes => {
-      let normalizedRecipes: IRecipe[] = [];
-
-      Object.values(recipes).forEach(categoryRecipes => {
-        categoryRecipes.forEach(recipe => {
-          if (normalizedRecipes.some(r => r.id === recipe.id)) {
-            return;
-          }
-          normalizedRecipes.push({ ...recipe } as IRecipe);
-        });
-      });
-
-      this.randomRecipes.set(normalizedRecipes);
+      this.randomRecipes.set(this.normalizeRecipes(recipes as Record<string, IRecipe[] | undefined>));
       this.loading.set(false);
     });
   }

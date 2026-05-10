@@ -7,7 +7,7 @@ import { MenuItem } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { LocalAuthService } from '../../services/local-auth.service';
 import { UserStateService } from '../../services/user-state.service';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../../services/device.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -25,10 +25,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class NavbarComponent implements AfterViewInit {
   private readonly localAuthService = inject(LocalAuthService);
   private readonly userState = inject(UserStateService);
-  private readonly deviceService = inject(DeviceDetectorService);
   private readonly platformId = inject(PLATFORM_ID);
 
-  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
+  isMobile = inject(DeviceService).isMobile;
 
   signedIn = computed(() => this.userState.isLoggedIn());
   isAdmin = computed(() => this.userState.isAdmin());

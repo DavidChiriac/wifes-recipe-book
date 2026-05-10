@@ -1,16 +1,13 @@
-import { computed, effect, inject, PLATFORM_ID, signal } from '@angular/core';
+import { computed, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { PaginatorState } from 'primeng/paginator';
-import { isPlatformBrowser } from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../services/device.service';
 import { catchError, of, take } from 'rxjs';
 import { SessionStorageService } from 'ngx-webstorage';
 import { IRecipe } from '../interfaces/recipe.interface';
 import { RecipesService } from '../services/recipes.service';
 
 export abstract class RecipesClass {
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
   readonly sessionStorage = inject(SessionStorageService);
   readonly recipesService = inject(RecipesService);
 
@@ -24,9 +21,7 @@ export abstract class RecipesClass {
 
   formIsEmpty = computed(() => this.requestParams().category.length === 0 && !this.requestParams().minMinutes && !this.requestParams().maxMinutes && !this.sortField() && this.searchTerm().length === 0);
 
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
+  isMobile = inject(DeviceService).isMobile;
 
   searchTerm = signal('');
 
@@ -101,11 +96,6 @@ export abstract class RecipesClass {
   cancel(): void {
     this.errorModalVisible.set(false);
     this.errorMessage.set('');
-  }
-
-  updateSearchTerm(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
   }
 
   applyFilters(form: {category: string[], minMinutes: number, maxMinutes: number}): void {

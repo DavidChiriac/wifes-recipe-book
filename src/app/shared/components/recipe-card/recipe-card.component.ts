@@ -4,12 +4,11 @@ import {
   inject,
   input,
   model,
-  PLATFORM_ID,
 } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { Router } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { CommonModule } from '@angular/common';
+import { DeviceService } from '../../services/device.service';
 import { RecipesService } from '../../services/recipes.service';
 import { UserStateService } from '../../services/user-state.service';
 import { take } from 'rxjs';
@@ -25,14 +24,10 @@ export class RecipeCardComponent {
   isFavourite = model(false);
 
   private readonly router = inject(Router);
-  private readonly deviceService = inject(DeviceDetectorService);
   private readonly recipesService = inject(RecipesService);
   private readonly userState = inject(UserStateService);
-  private readonly platformId = inject(PLATFORM_ID);
 
-  isMobile= computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
+  isMobile = inject(DeviceService).isMobile;
 
   userIsLoggedIn = computed(() => this.userState.isLoggedIn());
 

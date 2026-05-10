@@ -6,7 +6,6 @@ import { NewRecipeComponent } from './new-recipe/new-recipe.component';
 import { ViewRecipeComponent } from './view-recipe/view-recipe.component';
 import { socialAuthGuard } from './shared/guards/auth/social-auth.guard';
 import { adminGuard } from './shared/guards/auth/admin.guard';
-import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { RecipeEditGuard } from './shared/guards/auth/recipe-edit.guard';
 import { FavouriteRecipesComponent } from './favourite-recipes/favourite-recipes.component';
 import { ManageCategoriesComponent } from './manage-categories/manage-categories.component';
@@ -47,5 +46,4 @@ export const routes: Routes = [
     component: ManageCategoriesComponent,
     canActivate: [socialAuthGuard, adminGuard],
   },
-  { path: 'auth/google/callback', component: AuthCallbackComponent },
 ];

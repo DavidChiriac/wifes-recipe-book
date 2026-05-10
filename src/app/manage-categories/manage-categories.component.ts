@@ -3,11 +3,10 @@ import {
   DestroyRef,
   inject,
   OnInit,
-  PLATFORM_ID,
   signal,
   computed,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   FormControl,
   FormGroup,
@@ -21,7 +20,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../shared/services/device.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable } from 'rxjs';
 import { CategoriesService } from '../shared/services/categories.service';
@@ -51,8 +50,6 @@ export interface ICategory {
 export class ManageCategoriesComponent implements OnInit {
   private readonly categoriesService = inject(CategoriesService);
   private readonly recipesService = inject(RecipesService);
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
   categories = signal<ICategory[]>([]);
@@ -64,13 +61,10 @@ export class ManageCategoriesComponent implements OnInit {
   editingCategory = signal<ICategory | null>(null);
   categoryToDelete = signal<ICategory | null>(null);
   errorMessage = signal('');
-  uploading = signal(false);
   iconPreview = signal<string | null>(null);
   iconFile = signal<File | null>(null);
 
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
+  isMobile = inject(DeviceService).isMobile;
 
   categoryForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2)]),

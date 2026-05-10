@@ -1,5 +1,5 @@
 import { DestroyRef, EventEmitter, inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { from, Observable, of, switchMap } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import {
   Auth,
   GoogleAuthProvider,
@@ -121,31 +121,9 @@ export class LocalAuthService {
     );
   }
 
-  /**
-   * Backwards-compat shim used by `AuthCallbackComponent`. Firebase Auth
-   * does not require an external callback exchange, so this just resolves.
-   */
-  connect(_jwt: string): Observable<unknown> {
-    return of(null).pipe(
-      switchMap(async () => {
-        const u = this.auth.currentUser;
-        if (u) {
-          const profile = await this.persistUser(u);
-          return { jwt: profile.token, user: profile };
-        }
-        return null;
-      })
-    );
-  }
-
   /** Returns the cached Firebase ID token. */
   getToken(): string {
     return this.userState.user()?.token ?? '';
-  }
-
-  /** Returns the underlying Firebase user, if signed in. */
-  currentUser(): User | null {
-    return this.auth.currentUser;
   }
 
   /**

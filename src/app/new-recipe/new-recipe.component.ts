@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, PLATFORM_ID, signal, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, input, signal, viewChild } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -21,10 +21,10 @@ import { Router } from '@angular/router';
 import { RecipesService } from '../shared/services/recipes.service';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { catchError, concatMap, Observable, of, tap } from 'rxjs';
-import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../shared/services/device.service';
 import { AccordionModule } from 'primeng/accordion';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -50,8 +50,6 @@ export class NewRecipeComponent {
   private readonly recipesService = inject(RecipesService);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
   recipeForm = signal(new FormGroup({
@@ -99,7 +97,7 @@ export class NewRecipeComponent {
 
   id = input.required<string>();
 
-  isMobile = computed(() => isPlatformBrowser(this.platformId) && this.deviceService.isMobile());
+  isMobile = inject(DeviceService).isMobile;
 
   imageDeleteDialogVisible = false;
   imageToBeDeleted: { id: string; name: string; url: string } | undefined;
@@ -107,7 +105,7 @@ export class NewRecipeComponent {
   uploading = false;
 
   errorModalVisible = false;
-  errorMessage = 'banana';
+  errorMessage = '';
 
   categoryOptions = signal<{name: string; id: string}[]>([]);
 

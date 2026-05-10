@@ -1,32 +1,31 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, inject, PLATFORM_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from './shared/components/navbar/navbar.component';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { isPlatformBrowser } from '@angular/common';
+import { DeviceService } from './shared/services/device.service';
 
 @Component({
   selector: 'app-root',
-  imports: [CommonModule, RouterOutlet, NavbarComponent],
+  imports: [RouterOutlet, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = "Wife's Recipe Book";
+  private readonly platformId = inject(PLATFORM_ID);
 
-  isMobile!: boolean;
+  isMobile = inject(DeviceService).isMobile;
 
-  constructor(
-    private readonly deviceService: DeviceDetectorService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
+  constructor() {
     if (isPlatformBrowser(this.platformId)) {
-      this.isMobile = deviceService.isMobile();
-
-      if ('caches' in window) {
-        caches.keys().then((names) => {
-          names.forEach((name) => caches.delete(name));
-        });
+      if ('caches' in globalThis) {
+        this.clearCaches();
       }
     }
+  }
+
+  private clearCaches(): void {
+    caches.keys().then((names) => {
+      names.forEach((name) => caches.delete(name));
+    });
   }
 }

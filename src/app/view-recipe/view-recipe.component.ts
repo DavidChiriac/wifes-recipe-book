@@ -5,17 +5,16 @@ import {
   effect,
   inject,
   input,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { TextareaModule } from 'primeng/textarea';
 import { ImageModule } from 'primeng/image';
 import { RecipesService } from '../shared/services/recipes.service';
-import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../shared/services/device.service';
 import { CheckboxModule } from 'primeng/checkbox';
 import { UserStateService } from '../shared/services/user-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,20 +36,16 @@ import { take } from 'rxjs';
   styleUrl: './view-recipe.component.scss',
 })
 export class ViewRecipeComponent {
-  private readonly deviceService = inject(DeviceDetectorService);
   private readonly userState = inject(UserStateService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly recipesService = inject(RecipesService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly location = inject(Location);
 
   readonly id = input.required<string>();
 
   recipe = signal<IRecipe | undefined>(undefined);
 
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
+  isMobile = inject(DeviceService).isMobile;
   userIsLoggedIn = computed(() => this.userState.isLoggedIn());
 
   errorModalVisible = signal(false);

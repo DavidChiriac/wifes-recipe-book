@@ -10,7 +10,7 @@ import { LocalAuthService } from '../services/local-auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private localAuthService: LocalAuthService) {}
+  constructor(private readonly localAuthService: LocalAuthService) {}
 
   intercept(
     req: HttpRequest<any>,

@@ -447,7 +447,6 @@ export class RecipesService {
       coverImage: recipe.coverImage ?? null,
       minutes: recipe.minutes ?? 0,
       totalCalories: this.calculateTotalCalories(recipe),
-      recommended: false, // managed by the daily Cloud Function job
       updatedAt: serverTimestamp(),
     };
 

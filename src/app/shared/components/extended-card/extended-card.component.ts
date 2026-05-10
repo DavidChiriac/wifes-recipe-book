@@ -1,16 +1,14 @@
 import {
   Component,
-  computed,
   inject,
   input,
   output,
-  PLATFORM_ID,
 } from '@angular/core';
 import { IRecipe } from '../../interfaces/recipe.interface';
 import { ButtonModule } from 'primeng/button';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { CommonModule } from '@angular/common';
+import { DeviceService } from '../../services/device.service';
 
 @Component({
   selector: 'app-extended-card',
@@ -23,14 +21,7 @@ export class ExtendedCardComponent {
   readonly deleted = output<string>();
 
   private readonly router = inject(Router);
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
-
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
-
-  deleteModalVisible = false;
+  isMobile = inject(DeviceService).isMobile;
 
   view(): void {
     this.router.navigate(['recipe/' + this.recipe().documentId]);

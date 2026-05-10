@@ -1,15 +1,12 @@
 import { Component, DestroyRef, effect, inject, input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { RouterModule } from '@angular/router';
 import { catchError, debounceTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SelectModule } from 'primeng/select';
+
 import { FiltersComponent } from '../shared/components/filters/filters.component';
 import { RecipesClass } from '../shared/classes/filter.class';
 import { SearchBarComponent } from '../shared/components/search-bar/search-bar.component';
@@ -17,15 +14,11 @@ import { SearchBarComponent } from '../shared/components/search-bar/search-bar.c
 @Component({
   selector: 'app-recipe-collection',
   imports: [
-    InputTextModule,
     ButtonModule,
-    FormsModule,
     RecipeCardComponent,
     PaginatorModule,
     CommonModule,
     DialogModule,
-    RouterModule,
-    SelectModule,
     FiltersComponent,
     SearchBarComponent
   ],
@@ -74,7 +67,7 @@ export class RecipeCollectionComponent extends RecipesClass {
           category: this.category() ? [this.category()] : []
         }));
 
-        window.history.replaceState({}, '', window.location.href.split('?')[0]);
+        globalThis.history.replaceState({}, '', globalThis.location.href.split('?')[0]);
       }
     });
   }

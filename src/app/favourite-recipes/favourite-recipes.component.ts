@@ -1,21 +1,18 @@
 import {
   Component,
-  computed,
   DestroyRef,
-  effect,
   inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { DeviceDetectorService } from 'ngx-device-detector';
+import { DeviceService } from '../shared/services/device.service';
 import { RecipesService } from '../shared/services/recipes.service';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
 import { RecipeCardComponent } from '../shared/components/recipe-card/recipe-card.component';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, map } from 'rxjs';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-favourite-recipes',
@@ -25,13 +22,9 @@ import { catchError, map } from 'rxjs';
 })
 export class FavouriteRecipesComponent {
   private readonly recipesService = inject(RecipesService);
-  private readonly deviceService = inject(DeviceDetectorService);
-  private readonly platformId = inject(PLATFORM_ID);
   private readonly destroyRef = inject(DestroyRef);
 
-  isMobile = computed(
-    () => isPlatformBrowser(this.platformId) && this.deviceService.isMobile()
-  );
+  isMobile = inject(DeviceService).isMobile;
 
   errorModalVisible = signal(false);
   errorMessage = signal('');

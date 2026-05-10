@@ -47,7 +47,6 @@
     "@capacitor/status-bar": "^7.0.0",
     "@primeng/themes": "^20.0.1",
     "firebase": "^11.0.0",
-    "ngx-device-detector": "^10.0.2",
     "ngx-webstorage": "^20.0.0",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",

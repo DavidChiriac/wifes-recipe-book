@@ -1,21 +1,17 @@
 import {
   Component,
-  computed,
   DestroyRef,
   effect,
   inject,
-  PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { FormControl, FormGroup, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
-import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { PaginatorModule } from 'primeng/paginator';
 import { ExtendedCardComponent } from '../shared/components/extended-card/extended-card.component';
-import { RecipesService } from '../shared/services/recipes.service';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   catchError,
   concatMap,
@@ -25,12 +21,8 @@ import {
   of,
   toArray,
 } from 'rxjs';
-import { DeviceDetectorService } from 'ngx-device-detector';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { sortingOptions } from '../shared/constants/sorting-options';
-import { SelectModule } from 'primeng/select';
 import { FiltersComponent } from '../shared/components/filters/filters.component';
-import { SessionStorageService } from 'ngx-webstorage';
 import { RecipesClass } from '../shared/classes/filter.class';
 import { SearchBarComponent } from '../shared/components/search-bar/search-bar.component';
 
@@ -40,11 +32,9 @@ import { SearchBarComponent } from '../shared/components/search-bar/search-bar.c
     ButtonModule,
     FormsModule,
     ExtendedCardComponent,
-    InputTextModule,
     PaginatorModule,
     CommonModule,
     DialogModule,
-    SelectModule,
     FiltersComponent,
     SearchBarComponent
   ],

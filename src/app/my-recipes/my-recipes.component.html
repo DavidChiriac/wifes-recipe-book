@@ -8,8 +8,8 @@
     <div class="header">
         <h1 class="title">My Recipes</h1>
     </div>
-    <app-filters [filtersForm]="filtersForm" [isMobile]="isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
-    <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
+    <app-filters [filtersForm]="filtersForm" [isMobile]="!!isMobile()" [categoryOptions]="categoryOptions" [(filtersVisible)]="filtersVisible" (applyFiltersOutput)="applyFilters($event)" (clearFilters)="clearFilters()"></app-filters>
+    <app-search-bar (clearFilters)="clearFilters()" [(filtersVisible)]="filtersVisible" [formIsEmpty]="formIsEmpty()" [isMobile]="!!isMobile()" [(searchTerm)]="searchTerm" [(sortField)]="sortField"></app-search-bar>
 
     <div class="recipes-container">
         @for (recipe of recipes(); track recipe.documentId) {
