@@ -1,0 +1,71 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---- Helpers ----
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(authorId) {
+      return isSignedIn() && request.auth.uid == authorId;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // ---- Recipes ----
+    // Public read; only the author (or an admin) can write.
+    // Exception: any signed-in user may flip the boolean `recommended`
+    // field on its own (used by the client-side daily rotation that
+    // replaces the old Cloud Function).
+    match /recipes/{recipeId} {
+      allow read: if true;
+
+      allow create: if isSignedIn()
+        && request.resource.data.authorId == request.auth.uid;
+
+      allow update: if isOwner(resource.data.authorId)
+        || isAdmin()
+        || (
+          isSignedIn()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['recommended'])
+        );
+
+      allow delete: if isOwner(resource.data.authorId) || isAdmin();
+    }
+
+    // ---- Categories ----
+    // Public read; only admins can write.
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---- Users ----
+    // A user can read/write only their own profile (incl. favourites).
+    match /users/{userId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow create, update: if isSignedIn() && request.auth.uid == userId;
+      allow delete: if false;
+    }
+
+    // ---- Today recommended (client-side daily rotation marker) ----
+    // Public read; any signed-in user may create the day's marker (the
+    // first one wins; subsequent attempts are skipped client-side).
+    match /todayRecommended/{day} {
+      allow read: if true;
+      allow create: if isSignedIn();
+      allow update, delete: if isAdmin();
+    }
+
+    // ---- Admins collection (controls isAdmin()) ----
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}

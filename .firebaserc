@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "wifes-recipe-book-79475",
+    "Wifes Recipe Book DEV": "wifes-recipe-book-79475",
+    "Wifes Recipe Book PROD": "wife-s-recipe-book-prod"
+  },
+  "targets": {},
+  "etags": {}
+}

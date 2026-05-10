@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Wife\'s Recipe Book</string>
+    <string name="title_activity_main">Wife\'s Recipe Book</string>
+    <string name="package_name">com.davidchiriac.wifesrecipebook</string>
+    <string name="custom_url_scheme">com.davidchiriac.wifesrecipebook</string>
+</resources>

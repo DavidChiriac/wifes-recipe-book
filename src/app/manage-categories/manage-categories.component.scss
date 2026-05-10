@@ -1,0 +1,171 @@
+@use "sass:color";
+@use "../shared/overrides/variables.scss" as vars;
+
+.manage-categories {
+  padding: 20px 250px;
+  height: calc(100vh - 55px);
+  overflow: auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .title {
+      font-size: 3rem;
+      margin: 0;
+      color: #2d2d3f;
+    }
+  }
+}
+
+.manage-categories-mobile {
+  padding: 10px 20px;
+  height: calc(100vh - 55px);
+  overflow: auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .title {
+      font-size: 2rem;
+      margin: 0;
+      color: #2d2d3f;
+    }
+  }
+}
+
+// Table contrast overrides
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-thead > tr > th {
+      background: vars.$herbalWash;
+      color: #1e1e2f;
+      font-weight: 600;
+      border-bottom: 2px solid color.adjust(vars.$herbalWash, $lightness: -15%);
+    }
+
+    .p-datatable-tbody > tr {
+      color: #2d2d3f;
+
+      > td {
+        border-bottom: 1px solid color.adjust(vars.$whiteFlour, $lightness: -10%);
+      }
+
+      &:nth-child(even) {
+        background: rgba(vars.$herbalWash, 0.15);
+      }
+
+      &:hover {
+        background: rgba(vars.$herbalWash, 0.3);
+      }
+    }
+
+    .p-datatable-emptymessage td {
+      color: #555;
+    }
+  }
+
+  // Dialog contrast overrides
+  .p-dialog {
+    .p-dialog-header {
+      color: #1e1e2f;
+      font-weight: 600;
+    }
+
+    .p-dialog-content {
+      color: #2d2d3f;
+
+      label {
+        color: #3a3a50;
+      }
+
+      input.p-inputtext {
+        color: #1e1e2f;
+        border-color: #aaa;
+
+        &:focus {
+          border-color: vars.$crackedPepper;
+        }
+      }
+    }
+  }
+}
+
+.category-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+// Upload button contrast
+:host ::ng-deep .p-fileupload-basic .p-button {
+  background: vars.$crackedPepper;
+  border-color: vars.$crackedPepper;
+  color: #fff;
+
+  &:hover {
+    background: color.adjust(vars.$crackedPepper, $lightness: -10%);
+    border-color: color.adjust(vars.$crackedPepper, $lightness: -10%);
+  }
+}
+
+// Cancel button contrast
+:host ::ng-deep .p-button.p-button-secondary {
+  background: #6c757d;
+  border-color: #6c757d;
+  color: #fff;
+
+  &:hover {
+    background: #5a6268;
+    border-color: #5a6268;
+  }
+}
+
+.icon-preview {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2d2d3f;
+
+  .category-icon-preview {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.25rem;
+
+  :host ::ng-deep & {
+    .p-button.p-button-text {
+      &.p-button-info {
+        color: #3b5bdb;
+
+        &:hover {
+          background: rgba(59, 91, 219, 0.12);
+        }
+      }
+
+      &.p-button-danger {
+        color: #c0392b;
+
+        &:hover {
+          background: rgba(192, 57, 43, 0.12);
+        }
+      }
+    }
+  }
+}
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2d2d3f;
+}
