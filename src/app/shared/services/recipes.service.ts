@@ -60,10 +60,11 @@ export class RecipesService {
       category: string[];
       minMinutes?: number;
       maxMinutes?: number;
+      authorId?: string;
     },
     searchTerm: string = ''
   ): Observable<{ data: IRecipe[]; total: number }> {
-    return this.queryRecipes(params, searchTerm);
+    return this.queryRecipes(params, searchTerm, params.authorId);
   }
 
   getSingleRecipe(documentId: string): Observable<IRecipe> {

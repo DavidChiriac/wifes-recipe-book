@@ -1,0 +1,64 @@
+<div [ngClass]="{'manage-users': !isMobile(), 'manage-users-mobile': isMobile()}">
+  <div class="header">
+    <h1 class="title">Manage Users</h1>
+  </div>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else {
+    <p-table [value]="users()">
+      <ng-template #header>
+        <tr>
+          <th id="name-col">Name</th>
+          @if (!isMobile()) {
+            <th id="email-col">Email</th>
+          }
+          <th id="recipes-col">Recipes</th>
+          <th id="role-col">Role</th>
+          <th id="actions-col">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-user>
+        <tr>
+          <td class="name-cell">{{ user.displayName ?? 'Unknown' }}</td>
+          @if (!isMobile()) {
+            <td>{{ user.email ?? '—' }}</td>
+          }
+          <td class="text-center">
+            @if (user.recipeCount > 0) {
+              <a class="recipe-count-link" [routerLink]="['/collection']" [queryParams]="{authorId: user.uid, authorName: user.displayName}">
+                {{ user.recipeCount }}
+              </a>
+            } @else {
+              0
+            }
+          </td>
+          <td>
+            @if (user.isAdmin) {
+              <p-tag value="Admin" severity="info" />
+            } @else {
+              <p-tag value="User" severity="secondary" />
+            }
+          </td>
+          <td>
+            <p-button
+              [icon]="user.isAdmin ? 'pi pi-shield' : 'pi pi-user'"
+              [rounded]="true"
+              [text]="true"
+              [severity]="user.isAdmin ? 'danger' : 'info'"
+              [pTooltip]="user.uid === currentUid() ? 'Cannot modify your own role' : (user.isAdmin ? 'Remove admin' : 'Make admin')"
+              [loading]="togglingUid() === user.uid"
+              [disabled]="user.uid === currentUid()"
+              (onClick)="toggleAdmin(user)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template #emptymessage>
+        <tr>
+          <td [attr.colspan]="isMobile() ? 4 : 5" class="text-center">No users found.</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</div>

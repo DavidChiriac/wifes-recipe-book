@@ -17,9 +17,11 @@ export abstract class RecipesClass {
     category: new FormControl<string[]>([]),
     minMinutes: new FormControl(),
     maxMinutes: new FormControl(),
+    authorId: new FormControl<string | null>(null),
+    authorName: new FormControl<string | null>(null),
   });
 
-  formIsEmpty = computed(() => this.requestParams().category.length === 0 && !this.requestParams().minMinutes && !this.requestParams().maxMinutes && !this.sortField() && this.searchTerm().length === 0);
+  formIsEmpty = computed(() => this.requestParams().category.length === 0 && !this.requestParams().minMinutes && !this.requestParams().maxMinutes && !this.sortField() && this.searchTerm().length === 0 && !this.requestParams().authorId);
 
   isMobile = inject(DeviceService).isMobile;
 
@@ -32,6 +34,8 @@ export abstract class RecipesClass {
     category: string[];
     minMinutes?: number;
     maxMinutes?: number;
+    authorId?: string;
+    authorName?: string;
   }>({
     pageNumber: 1,
     pageSize: 10,
@@ -98,13 +102,15 @@ export abstract class RecipesClass {
     this.errorMessage.set('');
   }
 
-  applyFilters(form: {category: string[], minMinutes: number, maxMinutes: number}): void {
+  applyFilters(form: {category: string[], minMinutes: number, maxMinutes: number, authorId?: string | null, authorName?: string | null}): void {
     this.filtersVisible.set(false);
     const filters = form;
     this.filtersForm = new FormGroup({
       category: new FormControl<string[]>(filters.category || []),
       minMinutes: new FormControl(filters.minMinutes || null),
       maxMinutes: new FormControl(filters.maxMinutes || null),
+      authorId: new FormControl<string | null>(filters.authorId || null),
+      authorName: new FormControl<string | null>(filters.authorName || null),
     });
 
     if (filters.category && filters.category.length > 0) {
@@ -115,6 +121,11 @@ export abstract class RecipesClass {
     }
     if (filters.maxMinutes) {
       this.requestParams.update(params => ({ ...params, maxMinutes: filters.maxMinutes }));
+    }
+    if (filters.authorId) {
+      this.requestParams.update(params => ({ ...params, authorId: filters.authorId ?? undefined, authorName: filters.authorName ?? undefined }));
+    } else {
+      this.requestParams.update(params => ({ ...params, authorId: undefined, authorName: undefined }));
     }
 
     this.cacheFilters();
@@ -130,7 +141,9 @@ export abstract class RecipesClass {
       first: 0,
       category: [],
       minMinutes: undefined,
-      maxMinutes: undefined
+      maxMinutes: undefined,
+      authorId: undefined,
+      authorName: undefined,
     });
     this.sortField.set(undefined);
     this.searchTerm.set('');

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, ElementRef, inject, signal, ViewChild } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { DeviceService } from '../shared/services/device.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -73,10 +73,32 @@ export class HomePageComponent {
     ).subscribe(recipes => {
       this.randomRecipes.set(this.normalizeRecipes(recipes as Record<string, IRecipe[] | undefined>));
       this.loading.set(false);
+      // Wait one tick for @if(!loading()) to render the categories DOM
+      setTimeout(() => this.updateScrollArrows(), 0);
     });
   }
 
   navigateWithCategory(category: string): void {
     this.router.navigate(['/collection'], { queryParams: { category } });
+  }
+
+  @ViewChild('categoriesScroll') categoriesScrollRef!: ElementRef<HTMLDivElement>;
+
+  canScrollLeft = signal(false);
+  canScrollRight = signal(false);
+
+  scrollCategories(direction: number): void {
+    this.categoriesScrollRef.nativeElement.scrollBy({ left: direction * 200, behavior: 'smooth' });
+  }
+
+  onCategoriesScroll(): void {
+    this.updateScrollArrows();
+  }
+
+  private updateScrollArrows(): void {
+    const el = this.categoriesScrollRef?.nativeElement;
+    if (!el) return;
+    this.canScrollLeft.set(el.scrollLeft > 2);
+    this.canScrollRight.set(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
   }
 }

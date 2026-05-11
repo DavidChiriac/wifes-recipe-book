@@ -48,7 +48,7 @@ service cloud.firestore {
     // ---- Users ----
     // A user can read/write only their own profile (incl. favourites).
     match /users/{userId} {
-      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
       allow create, update: if isSignedIn() && request.auth.uid == userId;
       allow delete: if false;
     }
@@ -64,8 +64,8 @@ service cloud.firestore {
 
     // ---- Admins collection (controls isAdmin()) ----
     match /admins/{uid} {
-      allow read: if isSignedIn() && request.auth.uid == uid;
-      allow write: if false;
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      allow write: if isAdmin();
     }
   }
 }

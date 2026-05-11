@@ -9,6 +9,7 @@ import { adminGuard } from './shared/guards/auth/admin.guard';
 import { RecipeEditGuard } from './shared/guards/auth/recipe-edit.guard';
 import { FavouriteRecipesComponent } from './favourite-recipes/favourite-recipes.component';
 import { ManageCategoriesComponent } from './manage-categories/manage-categories.component';
+import { ManageUsersComponent } from './manage-users/manage-users.component';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,11 @@ export const routes: Routes = [
   {
     path: 'manage-categories',
     component: ManageCategoriesComponent,
+    canActivate: [socialAuthGuard, adminGuard],
+  },
+  {
+    path: 'manage-users',
+    component: ManageUsersComponent,
     canActivate: [socialAuthGuard, adminGuard],
   },
 ];

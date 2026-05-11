@@ -15,7 +15,7 @@ export class DeviceService {
     if (!isPlatformBrowser(this.platformId)) return;
 
     this.breakpointObserver
-      .observe('(max-width: 767px)')
+      .observe('(max-width: 900px)')
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((state) => this.isMobile.set(state.matches));
   }

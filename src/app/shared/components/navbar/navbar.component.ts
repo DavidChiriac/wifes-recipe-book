@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, computed, inject, PLATFORM_ID } from '@angular/core';
+import { AfterViewInit, Component, computed, ElementRef, HostListener, inject, PLATFORM_ID, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -27,7 +27,21 @@ export class NavbarComponent implements AfterViewInit {
   private readonly userState = inject(UserStateService);
   private readonly platformId = inject(PLATFORM_ID);
 
+  private readonly elRef = inject(ElementRef);
   isMobile = inject(DeviceService).isMobile;
+
+  menuOpen = signal(false);
+
+  toggleMenu(): void {
+    this.menuOpen.update(v => !v);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.menuOpen() && !this.elRef.nativeElement.contains(event.target)) {
+      this.menuOpen.set(false);
+    }
+  }
 
   signedIn = computed(() => this.userState.isLoggedIn());
   isAdmin = computed(() => this.userState.isAdmin());
@@ -50,10 +64,9 @@ export class NavbarComponent implements AfterViewInit {
   private updateMenuItems(admin: boolean): void {
     const base: MenuItem[] = [
       { label: 'My Recipes', routerLink: 'my-recipes' },
-      { label: 'Favourite Recipes', routerLink: 'favourite-recipes' },
     ];
     if (admin) {
-      base.push({ label: 'Categories', routerLink: 'manage-categories' });
+      base.push({ label: 'Categories', routerLink: 'manage-categories' }, { label: 'Users', routerLink: 'manage-users' });
     }
     base.push({ label: 'Sign Out', command: () => this.signOut() });
     this.items = base;

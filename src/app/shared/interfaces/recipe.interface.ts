@@ -8,7 +8,7 @@ export interface IRecipe {
   images?: { url: string; id: string; name: string }[];
   minutes?: number;
   documentId?: string;
-  author?: {documentId: string};
+  author?: {documentId: string; displayName?: string};
   totalCalories?: number;
   isFavourite?: boolean;
 }

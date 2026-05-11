@@ -3,7 +3,7 @@
 .recipe {
   position: relative;
   width: 100%;
-  height: calc(100vh - 55px);
+  height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
@@ -21,7 +21,7 @@
     .presentation {
       width: 100%;
       height: 100%;
-      padding: 20px 250px;
+      padding: 24px 250px;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -34,17 +34,24 @@
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.85);
-        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(15, 15, 26, 0.6);
+        backdrop-filter: blur(8px);
         color: white;
         cursor: pointer;
         font-size: 1rem;
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(0, 212, 255, 0.2);
+          border-color: vars.$accent-cyan;
+        }
       }
 
       &.black-text .back-button {
-        border-color: rgba(0, 0, 0, 0.5);
-        background: rgba(255, 255, 255, 0.6);
-        color: #2d2d3f;
+        border-color: vars.$border-accent;
+        background: vars.$bg-surface;
+        color: vars.$accent-cyan;
       }
 
       .bottom {
@@ -52,14 +59,29 @@
 
         h1 {
           color: white;
-          font-size: 4rem;
+          font-size: 3.5rem;
+          font-weight: 700;
+          letter-spacing: -0.03em;
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
         }
 
         .category {
-          padding: 10px 20px;
-          background-color: white;
+          padding: 8px 16px;
+          background: rgba(15, 15, 26, 0.6);
+          backdrop-filter: blur(8px);
           border-radius: 20px;
-          border: 1px solid black;
+          border: 1px solid vars.$border-accent;
+          color: vars.$accent-cyan;
+          font-size: 0.85rem;
+          font-weight: 500;
+        }
+
+        .author-byline {
+          margin: 0 0 0.75rem;
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.7);
+          font-style: italic;
+          letter-spacing: 0.01em;
         }
 
         .tag {
@@ -69,27 +91,34 @@
           padding: 10px;
           text-align: center;
           color: white;
-          border: 1px solid white;
-          background-color: rgb(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(15, 15, 26, 0.6);
+          backdrop-filter: blur(8px);
         }
       }
 
-      &.black-text .bottom h1{
-        color: black;
+      &.black-text .bottom h1 {
+        color: vars.$text-primary;
+        text-shadow: none;
+      }
+
+      &.black-text .bottom .author-byline {
+        color: vars.$text-secondary;
       }
     }
   }
 
   .content {
-    padding: 20px 250px;
+    padding: 24px 250px;
     display: flex;
     padding-bottom: 0;
-    border-bottom: 1px solid vars.$crackedPepper;
+    border-bottom: 1px solid vars.$border-subtle;
 
     .general {
       width: 50%;
       padding: 20px;
-      border-right: 1px solid vars.$crackedPepper;
+      border-right: 1px solid vars.$border-subtle;
+      color: vars.$text-primary;
 
       .cover-image {
         width: 100%;
@@ -98,6 +127,7 @@
         img {
           width: 100%;
           object-fit: contain;
+          border-radius: 12px;
         }
       }
     }
@@ -106,21 +136,26 @@
       width: 50%;
       padding: 20px;
       padding-left: 50px;
-      border-left: 1px solid vars.$crackedPepper;
+      border-left: 1px solid vars.$border-subtle;
+      color: vars.$text-primary;
     }
   }
 
   .preparation {
-    padding: 20px 250px;
+    padding: 24px 250px;
+    color: vars.$text-primary;
 
     .preparation-step {
-      border: 1px solid vars.$crackedPepper;
+      border: 1px solid vars.$border-accent;
       width: 50px;
       height: 50px;
       text-align: center;
       margin: 0;
       border-radius: 50%;
       line-height: 45px;
+      color: vars.$accent-cyan;
+      background: vars.$bg-surface;
+      font-weight: 600;
     }
   }
 
@@ -137,6 +172,36 @@
     .image {
       width: 33%;
       max-height: 500px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  }
+
+  @media (max-width: 1400px) {
+    .header .presentation,
+    .content,
+    .preparation { padding-left: 80px; padding-right: 80px; }
+  }
+
+  @media (max-width: 1100px) {
+    .header .presentation,
+    .content,
+    .preparation { padding-left: 32px; padding-right: 32px; }
+
+    .content {
+      flex-direction: column;
+
+      .general {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid vars.$border-subtle;
+      }
+
+      .ingredients {
+        width: 100%;
+        border-left: none;
+        padding-left: 20px;
+      }
     }
   }
 }
@@ -144,7 +209,7 @@
 .recipe-mobile {
   position: relative;
   width: 100%;
-  height: calc(100vh - 55px);
+  height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
@@ -162,25 +227,54 @@
     .presentation {
       width: 100%;
       height: 100%;
-      padding: 10px 20px;
+      padding: 16px 20px;
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      .back-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(15, 15, 26, 0.6);
+        backdrop-filter: blur(8px);
+        color: white;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+      }
+
+      &.black-text .back-button {
+        border-color: vars.$border-accent;
+        background: vars.$bg-surface;
+        color: vars.$accent-cyan;
+      }
 
       .bottom {
         margin-bottom: 100px;
 
         h1 {
           color: white;
-          font-size: 4rem;
+          font-size: 3rem;
+          font-weight: 700;
+          letter-spacing: -0.03em;
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
         }
 
         .category {
-          padding: 10px 20px;
-          background-color: white;
+          padding: 8px 16px;
+          background: rgba(15, 15, 26, 0.6);
+          backdrop-filter: blur(8px);
           border-radius: 20px;
-          border: 1px solid black;
+          border: 1px solid vars.$border-accent;
+          color: vars.$accent-cyan;
+          font-size: 0.8rem;
+          font-weight: 500;
         }
 
         .tag {
@@ -190,41 +284,48 @@
           padding: 10px;
           text-align: center;
           color: white;
-          border: 1px solid white;
-          background-color: rgb(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          background: rgba(15, 15, 26, 0.6);
+          backdrop-filter: blur(8px);
         }
       }
 
-      &.black-text .bottom h1{
-        color: black;
+      &.black-text .bottom h1 {
+        color: vars.$text-primary;
+        text-shadow: none;
       }
     }
   }
 
   .content {
-    padding: 10px 20px;
+    padding: 16px 20px;
     display: flex;
     padding-bottom: 0;
-    border-bottom: 1px solid vars.$crackedPepper;
+    border-bottom: 1px solid vars.$border-subtle;
 
     .ingredients {
       width: 100%;
       padding: 20px;
-      border-left: 1px solid vars.$crackedPepper;
+      border-left: 1px solid vars.$border-subtle;
+      color: vars.$text-primary;
     }
   }
 
   .preparation {
-    padding: 10px 20px;
+    padding: 16px 20px;
+    color: vars.$text-primary;
 
     .preparation-step {
-      border: 1px solid vars.$crackedPepper;
+      border: 1px solid vars.$border-accent;
       width: 50px;
       height: 50px;
       text-align: center;
       margin: 0;
       border-radius: 50%;
       line-height: 45px;
+      color: vars.$accent-cyan;
+      background: vars.$bg-surface;
+      font-weight: 600;
     }
   }
 
@@ -242,6 +343,8 @@
     .image {
       min-width: 100%;
       max-height: 300px;
+      border-radius: 12px;
+      overflow: hidden;
     }
   }
 }

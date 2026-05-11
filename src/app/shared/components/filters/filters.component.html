@@ -10,6 +10,11 @@
         <input id="minutes" pInputText type="number" formControlName="maxMinutes" class="w-6" placeholder="Max" />
         </div>
 
+        @if (authorOptions().length > 0) {
+          <label for="author">Author</label>
+          <p-select id="author" formControlName="authorId" [options]="authorOptions()" optionLabel="displayName" optionValue="uid" placeholder="All authors" [showClear]="true" />
+        }
+
         <p-button label="Apply Filters" type="submit" class="apply-filters-button"/>
     </div>
     </form>

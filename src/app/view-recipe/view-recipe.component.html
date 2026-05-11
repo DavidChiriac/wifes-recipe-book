@@ -29,8 +29,11 @@
             </div>
 
             <div class="bottom">
-                <h1 class="mb-3">{{recipe()?.title}}</h1>
-                <div class="flex gap-2">
+                <h1 class="mb-1">{{recipe()?.title}}</h1>
+                @if (recipe()?.author?.displayName) {
+                  <p class="author-byline">by {{recipe()?.author?.displayName}}</p>
+                }
+                <div class="flex gap-2 mt-3">
                     @for (category of recipe()?.categories; track $index) {
                         <div class="category flex align-items-center">
                             {{category.name}}

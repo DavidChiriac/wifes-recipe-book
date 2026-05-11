@@ -1,36 +1,44 @@
+@use "sass:color";
 @use "./variables.scss" as vars;
 
 .p-button {
-  font-size: 1rem;
-  color: vars.$whiteFlour;
-  border: none;
-  background: transparent;
-  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: vars.$text-primary;
+  border: 1px solid vars.$border-subtle;
+  background: vars.$bg-surface;
+  border-radius: 8px;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: vars.$whiteFlour;
+    background: vars.$bg-surface-hover;
+    border-color: vars.$border-accent;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.15);
 
     .p-button-label {
-      color: vars.$crackedPepper;
+      color: vars.$accent-cyan;
     }
   }
 
   &:focus-visible {
-    outline: none;
+    outline: 2px solid vars.$accent-cyan;
+    outline-offset: 2px;
   }
 }
 
 .add-recipe .p-button {
-  background: vars.$saffronThread;
-  color: vars.$crackedPepper;
+  background: vars.$accent-gradient;
+  color: #fff;
   border: none;
+  font-weight: 600;
 
   .p-button-label {
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &:hover {
-    background: vars.$whiteFlour;
+    opacity: 0.9;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.35);
   }
 }
 
@@ -39,148 +47,148 @@
 }
 
 .sign-in .p-button {
-  background: vars.$crackedPepper;
-  color: vars.$whiteFlour;
+  background: vars.$accent-cyan;
+  color: vars.$bg-primary;
   border: none;
+  font-weight: 600;
 
   .p-button-label {
-    font-weight: 700;
+    font-weight: 600;
   }
 
   &:hover {
-    background: vars.$whiteFlour;
-    color: vars.$crackedPepper;
+    background: color.adjust(#22d3ee, $lightness: 8%);
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.45);
   }
 }
 
 .submit-recipe .p-button {
-  background: vars.$crackedPepper;
+  background: vars.$accent-gradient;
+  color: #fff;
+  border: none;
 
   &:hover {
-    background: vars.$farro;
+    opacity: 0.9;
+    box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
   }
 }
 
 .new-ingredient .p-button {
   height: 34px;
   padding: 0.8rem 1rem;
-  background: vars.$crackedPepper;
-  height: 1.3rem;
+  background: vars.$accent-violet;
+  color: #fff;
+  border: none;
 
   &:hover {
-    background: vars.$farro;
+    background: color.adjust(#a78bfa, $lightness: 6%);
   }
 }
 
 .delete-ingredient .p-button {
   width: 34px;
   height: 34px;
-  background: vars.$herbalWash;
+  background: vars.$bg-surface-hover;
+  color: vars.$danger;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 
   &:hover {
-    background: vars.$farro;
+    background: rgba(239, 68, 68, 0.15);
   }
 }
 
 .search .p-button,
 .clear .p-button {
-  color: vars.$whiteFlour;
-  background: vars.$herbalWash;
+  color: vars.$text-primary;
+  background: vars.$bg-surface;
+  border: 1px solid vars.$border-accent;
   height: 36px;
 
   &:hover {
-    color: vars.$crackedPepper;
-    background: vars.$whiteFlour;
-    border: 1px solid vars.$herbalWash;
+    background: vars.$bg-surface-hover;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.15);
   }
 }
 
 .edit-button .p-button {
-  color: vars.$crackedPepper;
-  border: 1px solid vars.$crackedPepper;
+  color: vars.$accent-cyan;
+  border: 1px solid vars.$border-accent;
+  background: transparent;
 
   &:hover {
-    background: vars.$herbalWash;
-    color: vars.$whiteFlour;
-    border: none;
+    background: rgba(34, 211, 238, 0.12);
   }
 }
 
 .delete-button .p-button {
-  background: vars.$crackedPepper;
-  color: vars.$whiteFlour;
+  background: transparent;
+  color: vars.$danger;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 
   &:hover {
-    background: vars.$saffronThread;
-    border: 1px solid vars.$crackedPepper;
-    color: vars.$crackedPepper;
+    background: rgba(239, 68, 68, 0.1);
   }
 }
 
 .mobile .p-button {
-  font-size: 1rem;
-  padding: 0.4rem 0.4rem;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
 
-  .p-button-label{
+  .p-button-label {
     height: 1rem;
   }
 }
 
-.delete-section .p-button{
-  background-color: vars.$herbalWash;
-  color: vars.$whiteFlour;
+.delete-section .p-button {
+  background: transparent;
+  color: vars.$danger;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 
-  &:hover{
-    color: vars.$herbalWash;
-    background: vars.$whiteFlour;
+  &:hover {
+    background: rgba(239, 68, 68, 0.1);
   }
 }
 
 .outline .p-button {
-  border: 1px solid vars.$crackedPepper;
+  border: 1px solid vars.$border-accent;
   border-radius: 20px;
   padding: 10px 20px;
-  color: vars.$crackedPepper;
+  color: vars.$accent-cyan;
+  background: transparent;
 
-  &:hover{
-    background: vars.$herbalWash;
+  &:hover {
+    background: rgba(34, 211, 238, 0.1);
+    box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
   }
 }
 
-.mobile.outline .p-button{
+.mobile.outline .p-button {
   padding: 5px 10px;
 }
 
 .filters-button {
-  background: vars.$herbalWash;
-  color: vars.$whiteFlour;
-  border-radius: 6px;
+  background: vars.$bg-surface;
+  color: vars.$text-primary;
+  border-radius: 8px;
+  border: 1px solid vars.$border-accent;
 
-  .p-button{
+  .p-button {
     &:hover {
-      background: vars.$farro;
-      color: black;
-
-      .p-button-label {
-        color: black;
-      }
+      background: vars.$bg-surface-hover;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.15);
     }
   }
 }
 
 .clear-filters {
-  background: vars.$crackedPepper;
-  color: vars.$whiteFlour;
-  border-radius: 6px;
+  background: vars.$bg-surface;
+  color: vars.$text-primary;
+  border-radius: 8px;
+  border: 1px solid vars.$border-subtle;
 
-  .p-button{
+  .p-button {
     &:hover {
-      background: vars.$farro;
-      color: black;
-
-      .p-button-label {
-        color: black;
-      }
+      background: vars.$bg-surface-hover;
     }
   }
 }

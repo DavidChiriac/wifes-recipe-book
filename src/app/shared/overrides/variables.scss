@@ -1,5 +1,37 @@
-$crackedPepper: #898AC4;
-$whiteFlour: #FFF2E0;
-$herbalWash: #C0C9EE;
-$saffronThread: #FFF2E0;
-$farro: #c4a787;
+// === Fresh & Bright Theme ===
+// Backgrounds
+$bg-primary: #fdf8f0;      // warm cream white
+$bg-surface: #ffffff;      // pure white card surface
+$bg-surface-hover: #fff7ed; // warm orange tint on hover
+$bg-elevated: #fef3c7;     // soft amber elevated
+
+// Accents
+$accent-cyan: #0ea5e9;     // sky-500 – vivid bright blue
+$accent-violet: #f97316;   // orange-500 – warm, food-inspired
+$accent-gradient: linear-gradient(135deg, #f97316, #ec4899);
+
+// Text
+$text-primary: #1c1917;
+$text-secondary: #78716c;  // warm stone for contrast on cream
+$text-muted: #a8a29e;
+$text-white: #e2e8f0;      // soft blue-white, readable on dark navy overlays
+
+// Borders
+$border-subtle: rgba(120, 53, 15, 0.1); // warm amber tint
+$border-accent: rgba(249, 115, 22, 0.4);
+$border-glow: rgba(249, 115, 22, 0.65);
+
+// Glass effect
+$glass-bg: rgba(255, 255, 255, 0.8);
+$glass-border: rgba(249, 115, 22, 0.2);
+
+// Danger
+$danger: #ef4444;
+$danger-hover: #dc2626;
+
+// Legacy aliases (for templates that still reference old names)
+$crackedPepper: $accent-violet;
+$whiteFlour: $bg-primary;
+$herbalWash: $accent-cyan;
+$saffronThread: $bg-surface;
+$farro: $accent-violet;

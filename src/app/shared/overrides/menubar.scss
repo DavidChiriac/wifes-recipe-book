@@ -6,7 +6,7 @@
   border: none;
 
   .p-menubar-button {
-    color: vars.$whiteFlour;
+    color: vars.$text-white;
 
     &:focus-visible {
       outline: none;
@@ -14,6 +14,7 @@
 
     &:hover {
       background: transparent;
+      color: vars.$accent-cyan;
     }
   }
 
@@ -21,19 +22,24 @@
     left: -200%;
     width: 115px;
     padding: 0;
+    background: vars.$bg-surface;
+    border: 1px solid vars.$border-subtle;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 
     .p-menubar-item {
       .p-menubar-item-content {
         .p-menubar-item-link {
           .p-menubar-item-label {
-            font-size: 1rem;
+            font-size: 0.875rem;
+            color: vars.$text-primary;
           }
         }
 
         .p-menubar-item-link-active {
-          background: vars.$herbalWash;
+          background: vars.$bg-surface-hover;
           .p-menubar-item-label {
-            color: vars.$whiteFlour;
+            color: vars.$accent-cyan;
           }
         }
       }

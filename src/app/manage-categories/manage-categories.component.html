@@ -7,12 +7,12 @@
   @if (loading()) {
     <p>Loading...</p>
   } @else {
-    <p-table [value]="categories()" [tableStyle]="{'min-width': '30rem'}" styleClass="p-datatable-striped">
+    <p-table [value]="categories()">
       <ng-template #header>
         <tr>
           <th id="icon-column">Icon</th>
           <th id="name-column">Name</th>
-          <th id="actions-column" style="width: 10rem">Actions</th>
+          <th id="actions-column">Actions</th>
         </tr>
       </ng-template>
       <ng-template #body let-category>

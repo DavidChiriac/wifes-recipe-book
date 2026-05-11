@@ -1,10 +1,10 @@
 @use "./shared/overrides/variables.scss" as vars;
 
 .navbar-spacer {
-  height: calc(55px + env(safe-area-inset-top, 0px));
+  height: calc(60px + env(safe-area-inset-top, 0px));
 }
 
 .router-outlet {
   min-height: calc(100vh - 60px);
-  background: vars.$whiteFlour;
+  background: vars.$bg-primary;
 }

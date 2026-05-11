@@ -4,25 +4,27 @@
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
 
   label {
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    color: #2d2d3f;
+    color: vars.$text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 }
 
 .new-recipe {
-  padding: 20px 50px;
+  padding: 24px 50px;
   height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
 
     .back-button {
       display: flex;
@@ -31,17 +33,26 @@
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 50%;
-      border: 2px solid vars.$crackedPepper;
-      background: transparent;
-      color: vars.$crackedPepper;
+      border: 1px solid vars.$border-accent;
+      background: vars.$bg-surface;
+      color: vars.$accent-cyan;
       cursor: pointer;
       font-size: 1rem;
       flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 212, 255, 0.1);
+        box-shadow: 0 0 12px rgba(0, 212, 255, 0.2);
+      }
     }
 
     .title {
-      font-size: 3rem;
+      font-size: 2.5rem;
+      font-weight: 700;
       margin: 0;
+      color: vars.$text-primary;
+      letter-spacing: -0.03em;
     }
   }
 
@@ -60,6 +71,7 @@
         height: 90%;
         width: fit-content;
         object-fit: contain;
+        border-radius: 8px;
       }
     }
   }
@@ -71,17 +83,42 @@
 }
 
 .new-recipe-mobile {
-  padding: 10px 20px;
+  padding: 16px 20px;
   height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
-    text-align: center;
-    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 1px solid vars.$border-accent;
+      background: vars.$bg-surface;
+      color: vars.$accent-cyan;
+      cursor: pointer;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 212, 255, 0.1);
+      }
+    }
 
     .title {
-      font-size: 2rem;
+      font-size: 1.75rem;
+      font-weight: 700;
       margin: 0;
+      color: vars.$text-primary;
+      letter-spacing: -0.02em;
     }
   }
 
@@ -100,6 +137,7 @@
         height: 90%;
         width: fit-content;
         object-fit: contain;
+        border-radius: 8px;
       }
     }
   }
@@ -110,9 +148,10 @@
   }
 }
 
-.dialog-image{
-  img{
+.dialog-image {
+  img {
     width: 100%;
     object-fit: contain;
+    border-radius: 8px;
   }
 }

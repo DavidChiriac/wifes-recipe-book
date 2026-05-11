@@ -2,39 +2,51 @@
 
 .homepage {
   width: 100%;
-  height: calc(100vh - 55px);
+  height: calc(100vh - 60px);
   margin: auto;
-  padding: 10px 250px;
+  padding: 20px 250px;
   overflow: auto;
+  @media (max-width: 1400px) { padding: 20px 80px; }
+  @media (max-width: 1100px) { padding: 20px 32px; }
 
-  .categories{
-    margin-top: 4rem;
+  .categories-wrapper {
+    // desktop: no fade needed
+  }
+
+  .categories {
+    margin-top: 3rem;
     width: 100%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 1%;
 
-    .category{
+    .category {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 0.5rem;
       flex-wrap: wrap;
-      border-radius: 20px;
+      border-radius: 16px;
       flex-basis: 9%;
-      padding: 10px 10px 20px;
+      padding: 12px 12px 20px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      color: vars.$text-secondary;
 
-      &:hover{
-        background: vars.$herbalWash;
+      &:hover {
+        background: vars.$bg-surface;
+        border-color: vars.$border-accent;
         cursor: pointer;
+        color: vars.$accent-cyan;
+        box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
       }
 
-      .icon{
+      .icon {
         width: 80px;
         height: 80px;
-        img{
+        img {
           width: 100%;
           height: 100%;
           object-fit: scale-down;
@@ -46,38 +58,78 @@
 
 .homepage-mobile {
   width: 100%;
-  height: calc(100vh - 55px);
-  padding: 10px;
+  height: calc(100vh - 60px);
+  padding: 16px;
   overflow: auto;
 
-  .categories{
-    margin-top: 3rem;
+  .categories-wrapper {
+    position: relative;
+    width: 100%;
+
+    .cat-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid vars.$border-accent;
+      background: vars.$bg-surface;
+      color: vars.$accent-cyan;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: background 0.2s ease, transform 0.15s ease;
+
+      &:active {
+        transform: translateY(-50%) scale(0.9);
+      }
+
+      &.cat-arrow-left  { left: 0; }
+      &.cat-arrow-right { right: 0; }
+    }
+  }
+
+  .categories {
+    margin-top: 2rem;
     width: 100%;
     display: flex;
     justify-content: start;
-    overflow: auto;
+    overflow-x: auto;
+    scrollbar-width: none;
     gap: 10.25%;
     row-gap: 1rem;
+    padding: 4px 40px;
 
-    .category{
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
       gap: 0.5rem;
       flex-wrap: wrap;
-      border-radius: 20px;
+      border-radius: 12px;
       flex-basis: 24%;
+      color: vars.$text-secondary;
+      transition: all 0.2s ease;
 
-      &:hover{
-        background: vars.$herbalWash;
+      &:hover {
+        color: vars.$accent-cyan;
         cursor: pointer;
       }
 
-      .icon{
+      .icon {
         width: 60px;
         height: 60px;
-        img{
+        img {
           width: 100%;
           height: 100%;
           object-fit: scale-down;
@@ -88,37 +140,37 @@
 }
 
 .recommended-recipes {
-  margin: auto;
-  flex-wrap: wrap;
-  margin-top: 1rem;
   display: flex;
-  gap: 1.33%;
-  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 16px;
+  margin-top: 2rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: vars.$border-accent transparent;
+  padding-bottom: 8px;
 
-  .recipe{
-    display: flex;
-    flex-basis: 24%;
-    width: 100%;
+  .recipe {
+    flex: 0 0 260px;
   }
+}
+
+.recommended-recipes-container-mobile {
+  width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: vars.$border-accent transparent;
 }
 
 .recommended-recipes-mobile {
-  margin: auto;
-  margin-top: 1rem;
   display: flex;
-  gap: 1.33%;
-  justify-content: space-between;
-  width: 150%;
-  overflow: auto;
+  gap: 12px;
+  margin-top: 1.5rem;
+  padding-bottom: 6px;
+  width: max-content;
 
-  .recipe{
-    display: flex;
-    flex-basis: 35%;
+  .recipe {
+    width: 240px;
+    flex-shrink: 0;
   }
-}
-
-.recommended-recipes-container-mobile{
-  width: 100%;
-  overflow: auto;
 }
 

@@ -1,9 +1,22 @@
 @use './variables.scss' as vars;
 
-.mobile.p-inputtext{
-    width: 150px;
+.p-inputtext {
+  background: vars.$bg-surface;
+  color: vars.$text-primary;
+  border: 1px solid vars.$border-subtle;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: vars.$text-muted;
+  }
+
+  &:enabled:focus {
+    border-color: vars.$accent-cyan;
+    box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.15);
+  }
 }
 
-.p-inputtext:enabled:focus{
-    border-color: vars.$crackedPepper;
+.mobile.p-inputtext {
+  width: 150px;
 }

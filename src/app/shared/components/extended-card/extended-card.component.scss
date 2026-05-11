@@ -4,13 +4,17 @@
   display: flex;
   justify-content: space-between;
   height: 100px;
-  border-radius: 20px;
+  border-radius: 12px;
   width: 100%;
   overflow: hidden;
-  border: 1px solid vars.$crackedPepper;
+  border: 1px solid vars.$border-subtle;
+  background: vars.$bg-surface;
+  transition: all 0.2s ease;
 
-  &:hover{
-    background: vars.$herbalWash;
+  &:hover {
+    border-color: vars.$border-accent;
+    background: vars.$bg-surface-hover;
+    box-shadow: 0 4px 16px rgba(0, 212, 255, 0.08);
   }
 
   .details {
@@ -30,7 +34,7 @@
       }
     }
 
-    .title{
+    .title {
       display: flex;
       align-items: center;
       width: calc(100% - 200px);
@@ -38,6 +42,8 @@
       word-break: break-all;
       padding-block: 10px;
       overflow-y: auto;
+      color: vars.$text-primary;
+      font-weight: 500;
     }
   }
 
@@ -56,7 +62,13 @@
   border-radius: 10px;
   width: 100%;
   overflow: hidden;
-  border: 1px solid vars.$crackedPepper;
+  border: 1px solid vars.$border-subtle;
+  background: vars.$bg-surface;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: vars.$border-accent;
+  }
 
   .details {
     display: flex;
@@ -72,6 +84,11 @@
         width: 100%;
         object-fit: cover;
       }
+    }
+
+    .title {
+      color: vars.$text-primary;
+      font-size: 0.875rem;
     }
   }
 

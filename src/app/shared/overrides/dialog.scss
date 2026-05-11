@@ -1,3 +1,8 @@
-.p-dialog{
-    word-break: break-all;
+.p-dialog {
+  word-break: break-all;
+  background: #172038;
+  border: 1px solid rgba(148, 197, 253, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 16px 64px rgba(0, 0, 0, 0.6);
+  color: #ffffff;
 }

@@ -1,15 +1,20 @@
 @use "../shared/overrides/variables.scss" as vars;
 
 .recipe-collection {
-  height: calc(100vh - 55px);
+  height: calc(100vh - 60px);
   padding: 20px 250px;
   overflow: auto;
+  @media (max-width: 1400px) { padding: 20px 80px; }
+  @media (max-width: 1100px) { padding: 20px 32px; }
 
   .header {
     text-align: center;
     .title {
-      font-size: 3rem;
+      font-size: 2.5rem;
+      font-weight: 700;
       margin-top: 0;
+      color: vars.$text-primary;
+      letter-spacing: -0.03em;
     }
   }
 
@@ -24,25 +29,38 @@
     gap: 1.33%;
     row-gap: 2rem;
     display: flex;
+
+    @media (max-width: 900px) {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: vars.$border-accent transparent;
+      padding-bottom: 8px;
+    }
   }
 
-  .recipe{
+  .recipe {
     display: flex;
     flex-basis: 24%;
     width: 100%;
+    @media (max-width: 1100px) { flex-basis: 31%; }
+    @media (max-width: 900px)  { flex: 0 0 260px; }
   }
 }
 
 .recipe-collection-mobile {
-  padding: 10px 20px;
-  height: calc(100vh - 55px);
+  padding: 16px 20px;
+  height: calc(100vh - 60px);
   overflow: auto;
 
   .header {
     text-align: center;
     .title {
-      font-size: 2rem;
+      font-size: 1.75rem;
+      font-weight: 700;
       margin-top: 0;
+      color: vars.$text-primary;
+      letter-spacing: -0.02em;
     }
   }
 
@@ -59,7 +77,7 @@
     display: flex;
   }
 
-  .recipe{
+  .recipe {
     display: flex;
     flex-basis: 49%;
     width: 100%;

@@ -8,6 +8,9 @@
   </div>
   <div class="navigation">
     @if (signedIn()) {
+      <a class="nav-heart" [routerLink]="'/favourite-recipes'" routerLinkActive="active" pTooltip="Favourite Recipes" tooltipPosition="bottom" aria-label="Favourite Recipes">
+        <i class="pi pi-heart"></i>
+      </a>
       <p-button
         class="add-recipe"
         [ngClass]="{ mobile: isMobile }"
@@ -32,19 +35,19 @@
           [routerLink]="'/my-recipes'"
           routerLinkActive="active"
         />
-        <p-button
-          class="my-recipes"
-          [ngClass]="{ mobile: isMobile }"
-          label="Favourite Recipes"
-          [routerLink]="'/favourite-recipes'"
-          routerLinkActive="active"
-        />
         @if (isAdmin()) {
           <p-button
             class="my-recipes"
             [ngClass]="{ mobile: isMobile }"
             label="Categories"
             [routerLink]="'/manage-categories'"
+            routerLinkActive="active"
+          />
+          <p-button
+            class="my-recipes"
+            [ngClass]="{ mobile: isMobile }"
+            label="Users"
+            [routerLink]="'/manage-users'"
             routerLinkActive="active"
           />
         }
@@ -55,7 +58,23 @@
           (onClick)="signOut()"
         />
       } @else {
-        <p-menubar [model]="items" />
+        <div class="mobile-nav">
+          <button class="hamburger-btn" (click)="toggleMenu()" aria-label="Menu">
+            <i class="pi" [class.pi-bars]="!menuOpen()" [class.pi-times]="menuOpen()"></i>
+          </button>
+          @if(menuOpen()) {
+            <div class="mobile-dropdown">
+              @for(item of items; track $index) {
+                @if(item.routerLink) {
+                  <a class="mobile-nav-item" [routerLink]="item.routerLink" (click)="menuOpen.set(false)">{{item.label}}</a>
+                } @else {
+                  <button class="mobile-nav-item" (click)="item.command && item.command({}); menuOpen.set(false)">{{item.label}}</button>
+                }
+              }
+            </div>
+          }
+        </div>
+
       } 
     }
 

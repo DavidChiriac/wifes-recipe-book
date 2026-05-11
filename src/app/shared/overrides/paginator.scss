@@ -1,5 +1,14 @@
 @use "./variables.scss" as vars;
 
 .p-paginator {
-  background: vars.$whiteFlour;
+  background: vars.$bg-primary;
+  color: vars.$text-primary;
+  border: none;
+
+  .p-paginator-page {
+    &.p-highlight {
+      background: vars.$accent-cyan;
+      color: vars.$bg-primary;
+    }
+  }
 }
