@@ -10,10 +10,17 @@ html {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #0C1220;
 }
 
 body {
   margin: 0;
+  background: #0C1220;
+}
+
+// Loading spinner color
+.pi-spin.pi-spinner {
+  color: #1c1917;
 }
 
 body::before {
@@ -23,6 +30,7 @@ body::before {
   left: 0;
   right: 0;
   height: env(safe-area-inset-top, 0px);
+  background: #0C1220;
   z-index: 9999;
 }
 
@@ -33,6 +41,7 @@ body::after {
   left: 0;
   right: 0;
   height: env(safe-area-inset-bottom, 0px);
+  background: #0C1220;
   z-index: 9999;
 }
 

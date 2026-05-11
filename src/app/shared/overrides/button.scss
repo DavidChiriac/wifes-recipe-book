@@ -187,6 +187,7 @@
   border: 1px solid vars.$border-subtle;
 
   .p-button {
+    padding: 0.7rem;
     &:hover {
       background: vars.$bg-surface-hover;
     }

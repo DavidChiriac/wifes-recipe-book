@@ -1,7 +1,7 @@
 @use "../shared/overrides/variables.scss" as vars;
 
 .recipe-collection {
-  height: calc(100vh - 60px);
+  height: 100%;
   padding: 20px 250px;
   overflow: auto;
   @media (max-width: 1400px) { padding: 20px 80px; }
@@ -50,7 +50,7 @@
 
 .recipe-collection-mobile {
   padding: 16px 20px;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
 
   .header {

@@ -2,7 +2,7 @@
 
 .homepage {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: 100%;
   margin: auto;
   padding: 20px 250px;
   overflow: auto;
@@ -58,7 +58,7 @@
 
 .homepage-mobile {
   width: 100%;
-  height: calc(100vh - 60px);
+  height: 100%;
   padding: 16px;
   overflow: auto;
 
@@ -103,7 +103,6 @@
     scrollbar-width: none;
     gap: 10.25%;
     row-gap: 1rem;
-    padding: 4px 40px;
 
     &::-webkit-scrollbar {
       display: none;

@@ -2,7 +2,7 @@
 
 .recipe-collection {
   padding: 20px 250px;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
   @media (max-width: 1400px) { padding: 20px 80px; }
   @media (max-width: 1100px) { padding: 20px 32px; }
@@ -39,7 +39,7 @@
 
 .recipe-collection-mobile {
   padding: 16px 20px;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
 
   .recipes-container {

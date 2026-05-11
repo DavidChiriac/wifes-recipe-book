@@ -4,16 +4,16 @@
     }
     <span class="input-icon-left">
         @if (searchTerm().length > 0) {
-            <i class="pi pi-times cursor-pointer" (click)="searchTerm.set('')"></i>
+            <i class="pi pi-times cursor-pointer" (click)="searchTerm.set('')" onkeydown=""></i>
         } @else {
             <i class="pi pi-search cursor-pointer"></i>
         }
         <input type="text" class="h-full global-inputtext" [ngClass]="{mobile: isMobile}" pInputText placeholder="Search" 
                 [value]="searchTerm()" (keydown.enter)="updateSearchTerm($event)"/>
     </span>
-    <p-button class="flex align-items-center cursor-pointer filters-button ml-auto mr-2" (click)="filtersVisible.set(true)" icon="pi pi-filter" [label]="isMobile() ? '' : 'Filters'"/>
+    <p-button class="flex align-items-center cursor-pointer filters-button ml-auto mr-2" (click)="filtersVisible.set(true)" icon="pi pi-filter" [label]="isMobile() ? '' : 'Filters'" onkeydown=""/>
     @if(!formIsEmpty()){
-        <p-button class="flex align-items-center cursor-pointer clear-filters" (click)="clearFilters.emit()" icon="pi pi-times" label="Clear Filters" severity="secondary" [ngClass]="{mobile: isMobile()}"/>
+        <p-button class="flex align-items-center cursor-pointer clear-filters" (click)="clearFilters.emit()" icon="pi pi-times" label="Clear Filters" severity="secondary" [ngClass]="{mobile: isMobile()}" onkeydown=""/>
     }
 </div>
 @if(isMobile()){

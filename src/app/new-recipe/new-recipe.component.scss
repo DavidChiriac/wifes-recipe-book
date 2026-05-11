@@ -17,7 +17,7 @@
 
 .new-recipe {
   padding: 24px 50px;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
 
   .header {
@@ -84,7 +84,7 @@
 
 .new-recipe-mobile {
   padding: 16px 20px;
-  height: calc(100vh - 60px);
+  height: 100%;
   overflow: auto;
 
   .header {
