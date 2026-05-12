@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, computed, DestroyRef, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -107,6 +107,10 @@ export class NewRecipeComponent {
   errorModalVisible = false;
   errorMessage = '';
 
+  isEditMode = signal(false);
+  activePreparationPanel = signal<number | null>(0);
+  loading = signal(true);
+
   categoryOptions = signal<{name: string; id: string}[]>([]);
 
   constructor() {
@@ -115,6 +119,9 @@ export class NewRecipeComponent {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe((categories) => {
       this.categoryOptions.set(categories);
+      if (!this.id()) {
+        this.loading.set(false);
+      }
     });
 
     effect(() => {
@@ -125,6 +132,8 @@ export class NewRecipeComponent {
   }
 
   populateForm(): void {
+    this.isEditMode.set(true);
+    this.activePreparationPanel.set(null);
     this.recipesService
       .getSingleRecipe(this.id())
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -175,6 +184,8 @@ export class NewRecipeComponent {
         this.existingCoverImage = recipe.coverImage
           ? { ...recipe.coverImage }
           : undefined;
+
+        this.loading.set(false);
       })
   }
 
@@ -261,6 +272,8 @@ export class NewRecipeComponent {
     return recipe;
   }
 
+  private readonly elementRef = inject(ElementRef);
+
   addNewIngredient(index: number): void {
     const ingredientGroup = this.ingredients.at(index);
 
@@ -274,6 +287,14 @@ export class NewRecipeComponent {
         calories: new FormControl(),
       })
     );
+
+    setTimeout(() => {
+      const inputs = this.elementRef.nativeElement.querySelectorAll(
+        `p-accordion-panel:nth-child(${index + 1}) #ingredient-name`
+      );
+      const lastInput = inputs[inputs.length - 1] as HTMLElement;
+      lastInput?.focus();
+    });
   }
 
   addNewPreparationStep(): void {
@@ -283,6 +304,17 @@ export class NewRecipeComponent {
         step: new FormControl(),
       })
     );
+
+    const newIndex = this.preparation.length - 1;
+    this.activePreparationPanel.set(newIndex);
+
+    setTimeout(() => {
+      const textareas = this.elementRef.nativeElement.querySelectorAll(
+        '#preparation textarea'
+      );
+      const lastTextarea = textareas[textareas.length - 1] as HTMLElement;
+      lastTextarea?.focus();
+    });
   }
 
   addNewIngredientSection(): void {

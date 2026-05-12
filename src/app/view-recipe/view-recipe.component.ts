@@ -20,6 +20,7 @@ import { UserStateService } from '../shared/services/user-state.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { take } from 'rxjs';
+import { preloadImages } from '../shared/utils/preload-images';
 
 @Component({
   selector: 'app-view-recipe',
@@ -72,12 +73,14 @@ export class ViewRecipeComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (recipe) => {
-          this.recipe.set({ ...recipe });
+          preloadImages([recipe.coverImage?.url]).then(() => {
+            this.recipe.set({ ...recipe });
 
-          this.isFavourite = recipe.isFavourite ?? false;
+            this.isFavourite = recipe.isFavourite ?? false;
 
-          const container = document.getElementById('recipe-container');
-          container?.scrollTo(0, 0);
+            const container = document.getElementById('recipe-container');
+            container?.scrollTo(0, 0);
+          });
         },
         error: (error) => {
           this.errorMessage.set(error.message);

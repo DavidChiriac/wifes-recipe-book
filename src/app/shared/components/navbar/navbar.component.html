@@ -13,14 +13,14 @@
       </a>
       <p-button
         class="add-recipe"
-        [ngClass]="{ mobile: isMobile }"
+        [ngClass]="{ mobile: isMobile() }"
         label="+Add"
         [routerLink]="'/new-recipe'"
       />
     }
     <p-button
       class="recipe-collection"
-      [ngClass]="{ mobile: isMobile }"
+      [ngClass]="{ mobile: isMobile() }"
       label="Recipe Collection"
       [routerLink]="'/collection'"
       routerLinkActive="active"
@@ -30,7 +30,7 @@
       @if(isMobile() === false){ 
         <p-button
           class="my-recipes"
-          [ngClass]="{ mobile: isMobile }"
+          [ngClass]="{ mobile: isMobile() }"
           label="My Recipes"
           [routerLink]="'/my-recipes'"
           routerLinkActive="active"
@@ -38,14 +38,14 @@
         @if (isAdmin()) {
           <p-button
             class="my-recipes"
-            [ngClass]="{ mobile: isMobile }"
+            [ngClass]="{ mobile: isMobile() }"
             label="Categories"
             [routerLink]="'/manage-categories'"
             routerLinkActive="active"
           />
           <p-button
             class="my-recipes"
-            [ngClass]="{ mobile: isMobile }"
+            [ngClass]="{ mobile: isMobile() }"
             label="Users"
             [routerLink]="'/manage-users'"
             routerLinkActive="active"
@@ -53,7 +53,7 @@
         }
         <p-button
           class="sign-in"
-          [ngClass]="{ mobile: isMobile }"
+          [ngClass]="{ mobile: isMobile() }"
           label="Sign Out"
           (onClick)="signOut()"
         />
@@ -81,7 +81,7 @@
     @if (!signedIn()) {
       <p-button
           class="sign-in"
-          [ngClass]="{ mobile: isMobile }"
+          [ngClass]="{ mobile: isMobile() }"
           label="Sign In"
           (onClick)="sign()"
         />

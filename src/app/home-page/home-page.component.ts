@@ -5,6 +5,7 @@ import { DeviceService } from '../shared/services/device.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipesService } from '../shared/services/recipes.service';
 import { catchError, of, switchMap } from 'rxjs';
+import { preloadImages } from '../shared/utils/preload-images';
 
 import { Router, RouterModule } from '@angular/router';
 import { IRecipe } from '../shared/interfaces/recipe.interface';
@@ -71,10 +72,13 @@ export class HomePageComponent {
         );
       })
     ).subscribe(recipes => {
-      this.randomRecipes.set(this.normalizeRecipes(recipes as Record<string, IRecipe[] | undefined>));
-      this.loading.set(false);
-      // Wait one tick for @if(!loading()) to render the categories DOM
-      setTimeout(() => this.updateScrollArrows(), 0);
+      const normalized = this.normalizeRecipes(recipes as Record<string, IRecipe[] | undefined>);
+      preloadImages(normalized.map(r => r.coverImage?.url)).then(() => {
+        this.randomRecipes.set(normalized);
+        this.loading.set(false);
+        // Wait one tick for @if(!loading()) to render the categories DOM
+        setTimeout(() => this.updateScrollArrows(), 0);
+      });
     });
   }
 

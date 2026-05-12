@@ -1,3 +1,9 @@
+@if (loading()) {
+  <div class="flex justify-content-center align-items-center" style="height: 100%">
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem"></i>
+  </div>
+}
+@if (!loading()) {
 <div [ngClass]="{'new-recipe-mobile': isMobile(), 'new-recipe': isMobile() === false}">
   <button class="back-button" (click)="goBack()"><i class="pi pi-arrow-left"></i></button>
 
@@ -20,6 +26,7 @@
           [ngClass]="{ mobile: isMobile, 'w-12': isMobile(), 'w-3': isMobile() === false }"
           [options]="categoryOptions()"
           [placeholder]="'Select categories'"
+          appendTo="body"
         >
           <ng-template let-option pTemplate="option">
             <div class="flex align-items-center gap-2">
@@ -31,7 +38,7 @@
       </div>
       <br />
       <label for="ingredients">Ingredients:</label>
-      <p-accordion id="ingredients" [value]="0" formArrayName="ingredients">
+      <p-accordion id="ingredients" [value]="isEditMode() ? null : 0" formArrayName="ingredients">
         @for (section of ingredients.controls; track section.get('id'); let i = $index) {
             <p-accordion-panel [value]="i" [formGroupName]="i">
                 <p-accordion-header><div class="flex gap-2 align-items-center"><input pInputText id="ingredient-header-name" type="text" [ngClass]="{mobile: isMobile}" formControlName="sectionName" [placeholder]="`Section ${i + 1}` " (click)="$event.stopPropagation()"/><p-button class="delete-section" [label]="isMobile() ? '' : 'Delete section'" icon="pi pi-trash" [ngClass]="{mobile: isMobile}" (onClick)="$event.stopPropagation(); deleteSection(i)"/></div></p-accordion-header>
@@ -40,10 +47,10 @@
                     @for (ingredient of getNestedIngredients(i).controls; track ingredient.get('id'); let j = $index) {
                       <div [formGroupName]="j">
                         <div
-                          class="flex gap-3 mb-3"
+                          class="flex gap-3"
                           [ngClass]="{
                             'align-items-center': isMobile() === false,
-                            'align-items-start': isMobile
+                            'align-items-start': isMobile()
                           }"
                         >
                           <div class="flex gap-2">
@@ -54,29 +61,29 @@
                                 pInputText
                                 formControlName="name"
                                 class="w-12"
-                                [ngClass]="{ mobile: isMobile }"
+                                [ngClass]="{ mobile: isMobile() }"
                                 type="text"
                               />
                             </div>
-                            <div class="field" [ngClass]="{mobile: isMobile}">
+                            <div class="field" [ngClass]="{mobile: isMobile()}">
                               <label for="quantity">Quantity: </label>
                               <input
                                 id="quantity"
                                 pInputText
                                 formControlName="quantity"
                                 class="w-12"
-                                [ngClass]="{ mobile: isMobile }"
+                                [ngClass]="{ mobile: isMobile() }"
                                 type="text"
                               />
                             </div>
-                            <div class="field" [ngClass]="{mobile: isMobile}">
+                            <div class="field" [ngClass]="{mobile: isMobile()}">
                               <label for="calories">Calories: </label>
                               <input
                                 id="calories"
                                 pInputText
                                 formControlName="calories"
                                 class="w-12"
-                                [ngClass]="{ mobile: isMobile }"
+                                [ngClass]="{ mobile: isMobile() }"
                                 type="number"
                               />
                             </div>
@@ -85,7 +92,7 @@
                           <div class="w-2">
                             <p-button
                               class="delete-ingredient"
-                              [ngClass]="{ mobile: isMobile }"
+                              [ngClass]="{ mobile: isMobile() }"
                               label="-"
                               (onClick)="removeIngredient(i, j)"
                             ></p-button>
@@ -96,7 +103,7 @@
                     }
                     <p-button
                       class="new-ingredient"
-                      [ngClass]="{ mobile: isMobile }"
+                      [ngClass]="{ mobile: isMobile() }"
                       label="+Add ingredient"
                       (onClick)="addNewIngredient(i)"
                     ></p-button>
@@ -110,7 +117,7 @@
       <br/>
       <br />
       <label for="preparation">Preparation:</label>
-      <p-accordion id="preparation" [value]="0" formArrayName="preparation">
+      <p-accordion id="preparation" [value]="activePreparationPanel()" (valueChange)="activePreparationPanel.set($any($event))" formArrayName="preparation">
         @for (section of preparation.controls; track section.get('id'); let i = $index) {
             <p-accordion-panel [value]="i" [formGroupName]="i">
                 <p-accordion-header><div class="flex gap-2 align-items-center">{{`Step ${i + 1}`}}<p-button class="delete-section" [label]="isMobile() ? '' : 'Delete step'" icon="pi pi-trash" [ngClass]="{mobile: isMobile}" (onClick)="$event.stopPropagation(); removePreparationStep(i)"/></div></p-accordion-header>
@@ -127,7 +134,7 @@
         }
       </p-accordion>
       <br/>
-      <p-button class="submit-recipe" label="Add new ingredients section" (onClick)="addNewPreparationStep()"/>
+      <p-button class="submit-recipe" label="Add new preparation step" (onClick)="addNewPreparationStep()"/>
       <br />
       <br/>
       <div>
@@ -162,13 +169,11 @@
             <div>Drag and drop files to here to upload.</div>
           </ng-template>
           <ng-template #content>
-            <ul>
             @if (coverImagePreview()) {
               <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="coverImagePreview()!.url" alt="Cover"/></div> {{ coverImagePreview()!.name }} <p-button icon="pi pi-times" [ngClass]="{mobile: isMobile}" class="ml-auto delete-button" (onClick)="removeCoverImagePreview()"/></li>
             } @else if (existingCoverImage) {
               <li class="overflow-auto font-bold flex align-items-center gap-5 preview-image"> <div class="image"><img [src]="existingCoverImage.url" alt="Cover"/></div> {{ existingCoverImage.name }} <p-button icon="pi pi-times" [ngClass]="{mobile: isMobile}" class="ml-auto delete-button" (onClick)="removeExistingCoverImage()"/></li>
             }
-            </ul>
           </ng-template>
         </p-fileupload>
       </div>
@@ -215,6 +220,7 @@
     </div>
   </form>
 </div>
+}
 
 <p-dialog [modal]="true" [showHeader]="false" [(visible)]="imageDeleteDialogVisible" [style]="{ width: '25rem' }">
     <h2 class="mb-3 text-center">Are you sure you want to delete this Recipe?</h2>

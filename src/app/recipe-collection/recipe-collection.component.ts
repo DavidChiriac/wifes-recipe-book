@@ -5,6 +5,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { catchError, debounceTime } from 'rxjs';
+import { preloadImages } from '../shared/utils/preload-images';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { FiltersComponent } from '../shared/components/filters/filters.component';
@@ -113,11 +114,14 @@ export class RecipeCollectionComponent extends RecipesClass {
         })
       ).subscribe(fetchedRecipes => {
         this.totalRecords.set(fetchedRecipes.total);
-        this.recipes.set(fetchedRecipes.data.map(recipe => ({
+        const recipes = fetchedRecipes.data.map(recipe => ({
           ...recipe,
           isFavourite: recipe.isFavourite ?? false
-        })));
-        this.loading.set(false);
+        }));
+        preloadImages(recipes.map(r => r.coverImage?.url)).then(() => {
+          this.recipes.set(recipes);
+          this.loading.set(false);
+        });
       });
   }
 

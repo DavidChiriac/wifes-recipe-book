@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError } from 'rxjs';
+import { preloadImages } from '../shared/utils/preload-images';
 
 @Component({
   selector: 'app-favourite-recipes',
@@ -54,7 +55,9 @@ export class FavouriteRecipesComponent {
             } as IRecipe;
           })
         );
-        this.loading.set(false);
+        preloadImages(recipes.map(r => r.coverImage?.url)).then(() => {
+          this.loading.set(false);
+        });
       });
   }
 

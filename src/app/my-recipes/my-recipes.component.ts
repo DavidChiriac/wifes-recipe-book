@@ -21,6 +21,7 @@ import {
   of,
   toArray,
 } from 'rxjs';
+import { preloadImages } from '../shared/utils/preload-images';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FiltersComponent } from '../shared/components/filters/filters.component';
 import { RecipesClass } from '../shared/classes/filter.class';
@@ -99,8 +100,10 @@ export class MyRecipesComponent extends RecipesClass {
       )
       .subscribe({
         next: (recipes) => {
-          this.recipes.set(recipes);
-          this.loading.set(false);
+          preloadImages(recipes.map(r => r.coverImage?.url)).then(() => {
+            this.recipes.set(recipes);
+            this.loading.set(false);
+          });
         },
       });
   }
