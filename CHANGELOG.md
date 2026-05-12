@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/DavidChiriac/wifes-repice-book/compare/v3.0.0...v3.0.1) (2026-05-12)
+
+
+### Bug Fixes
+
+* different bugfixes and improvements ([c9dfb2a](https://github.com/DavidChiriac/wifes-repice-book/commit/c9dfb2a100a78d47b657073a9657a311856af522))
+
 ## [3.0.0](https://github.com/DavidChiriac/wifes-repice-book/compare/v2.1.2...v3.0.0) (2026-05-11)
 
 
