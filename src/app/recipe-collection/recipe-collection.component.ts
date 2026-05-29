@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { catchError, debounceTime } from 'rxjs';
 import { preloadImages } from '../shared/utils/preload-images';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 
 import { FiltersComponent } from '../shared/components/filters/filters.component';
 import { RecipesClass } from '../shared/classes/filter.class';
@@ -30,6 +31,7 @@ import { UsersService } from '../shared/services/users.service';
 export class RecipeCollectionComponent extends RecipesClass {
   private readonly destroyRef = inject(DestroyRef);
   private readonly usersService = inject(UsersService);
+  private readonly route = inject(ActivatedRoute);
 
   category = input<string>('');
   authorId = input<string>('');
@@ -65,6 +67,25 @@ export class RecipeCollectionComponent extends RecipesClass {
         category: this.cachedFilters?.category || [],
         minMinutes: this.cachedFilters?.minMinutes || undefined,
         maxMinutes: this.cachedFilters?.maxMinutes || undefined
+      }));
+    }
+
+    // Apply query params synchronously so the initial getRecipes() call
+    // (triggered by the base-class effect) already includes the filter.
+    const snapshot = this.route.snapshot.queryParams;
+    if (snapshot['category']) {
+      const cat = snapshot['category'];
+      this.filtersForm.patchValue({ category: [cat] });
+      this.requestParams.update(params => ({
+        ...params,
+        category: [cat]
+      }));
+    }
+    if (snapshot['authorId']) {
+      this.requestParams.update(params => ({
+        ...params,
+        authorId: snapshot['authorId'],
+        authorName: snapshot['authorName'] || snapshot['authorId'],
       }));
     }
 

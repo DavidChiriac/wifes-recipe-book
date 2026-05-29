@@ -2,7 +2,7 @@
     <form [formGroup]="filtersForm()" (ngSubmit)="applyFilters()">
     <div class="flex flex-column gap-3">
         <label for="category">Category</label>
-        <p-multiSelect id="category" optionLabel="name" optionValue="name" formControlName="category" [options]="categoryOptions()" />
+        <p-multiSelect id="category" optionLabel="name" optionValue="name" formControlName="category" [options]="categoryOptions()" appendTo="body" />
 
         <label for="minutes">Minutes</label>
         <div class="flex justify-content-between gap-2">
@@ -10,10 +10,8 @@
         <input id="minutes-max" pInputText type="number" formControlName="maxMinutes" class="w-6" placeholder="Max" />
         </div>
 
-        @if (authorOptions().length > 0) {
-          <label for="author">Author</label>
-          <p-select id="author" formControlName="authorId" [options]="authorOptions()" optionLabel="displayName" optionValue="uid" placeholder="All authors" [showClear]="true" />
-        }
+        <label for="author">Author</label>
+        <p-select id="author" formControlName="authorId" [options]="authorOptions()" optionLabel="displayName" optionValue="uid" placeholder="All authors" [showClear]="true" appendTo="body" />
 
         <p-button label="Apply Filters" type="submit" class="apply-filters-button"/>
     </div>
